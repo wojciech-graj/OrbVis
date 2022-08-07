@@ -1,0 +1,195 @@
+#include "timeline.h"
+
+#include "gfx.h"
+#include
+#include "ui.h"
+#include "phys.h"
+#include "system.h"
+#include "setting.h"
+
+#include <stdint.h>
+#include <math.h>
+
+#define SPAN_INC_LOC x + w - 30, y - 15, 15, 15
+#define SPAN_DEC_LOC x + w - 15, y - 15, 15, 15
+
+enum Timespan g_timespan = TIMESPAN_MINUTE;
+
+static void incdec_render(float x, float y, float w, float h, bool inc);
+
+void timeline_init(void)
+{
+
+}
+
+void timeline_render(float x, float y, float w, float h)
+{
+	NVGpaint paint = nvgLinearGradient(g_vg, x, y, x, y + h, nvgRGBA(64, 64, 64, 127), nvgRGBA(127, 127, 127, 127));
+
+	/* Box */
+	nvgBeginPath(g_vg);
+	nvgRect(g_vg, x, y, w, h);
+	nvgFillPaint(g_vg, paint);
+	nvgFill(g_vg);
+
+	/* Graduation */
+	long epoch_ms_start;
+	float x_grad; /* Horizontal distance to first graduation */
+	unsigned n_grad;
+	unsigned first_grad;
+	unsigned grad_min_mod;
+	unsigned grad_maj_mod;
+	long dur_ms;
+	char *span_str;
+	switch (g_timespan) {
+	case TIMESPAN_MINUTE:
+		grad_min_mod = 5;
+		grad_maj_mod = 15;
+		n_grad = 60;
+		dur_ms = 60000l;
+		epoch_ms_start = g_phys.epoch_ms - 30000;
+		first_grad = (1 + epoch_ms_start / 1000l) % 15;
+		x_grad = (1000 - (epoch_ms_start % 1000)) * (1.f / 60000.f) * w;
+		span_str = "Minute";
+		break;
+	case TIMESPAN_HOUR:
+		grad_min_mod = 5;
+		grad_maj_mod = 15;
+		n_grad = 60;
+		dur_ms = 3600000l;
+		epoch_ms_start = g_phys.epoch_ms - 1800000l;
+		first_grad = (1 + epoch_ms_start / 60000l) % 15;
+		x_grad = (60l - ((epoch_ms_start / 1000l) % 60l)) * (1.f / 3600.f) * w;
+		span_str = "Hour";
+		break;
+	case TIMESPAN_DAY:
+		grad_min_mod = 4;
+		grad_maj_mod = 24;
+		n_grad = 96;
+		dur_ms = 86400000l;
+		epoch_ms_start = g_phys.epoch_ms - 43200000l;
+		first_grad = (1 + epoch_ms_start / 900000l) % 24;
+		x_grad = (150l - ((epoch_ms_start / 6000l) % 150l)) * (1.f / 14400.f) * w;
+		span_str = "Day";
+		break;
+	case TIMESPAN_WEEK:
+		grad_min_mod = 4;
+		grad_maj_mod = 8;
+		n_grad = 56;
+		dur_ms = 604800000l;
+		epoch_ms_start = g_phys.epoch_ms - 302400000l;
+		first_grad = (1 + epoch_ms_start / 10800000l) % 8;
+		x_grad = (180l - ((epoch_ms_start / 60000l) % 180l)) * (1.f / 10080.f) * w;
+		span_str = "Week";
+		break;
+	case TIMESPAN_YEAR:
+		grad_min_mod = 4;
+		grad_maj_mod = 12;
+		n_grad = 48;
+		dur_ms = 31557600000l;
+		epoch_ms_start = g_phys.epoch_ms - 15778800000l;
+		first_grad = (1 + epoch_ms_start / 657450000l) % 12;
+		x_grad = (21915l - ((epoch_ms_start / 300l) % 21915l)) / 1051920.f * w;
+		span_str = "Year";
+		break;
+	}
+
+	nvgBeginPath(g_vg);
+	float x_step = w / n_grad;
+	float x_cur = x_grad + x;
+	float grad_ys[3] = {
+		y + 0.25f * h,
+		y + 0.5f * h,
+		y + 0.75f * h,
+	};
+	unsigned cur_grad = first_grad;
+
+	unsigned i;
+	for (i = 0; i < n_grad; i++) {
+		float y_end;
+		if (cur_grad % grad_maj_mod == 0)
+			y_end = grad_ys[0];
+		else if (cur_grad % grad_min_mod == 0)
+			y_end = grad_ys[1];
+		else
+			y_end = grad_ys[2];
+		nvgMoveTo(g_vg, x_cur, y + h);
+		nvgLineTo(g_vg, x_cur, y_end);
+		cur_grad++;
+		x_cur += x_step;
+	}
+	nvgStrokeColor(g_vg, nvgRGBA(255, 255, 255, 255));
+	nvgStroke(g_vg);
+
+	/* Graduation Text */
+	nvgFontSize(g_vg, 12.0f);
+	nvgFontFace(g_vg, FONT_REGULAR);
+	nvgFillColor(g_vg, nvgRGBA(255, 255, 255, 255));
+	nvgTextAlign(g_vg, NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+	nvgScissor(g_vg, x, y, w, h);
+	unsigned n_vis_grad_maj = n_grad / grad_maj_mod;
+	unsigned n_steps = n_vis_grad_maj + 1;
+	long step_ms = dur_ms * grad_maj_mod / n_grad;
+	long rnd = (dur_ms / n_vis_grad_maj);
+	long cur_ms = (1000l + g_phys.epoch_ms - dur_ms / 2l) / rnd * rnd;
+	x_cur = x + x_grad - first_grad * x_step;
+	x_step *= grad_maj_mod;
+	for (i = 0; i < n_steps; i++) {
+		nvgText(g_vg, x_cur, y, epoch_to_iso8601(cur_ms, gs_gmt, false), NULL);
+		cur_ms += step_ms;
+		x_cur += x_step;
+	}
+	nvgResetScissor(g_vg);
+
+	/* Central Graduation */
+	nvgBeginPath(g_vg);
+	nvgMoveTo(g_vg, x + w * 0.5f, y + h);
+	nvgLineTo(g_vg, x + w * 0.5f, y + 0.25f * h);
+	nvgStrokeColor(g_vg, g_color_highlight);
+	nvgStrokeWidth(g_vg, 4);
+	nvgStroke(g_vg);
+
+	/* Span */
+	float span_x = x + w - 100;
+	nvgTextAlign(g_vg, NVG_ALIGN_LEFT | NVG_ALIGN_BOTTOM);
+	nvgText(g_vg, span_x, y, span_str, NULL);
+	nvgTextAlign(g_vg, NVG_ALIGN_RIGHT | NVG_ALIGN_BOTTOM);
+	nvgText(g_vg, span_x, y, "SPAN: ", NULL);
+
+	/* Timescale buttons */
+	nvgBeginPath(g_vg);
+	incdec_render(SPAN_INC_LOC, true);
+	incdec_render(SPAN_DEC_LOC, false);
+	nvgFill(g_vg);
+}
+
+void incdec_render(float x, float y, float w, float h, bool inc)
+{
+	float yh, yl;
+	if (inc) {
+		yh = y + h - 3;
+		yl = y + 3;
+	} else {
+		yh = y + 3;
+		yl = y + h - 3;
+	}
+	nvgMoveTo(g_vg, x, yh);
+	nvgLineTo(g_vg, x + w / 2, yl);
+	nvgLineTo(g_vg, x + w, yh);
+	nvgLineTo(g_vg, x, yh);
+}
+
+void timeline_gen_elems(float x, float y, float w, float h)
+{
+	ui_gen_elem_rect(x, y, w, h, UI_TIMELINE);
+	ui_gen_elem_rect(SPAN_INC_LOC, UI_SPAN_INC);
+	ui_gen_elem_rect(SPAN_DEC_LOC, UI_SPAN_DEC);
+}
+
+void timeline_span_press(uint8_t ui_elem)
+{
+	if (ui_elem == UI_SPAN_INC && g_timespan != TIMESPAN_YEAR)
+		g_timespan++;
+	else if (ui_elem == UI_SPAN_DEC && g_timespan != TIMESPAN_MINUTE)
+		g_timespan--;
+}

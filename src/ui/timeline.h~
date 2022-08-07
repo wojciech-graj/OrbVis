@@ -1,0 +1,18 @@
+#ifndef __TIMELINE_H__
+#define __TIMELINE_H__
+
+#include "type.h"
+
+enum Timespan {
+	TIMESPAN_MINUTE,
+	TIMESPAN_HOUR,
+	TIMESPAN_DAY,
+	TIMESPAN_WEEK,
+	TIMESPAN_YEAR,
+};
+
+void timeline_render(float x, float y, float w, float h);
+
+extern enum Timespan g_timespan;
+
+#endif /* __TIMELINE_H__ */
