@@ -4,6 +4,9 @@
 #include <cglm/mat4.h>
 #include <cglm/vec3.h>
 
+#undef near
+#undef far
+
 struct Camera {
 	vec3 pos;
 	vec3 target;

@@ -4,10 +4,10 @@
 #define wgs72old 1
 #define wgs72 2
 #define wgs84 3
-#define pi 3.14159265358979323846
+#define pi_ 3.14159265358979323846
 
-#define twopi  (2.0*pi)
-#define deg2rad  (pi/180.0)
+#define twopi  (2.0*pi_)
+#define deg2rad  (pi_/180.0)
 
 #ifdef __STDC_VERSION__
 #include <stdbool.h>

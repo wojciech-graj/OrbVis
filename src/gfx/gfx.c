@@ -68,5 +68,5 @@ void gfx_init(GtkBuilder *builder)
 		NULL);
 
 	glarea = GTK_GL_AREA(gtk_builder_get_object(builder, "glarea"));
-	gtk_gl_area_set_required_version(glarea, 4, 6);
+	gtk_gl_area_set_required_version(glarea, 4, 3);
 }

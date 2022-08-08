@@ -213,7 +213,7 @@ double gdi(char *str, int ind1, int ind2)
 
 void setValsToRec(TLE *tle, ElsetRec *rec)
 {
-    double xpdotp = 1440.0 / (2.0 * pi);  /* 229.1831180523293 */
+    double xpdotp = 1440.0 / twopi;  /* 229.1831180523293 */
 
     rec->elnum = tle->elnum;
     rec->revnum = tle->revnum;

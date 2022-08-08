@@ -2,9 +2,22 @@ TARGET := orbvis
 
 CC := gcc
 WARNINGS := -Wall -Wextra -Wpedantic -Wdouble-promotion -Wstrict-prototypes -Wshadow -Wduplicated-cond -Wduplicated-branches -Wjump-misses-init -Wnull-dereference -Wrestrict -Wlogical-op -Walloc-zero -Wformat-security -Wformat-signedness -Winit-self -Wlogical-op -Wmissing-declarations -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wswitch-enum -Wundef -Wwrite-strings -Wno-discarded-qualifiers
-DBGFLAGS := -fsanitize=address -fsanitize=undefined -g -ftrapv -fno-omit-frame-pointer -lrt
-CFLAGS := -march=native -O3 `pkg-config --cflags gl gtk+-3.0 cglm libcurl epoxy` -flto
-LDFLAGS := -lm -ldl `pkg-config --libs gl gtk+-3.0 cglm libcurl epoxy` -flto
+CFLAGS := -march=native -O3
+LDFLAGS := -lm
+
+ifeq ($(MAKECMDGOALS),windows)
+  CFLAGS += `pkg-config --cflags gtk+-3.0 cglm libcurl epoxy` -flto
+  LDFLAGS += -lopengl32 `pkg-config --libs gtk+-3.0 cglm libcurl epoxy` -flto
+else
+  CFLAGS += `pkg-config --cflags gl gtk+-3.0 cglm libcurl epoxy`
+  LDFLAGS += -ldl `pkg-config --libs gl gtk+-3.0 cglm libcurl epoxy`
+  ifeq ($(MAKECMDGOALS),debug)
+    CFLAGS += -fsanitize=address -fsanitize=undefined -g -ftrapv -fno-omit-frame-pointer -lrt
+  else
+    CFLAGS += -flto
+    LDFLAGS += -flto
+  endif
+endif
 
 BUILD_DIR := ./obj
 SRC_DIRS := ./src
@@ -51,10 +64,13 @@ $(OBJS_SATCAT):
 
 $(BUILD_DIR)/%.c.o: %.c
 	mkdir -p $(dir $@)
-	$(CC) $(INC_FLAGS) -std=gnu11 $(CFLAGS) $(WARNINGS) -c $< -o $@
+	$(CC) $(INC_FLAGS) -std=c11 $(CFLAGS) $(WARNINGS) -c $< -o $@
 
 clean:
 	rm -rf $(BUILD_DIR)
 	rm -f $(TARGET)
+
+windows: $(TARGET)
+debug: $(TARGET)
 
 -include $(DEPS)
