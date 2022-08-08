@@ -31,6 +31,7 @@ gboolean on_window_main_delete_event(GtkWidget *widget, GdkEvent *event, gpointe
 	render_deinit();
 	entity_deinit();
 	ui_deinit();
+	system_deinit();
 
 	return FALSE;
 }

@@ -1,42 +1,47 @@
 #include "system.h"
 
-#include <stdlib.h>
-#include <time.h>
-
 #include "error.h"
 
-static struct timespec start_t;
+#include <glib.h>
+
+#include <stdlib.h>
+
+static GDateTime *t_start;
 static char iso8601_str[29];
 
 void system_init(void)
 {
-	timespec_get(&start_t, TIME_UTC);
-	srand((unsigned)start_t.tv_sec);
+	t_start = g_date_time_new_now_utc();
+}
+
+void system_deinit(void)
+{
+	g_date_time_unref(t_start);
 }
 
 double system_time(void)
 {
-	struct timespec cur_t;
-	timespec_get(&cur_t, TIME_UTC);
-	return (cur_t.tv_sec - start_t.tv_sec) + (cur_t.tv_nsec - start_t.tv_nsec) * 1e-9;
+	GDateTime *t_now = g_date_time_new_now_utc();
+	GTimeSpan diff = g_date_time_difference(t_now, t_start);
+	g_date_time_unref(t_now);
+	return diff * 1.e-6;
 }
 
 long system_epoch_ms(void)
 {
-	struct timespec cur_t;
-	timespec_get(&cur_t, TIME_UTC);
-	return 1000L * cur_t.tv_sec + cur_t.tv_nsec / 1000000L;
+	GDateTime *t_now = g_date_time_new_now_utc();
+	long epoch_ms = 1000L * g_date_time_to_unix(t_now) + g_date_time_get_microsecond(t_now) / 1000L;
+	g_date_time_unref(t_now);
+	return epoch_ms;
 }
 
 char *epoch_to_iso8601(long epoch_ms, bool gmt, bool ms)
 {
-	time_t epoch_s = epoch_ms / 1000l;
-	struct tm tm_s;
-	if (gmt)
-		gmtime_r(&epoch_s, &tm_s);
-	else
-		localtime_r(&epoch_s, &tm_s);
-	strftime(iso8601_str, 20, "%FT%T", &tm_s);
+	long epoch_s = epoch_ms / 1000L;
+	GDateTime *t_now = (gmt) ? g_date_time_new_from_unix_utc(epoch_s) : g_date_time_new_from_unix_local(epoch_s);
+	gchar *str = g_date_time_format(t_now, "%FT%T");
+	memcpy(iso8601_str, str, 19);
+	g_free(str);
 	unsigned str_idx;
 	if (ms) {
 		sprintf(iso8601_str + 19, ".%03ld", epoch_ms % 1000);
@@ -48,14 +53,12 @@ char *epoch_to_iso8601(long epoch_ms, bool gmt, bool ms)
 		iso8601_str[str_idx] = 'Z';
 		iso8601_str[str_idx + 1] = '\0';
 	} else {
-		strftime(iso8601_str + str_idx, 6, "%z", &tm_s);
+		str = g_date_time_format(t_now, "%z");
+		memcpy(iso8601_str + str_idx, str, 6);
+		g_free(str);
 	}
+	g_date_time_unref(t_now);
 	return iso8601_str;
-}
-
-float rand_flt(void)
-{
-	return rand() / (float)RAND_MAX;
 }
 
 long fsize(FILE *file)

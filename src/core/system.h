@@ -9,11 +9,11 @@
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
 void system_init(void);
+void system_deinit(void);
 
 double system_time(void);
 long system_epoch_ms(void);
 char *epoch_to_iso8601(long epoch_ms, bool gmt, bool ms);
-float rand_flt(void);
 long fsize(FILE *file);
 size_t count(char *str, char c, size_t size);
 
