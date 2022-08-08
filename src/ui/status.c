@@ -1,8 +1,18 @@
 #include "status.h"
 
-GtkStatusbar *g_statusbar;
+static GtkStatusbar *statusbar;
 
 void status_init(GtkBuilder *builder)
 {
-	g_statusbar = GTK_STATUSBAR(gtk_builder_get_object(builder, "statusbar"));
+	statusbar = GTK_STATUSBAR(gtk_builder_get_object(builder, "statusbar"));
+}
+
+void status_push(unsigned ctx_id, const char *text)
+{
+	gtk_statusbar_push(statusbar, ctx_id, text);
+}
+
+void status_pop(unsigned ctx_id)
+{
+	gtk_statusbar_pop(statusbar, ctx_id);
 }

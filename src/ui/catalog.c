@@ -1,6 +1,7 @@
 #include "catalog.h"
 
 #include "satcat_code.h"
+#include "mem.h"
 
 #include <ctype.h>
 
@@ -41,7 +42,8 @@ static enum Column sort_col = COL_CATNUM;
 static GtkSortType sort_type = GTK_SORT_ASCENDING;
 static GtkTreeModelFilter *filter = NULL;
 static GtkTreeView *satellite_view;
-GtkListStore *g_satellite_store;
+static GtkListStore *satellite_store;
+static char *str_satellite_store = NULL;
 
 static const unsigned OFFSET_ID = offsetof(struct Satellite, satcat) + offsetof(struct SatCat, id);
 static const unsigned OFFSET_NAME = offsetof(struct Satellite, name);
@@ -61,6 +63,9 @@ static void init_col_from_store_col(GtkCellRenderer *render, GObject *obj, unsig
 static void cell_data_func_select(GtkTreeViewColumn *tree_column, GtkCellRenderer *cell, GtkTreeModel *tree_model, GtkTreeIter *iter, gpointer data);
 static void cell_data_func_str(GtkTreeViewColumn *tree_column, GtkCellRenderer *cell, GtkTreeModel *tree_model, GtkTreeIter *iter, gpointer data);
 static void cell_data_func_status(GtkTreeViewColumn *tree_column, GtkCellRenderer *cell, GtkTreeModel *tree_model, GtkTreeIter *iter, gpointer data);
+
+static void catalog_construct_views(void);
+static void catalog_deconstruct_views(void);
 
 void on_catalog_clicked(GtkToolButton *toolbutton, gpointer user_data)
 {
@@ -122,7 +127,7 @@ void on_col_clicked(GtkTreeViewColumn *treeviewcolumn, gpointer user_data)
 
 void catalog_construct_views(void)
 {
-	sort = GTK_TREE_SORTABLE(gtk_tree_model_sort_new_with_model(GTK_TREE_MODEL(g_satellite_store)));
+	sort = GTK_TREE_SORTABLE(gtk_tree_model_sort_new_with_model(GTK_TREE_MODEL(satellite_store)));
 	gtk_tree_sortable_set_sort_func(sort, 1, catalog_view_search_compare_func, NULL, NULL);
 
 	filter = GTK_TREE_MODEL_FILTER(gtk_tree_model_filter_new(GTK_TREE_MODEL(sort), NULL));
@@ -271,6 +276,33 @@ void init_col_from_store_col(GtkCellRenderer *render, GObject *obj, unsigned col
 		g_object_set(render, "width-chars", width_chars, NULL);
 }
 
+void catalog_satellites_fill(struct Satellite *satellites, size_t n_satellites)
+{
+	catalog_deconstruct_views();
+	gtk_list_store_clear(satellite_store);
+	free(str_satellite_store);
+	str_satellite_store = safe_malloc(31 * n_satellites);
+	char *str = str_satellite_store;
+	unsigned i;
+	for (i = 0; i < n_satellites; i++) {
+		const struct SCDate *date = &satellites[i].satcat.launch_date;
+		snprintf(str, 31, "%04u-%02u-%02u %07.1f %05.1f %.5s", date->year, date->month, date->day, satellites[i].satcat.period, satellites[i].satcat.inc_deg, satellites[i].satcat.source);
+		str[10] = str[18] = str[24] = '\0';
+		gtk_list_store_insert_with_values(satellite_store, NULL, -1,
+			0, &satellites[i],
+			1, satellites[i].satcat.catnum,
+			2, str,
+			3, str + 11,
+			4, str + 19,
+			5, str + 25,
+			6, satellites[i].satcat.apogee,
+			7, satellites[i].satcat.perigee,
+			-1);
+		str += 31;
+	}
+	catalog_construct_views();
+}
+
 void catalog_init(GtkBuilder *builder)
 {
 	gtk_builder_add_callback_symbols(builder,
@@ -281,8 +313,8 @@ void catalog_init(GtkBuilder *builder)
 		NULL);
 
 	window_catalog = GTK_WINDOW(gtk_builder_get_object(builder, "window_catalog"));
-	g_satellite_store = GTK_LIST_STORE(gtk_builder_get_object(builder, "satellite_store"));
-	g_object_ref(g_satellite_store);
+	satellite_store = GTK_LIST_STORE(gtk_builder_get_object(builder, "satellite_store"));
+	g_object_ref(satellite_store);
 	satellite_view = GTK_TREE_VIEW(gtk_builder_get_object(builder, "catalog_view"));
 
 	GtkCellRenderer *render_select = gtk_cell_renderer_toggle_new();
@@ -303,4 +335,9 @@ void catalog_init(GtkBuilder *builder)
 	unsigned i;
 	for (i = 0; i < NUM_COLS; i++)
 		columns[i] = GTK_TREE_VIEW_COLUMN(gtk_builder_get_object(builder, column_ids[i]));
+}
+
+void catalog_deinit(void)
+{
+	free(str_satellite_store);
 }

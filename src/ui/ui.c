@@ -30,6 +30,7 @@ gboolean on_window_main_delete_event(GtkWidget *widget, GdkEvent *event, gpointe
 	thread_deinit();
 	render_deinit();
 	entity_deinit();
+	ui_deinit();
 
 	return FALSE;
 }
@@ -72,4 +73,9 @@ void ui_init(int argc, char ***argv)
 	gtk_widget_show_all(window_main);
 
 	g_object_unref((gpointer)builder);
+}
+
+void ui_deinit(void)
+{
+	catalog_deinit();
 }

@@ -2,10 +2,9 @@
 #define __ERROR_H__
 
 #include "type.h"
+#include "system.h"
 
 #include <stdlib.h>
-
-#include "system.h"
 
 #define error(...)                       \
 	do {                             \

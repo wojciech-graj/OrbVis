@@ -1,20 +1,18 @@
 #include "input.h"
 
-#include <math.h>
-#include <stdbool.h>
-
-#include <cglm/affine.h>
-#include <cglm/mat4.h>
-#include <cglm/vec3.h>
-
-#include <gdk/gdk.h>
-
 #include "camera.h"
 #include "gfx.h"
 #include "satellite.h"
 #include "search.h"
 #include "type.h"
 #include "ui.h"
+
+#include <cglm/affine.h>
+#include <cglm/mat4.h>
+#include <cglm/vec3.h>
+
+#include <math.h>
+#include <stdbool.h>
 
 static double cursor_press_xpos;
 static double cursor_press_ypos;

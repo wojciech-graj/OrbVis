@@ -3,8 +3,12 @@
 
 #include "ui.h"
 
-void status_init(GtkBuilder *builder);
+enum Status {
+	STAT_FETCHING_SAT = 0u,
+};
 
-extern GtkStatusbar *g_statusbar;
+void status_init(GtkBuilder *builder);
+void status_push(unsigned ctx_id, const char *text);
+void status_pop(unsigned ctx_id);
 
 #endif

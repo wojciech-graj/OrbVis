@@ -1,8 +1,8 @@
 TARGET := orbvis
 
 CC := gcc
-WARNINGS := -Wall -Wextra -Wpedantic -Wdouble-promotion -Wstrict-prototypes -Wshadow -Wduplicated-cond -Wduplicated-branches -Wjump-misses-init -Wnull-dereference -Wrestrict -Wlogical-op -Wno-maybe-uninitialized -Walloc-zero -Wformat-security -Wformat-signedness -Winit-self -Wlogical-op -Wmissing-declarations -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wswitch-enum -Wundef -Wwrite-strings -Wno-address-of-packed-member -Wno-discarded-qualifiers
-DBGFLAGS :=  -fsanitize=address -fsanitize=undefined -g -ftrapv -fno-omit-frame-pointer -lrt
+WARNINGS := -Wall -Wextra -Wpedantic -Wdouble-promotion -Wstrict-prototypes -Wshadow -Wduplicated-cond -Wduplicated-branches -Wjump-misses-init -Wnull-dereference -Wrestrict -Wlogical-op -Walloc-zero -Wformat-security -Wformat-signedness -Winit-self -Wlogical-op -Wmissing-declarations -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wswitch-enum -Wundef -Wwrite-strings -Wno-discarded-qualifiers
+DBGFLAGS := -fsanitize=address -fsanitize=undefined -g -ftrapv -fno-omit-frame-pointer -lrt
 CFLAGS := -march=native -O3 `pkg-config --cflags gl gtk+-3.0 cglm libcurl epoxy` -flto
 LDFLAGS := -lm -ldl `pkg-config --libs gl gtk+-3.0 cglm libcurl epoxy` -flto
 

@@ -12,11 +12,9 @@ struct BO {
 };
 
 void bo_init(struct BO *bo, GLint type, bool dynamic);
-
 void bo_deinit(struct BO *bo);
 
 void bo_bind(struct BO *bo);
-
 void bo_buffer(struct BO *bo, void *data, size_t size);
 
 #endif /* __BO_H__ */

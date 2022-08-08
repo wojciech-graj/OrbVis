@@ -70,8 +70,6 @@ static vec3 *satellite_orbits = NULL;
 static GArray *satellite_orbit_idxs = NULL;
 static vec3 *satellite_orbit_colors = NULL;
 
-static char *str_satellite_store = NULL;
-
 static void satellite_toggle_orbit(uint32_t idx);
 static void satellites_get(void);
 static uint64_t sc_hash(const void *item, uint64_t seed0, uint64_t seed1);
@@ -129,7 +127,6 @@ void satellite_deinit(void)
 	free(satellite_verts);
 	free(satellite_orbits);
 	free(satellite_orbit_colors);
-	free(str_satellite_store);
 	g_array_unref(satellite_orbit_firsts);
 	g_array_unref(satellite_orbit_counts);
 	g_array_unref(satellite_orbit_idxs);
@@ -137,7 +134,7 @@ void satellite_deinit(void)
 
 void satellites_get_prep(void)
 {
-	gtk_statusbar_push(g_statusbar, 0, "Fetching satellite data...");
+	status_push(STAT_FETCHING_SAT, "Fetching satellite data...");
 }
 
 void *satellites_get_thrd(void *arguments)
@@ -283,31 +280,8 @@ void satellites_get_sync(void)
 	bo_buffer(&vbo_vert_colors, vert_colors_sync, sizeof(vec3) * n_satellites);
 	free(vert_colors_sync);
 	satellites_renderable = false;
-	gtk_statusbar_pop(g_statusbar, 0);
-
-	catalog_deconstruct_views();
-	gtk_list_store_clear(g_satellite_store);
-	free(str_satellite_store);
-	str_satellite_store = safe_malloc(31 * n_satellites);
-	char *str = str_satellite_store;
-	unsigned i;
-	for (i = 0; i < n_satellites; i++) {
-		const struct SCDate *date = &satellites[i].satcat.launch_date;
-		snprintf(str, 31, "%04u-%02u-%02u %07.1f %05.1f %.5s", date->year, date->month, date->day, satellites[i].satcat.period, satellites[i].satcat.inc_deg, satellites[i].satcat.source);
-		str[10] = str[18] = str[24] = '\0';
-		gtk_list_store_insert_with_values(g_satellite_store, NULL, -1,
-			0, &satellites[i],
-			1, satellites[i].satcat.catnum,
-			2, str,
-			3, str + 11,
-			4, str + 19,
-			5, str + 25,
-			6, satellites[i].satcat.apogee,
-			7, satellites[i].satcat.perigee,
-			-1);
-		str += 31;
-	}
-	catalog_construct_views();
+	status_pop(STAT_FETCHING_SAT);
+	catalog_satellites_fill(satellites, n_satellites);
 }
 
 void satellites_phys_sync(void)

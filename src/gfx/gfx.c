@@ -7,7 +7,7 @@
 #include "timemgr.h"
 
 struct GLCtx g_gl_ctx;
-GtkGLArea *g_glarea;
+static GtkGLArea *glarea;
 
 static void on_glarea_realize(GtkWidget *widget, gpointer user_data);
 static void on_glarea_resize(GtkGLArea *area, int width, int height, gpointer user_data);
@@ -18,15 +18,15 @@ void on_glarea_realize(GtkWidget *widget, gpointer user_data)
 	(void)user_data;
 	(void)widget;
 
-	error_check(!gtk_gl_area_get_error(g_glarea), "Failed to create OpenGL context");
+	error_check(!gtk_gl_area_get_error(glarea), "Failed to create OpenGL context");
 
-	gtk_gl_area_make_current(g_glarea);
+	gtk_gl_area_make_current(glarea);
 
-	GdkGLContext *glcontext = gtk_gl_area_get_context(g_glarea);
+	GdkGLContext *glcontext = gtk_gl_area_get_context(glarea);
 	GdkWindow *glwindow = gdk_gl_context_get_window(glcontext);
 	GdkFrameClock *frame_clock = gdk_window_get_frame_clock(glwindow);
 
-	g_signal_connect_swapped(frame_clock, "update", G_CALLBACK(gtk_gl_area_queue_render), g_glarea);
+	g_signal_connect_swapped(frame_clock, "update", G_CALLBACK(gtk_gl_area_queue_render), glarea);
 
 	gdk_frame_clock_begin_updating(frame_clock);
 }
@@ -67,6 +67,6 @@ void gfx_init(GtkBuilder *builder)
 		"on_glarea_realize", G_CALLBACK(on_glarea_realize),
 		NULL);
 
-	g_glarea = GTK_GL_AREA(gtk_builder_get_object(builder, "glarea"));
-	gtk_gl_area_set_required_version(g_glarea, 4, 6);
+	glarea = GTK_GL_AREA(gtk_builder_get_object(builder, "glarea"));
+	gtk_gl_area_set_required_version(glarea, 4, 6);
 }

@@ -5,10 +5,8 @@
 #include "ui.h"
 
 void catalog_init(GtkBuilder *builder);
+void catalog_deinit(void);
 void catalog_satellite_changed(struct Satellite *satellite);
-void catalog_construct_views(void);
-void catalog_deconstruct_views(void);
-
-extern GtkListStore *g_satellite_store;
+void catalog_satellites_fill(struct Satellite *satellites, size_t n_satellites);
 
 #endif /* __CATALOG_H__ */
