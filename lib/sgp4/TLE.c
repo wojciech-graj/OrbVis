@@ -9,10 +9,10 @@
 #define FALSE 0
 
 /* parse the double */
-static double gd(char *str, int ind1, int ind2);
+static double gd(char *str, int32_t ind1, int32_t ind2);
 
 /* parse the double with implied decimal */
-static double gdi(char *str, int ind1, int ind2);
+static double gdi(char *str, int32_t ind1, int32_t ind2);
 
 static void setValsToRec(TLE *tle, ElsetRec *rec);
 
@@ -35,7 +35,7 @@ void parseLines(TLE *tle, char *line1, char *line2)
 
     tle->rec.classification=line1[7];
 
-    tle->objectNum = (int)gd(line1,2,7);
+    tle->objectNum = (int32_t)gd(line1,2,7);
     strncpy(tle->objectID,&line1[2],5);
     tle->objectID[5]=0;
 
@@ -50,7 +50,7 @@ void parseLines(TLE *tle, char *line1, char *line2)
     if(line1[53]=='-') tle->bstar *= -1.0;
     tle->bstar *= pow(10.0, gd(line1,59,61));
 
-    tle->elnum = (int)gd(line1,64,68);
+    tle->elnum = (int32_t)gd(line1,64,68);
 
     tle->incDeg = gd(line2,8,16);
     tle->raanDeg = gd(line2,17,25);
@@ -58,7 +58,7 @@ void parseLines(TLE *tle, char *line1, char *line2)
     tle->argpDeg = gd(line2,34,42);
     tle->maDeg = gd(line2,43,51);
     tle->n = gd(line2,52,63);
-    tle->revnum = (int)gd(line2,63,68);
+    tle->revnum = (int32_t)gd(line2,63,68);
 
     tle->sgp4Error = 0;
 
@@ -67,7 +67,7 @@ void parseLines(TLE *tle, char *line1, char *line2)
     setValsToRec(tle, &tle->rec);
 }
 
-bool isLeap(int year)
+bool isLeap(int32_t year)
 {
     if(year % 4 != 0)
     {
@@ -89,16 +89,16 @@ bool isLeap(int year)
     return TRUE;
 }
 
-long parseEpoch(ElsetRec *rec, char *str)
+int64_t parseEpoch(ElsetRec *rec, char *str)
 {
     char tmp[16], tmp2[16];
-    int year, doy, hr, mn, sc/*, milli */, mon, day;
+    int32_t year, doy, hr, mn, sc/*, milli */, mon, day;
     double dfrac;
     double sec;
-    int days[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
-    int ind;
+    int32_t days[12] = {31,28,31,30,31,30,31,31,30,31,30,31};
+    int32_t ind;
     double diff, diff2;
-    long epoch;
+    int64_t epoch;
 
     strncpy(tmp,str,14);
     tmp[15]=0;
@@ -132,16 +132,16 @@ long parseEpoch(ElsetRec *rec, char *str)
 
 
     dfrac *= 24.0;
-    hr = (int)dfrac;
+    hr = (int32_t)dfrac;
     dfrac = 60.0*(dfrac - hr);
-    mn = (int)dfrac;
+    mn = (int32_t)dfrac;
     dfrac = 60.0*(dfrac - mn);
-    sc = (int)dfrac;
+    sc = (int32_t)dfrac;
 
 
 
     dfrac = 1000.0*(dfrac-sc);
-    /* milli = (int)dfrac; */
+    /* milli = (int32_t)dfrac; */
 
     sec = ((double)sc)+dfrac/1000.0;
 
@@ -165,12 +165,12 @@ long parseEpoch(ElsetRec *rec, char *str)
     diff2 = 86400000.0*rec->jdsatepochF;
     diff*=86400000.0;
 
-    epoch = (long)diff2;
-    epoch+=(long)diff;
+    epoch = (int64_t)diff2;
+    epoch+=(int64_t)diff;
     return epoch;
 }
 
-void getRVForDate(TLE *tle, long millisSince1970, double r[3], double v[3])
+void getRVForDate(TLE *tle, int64_t millisSince1970, double r[3], double v[3])
 {
     double diff = millisSince1970-tle->epoch;
     diff/=60000.0;
@@ -184,11 +184,11 @@ void getRV(TLE *tle, double minutesAfterEpoch, double r[3], double v[3])
     tle->sgp4Error = tle->rec.error;
 }
 
-double gd(char *str, int ind1, int ind2)
+double gd(char *str, int32_t ind1, int32_t ind2)
 {
     double num = 0;
     char tmp[50];
-    int cnt = ind2-ind1;
+    int32_t cnt = ind2-ind1;
     strncpy(tmp,&str[ind1],cnt);
     tmp[cnt]=0;
     num = strtod(tmp,NULL);
@@ -196,11 +196,11 @@ double gd(char *str, int ind1, int ind2)
 }
 
 /* parse with an implied decimal place */
-double gdi(char *str, int ind1, int ind2)
+double gdi(char *str, int32_t ind1, int32_t ind2)
 {
     double num = 0;
     char tmp[52];
-    int cnt;
+    int32_t cnt;
 
     tmp[0]='0';
     tmp[1]='.';

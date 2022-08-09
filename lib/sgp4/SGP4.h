@@ -15,6 +15,8 @@
 typedef int bool;
 #endif
 
+#include <stdint.h>
+
 /**
  * This class implements the elsetrec data type from Vallado's SGP4 code.
  *
@@ -25,11 +27,11 @@ typedef int bool;
  *
  */
 typedef struct ElsetRec {
-    int whichconst;
+    int32_t whichconst;
     char satid[6];
-    int epochyr;
-    int epochtynumrev;
-    int error;
+    int32_t epochyr;
+    int32_t epochtynumrev;
+    int32_t error;
     char operationmode;
     char init;
     char method;
@@ -53,9 +55,9 @@ typedef struct ElsetRec {
     /* sgp4fix add new variables from tle */
     char classification;
     char intldesg[12];
-    int ephtype;
-    long elnum;
-    long revnum;
+    int32_t ephtype;
+    int64_t elnum;
+    int64_t revnum;
 
     /* sgp4fix add unkozai'd variable */
     double no_unkozai;
@@ -81,7 +83,7 @@ typedef struct ElsetRec {
     double j3oj2;
 
     /*       Additional elements to capture relevant TLE and object information: */
-    long dia_mm; /* RSO dia in mm */
+    int64_t dia_mm; /* RSO dia in mm */
     double period_sec; /* Period in seconds */
     char active; /* "Active S/C" flag (0=n, 1=y) */
     char not_orbital; /* "Orbiting S/C" flag (0=n, 1=y) */
@@ -95,7 +97,7 @@ typedef struct ElsetRec {
     double mp;
 
 
-    int isimp;
+    int32_t isimp;
     double aycof;
     double con41;
     double cc1;
@@ -122,7 +124,7 @@ typedef struct ElsetRec {
     double nodecf;
 
     /* deep space */
-    int irez;
+    int32_t irez;
     double d2201;
     double d2211;
     double d3210;
@@ -268,10 +270,10 @@ bool sgp4init ( char opsmode,ElsetRec *satrec);
 
 bool sgp4 ( ElsetRec *satrec, double tsince, double *r, double *v);
 
-void getgravconst(int whichconst, ElsetRec *rec);
+void getgravconst(int32_t whichconst, ElsetRec *rec);
 
 double gstime(double jdut1);
 
-void jday(int year, int mon, int day, int hr, int minute, double sec, double *jd, double *jdfrac);
+void jday(int32_t year, int32_t mon, int32_t day, int32_t hr, int32_t minute, double sec, double *jd, double *jdfrac);
 
 #endif
