@@ -10,7 +10,7 @@ struct Edge {
 			guint32 a : 32;
 			guint32 b : 32;
 		} v;
-		int64_t hash;
+		gint64 hash;
 	} edge;
 	guint32 mid;
 };

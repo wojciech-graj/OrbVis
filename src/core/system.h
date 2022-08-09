@@ -11,8 +11,8 @@ void system_init(void);
 void system_deinit(void);
 
 double system_time(void);
-long system_epoch_ms(void);
-char *epoch_to_iso8601(long epoch_ms, gboolean gmt, gboolean ms);
+gint64 system_epoch_ms(void);
+char *epoch_to_iso8601(gint64 epoch_ms, gboolean gmt, gboolean ms);
 long fsize(FILE *file);
 size_t count(char *str, char c, size_t size);
 

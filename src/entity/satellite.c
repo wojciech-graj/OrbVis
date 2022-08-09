@@ -158,7 +158,7 @@ static int sc_compare(const void *a, const void *b, void *udata)
 void save_satellite_cache(void)
 {
 	FILE *cache = fopen(".sat_cache", "w");
-	long epoch_ms = system_epoch_ms();
+	gint64 epoch_ms = system_epoch_ms();
 	fwrite(&epoch_ms, 8, 1, cache);
 	fwrite(&dl_multi.handles[DL_SATCAT].size, 8, 1, cache);
 	fwrite(&dl_multi.handles[DL_TLE].size, 8, 1, cache);
@@ -181,9 +181,9 @@ void satellites_get(void)
 		dl_multi_perform(&dl_multi);
 		save_satellite_cache();
 	} else {
-		long cache_time;
+		gint64 cache_time;
 		fread(&cache_time, 8, 1, cache);
-		if (system_epoch_ms() - cache_time > 43200000L) {
+		if (system_epoch_ms() - cache_time > 43200000LL) {
 			fclose(cache);
 			dl_multi_perform(&dl_multi);
 			save_satellite_cache();
@@ -345,10 +345,10 @@ static void satellite_toggle_orbit(guint32 idx)
 		satellite_orbits = g_realloc(satellite_orbits, satellite_orbits_size);
 		satellite_orbit_colors = g_realloc(satellite_orbit_colors, satellite_orbits_size);
 
-		long period = MS_IN_DAY / (float)satellites[idx].tle.n;
+		gint64 period = MS_IN_DAY / (float)satellites[idx].tle.n;
 		int i;
 		for (i = 0; i < count; i++) {
-			long epoch_ms = g_phys.epoch_ms + period * i / count;
+			gint64 epoch_ms = g_phys.epoch_ms + period * i / count;
 			double r[3], v[3];
 			getRVForDate(&satellites[idx].tle, epoch_ms, r, v);
 			glm_vec3_copy((vec3){ r[0], r[1], r[2] }, satellite_orbits[first + i]);

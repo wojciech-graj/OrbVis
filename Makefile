@@ -7,7 +7,7 @@ LDFLAGS := -lm
 
 ifeq ($(MAKECMDGOALS),windows)
   CFLAGS += `pkg-config --cflags gtk+-3.0 cglm libcurl epoxy` -flto
-  LDFLAGS += -lopengl32 `pkg-config --libs gtk+-3.0 cglm libcurl epoxy` -flto
+  LDFLAGS += -lopengl32 `pkg-config --libs gtk+-3.0 cglm libcurl epoxy` -mwindows -flto
 else
   CFLAGS += `pkg-config --cflags gl gtk+-3.0 cglm libcurl epoxy`
   LDFLAGS += -ldl `pkg-config --libs gl gtk+-3.0 cglm libcurl epoxy`

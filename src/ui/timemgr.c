@@ -8,6 +8,7 @@
 
 enum Timeflow g_timeflow = TIME_REALTIME;
 float g_timescale = 1.f;
+
 static GtkToggleToolButton *play_button;
 static GtkEntry *time_entry;
 static GtkEntry *speed_entry;
@@ -66,7 +67,7 @@ void on_time_activate(GtkEntry *entry, gpointer user_data)
 	if (!dt)
 		return;
 
-	g_phys.epoch_ms = 1000l * g_date_time_to_unix(dt) + g_date_time_get_microsecond(dt) / 1000l;
+	g_phys.epoch_ms = 1000LL * g_date_time_to_unix(dt) + g_date_time_get_microsecond(dt) / 1000LL;
 	g_date_time_unref(dt);
 	timeflow_set(TIME_PAUSE);
 }

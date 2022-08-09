@@ -8,7 +8,7 @@
 #include "timemgr.h"
 
 struct PhysCtx g_phys;
-static long epoch_ms;
+static gint64 epoch_ms;
 static struct PhysCtx phys_ctx_sync;
 
 static void phys(void);
@@ -17,7 +17,7 @@ static void phys_phys_sync(void);
 
 void phys_phys(void)
 {
-	long cur_epoch_ms = system_epoch_ms();
+	gint64 cur_epoch_ms = system_epoch_ms();
 	switch (g_timeflow) {
 	case TIME_REALTIME:
 		phys_ctx_sync.epoch_ms = cur_epoch_ms;
@@ -26,7 +26,7 @@ void phys_phys(void)
 		phys_ctx_sync.epoch_ms = g_phys.epoch_ms;
 		break;
 	case TIME_ARBITRARY:
-		phys_ctx_sync.epoch_ms = g_phys.epoch_ms + (long)((cur_epoch_ms - epoch_ms) * g_timescale);
+		phys_ctx_sync.epoch_ms = g_phys.epoch_ms + (gint64)((cur_epoch_ms - epoch_ms) * g_timescale);
 		break;
 	}
 	epoch_ms = cur_epoch_ms;

@@ -25,17 +25,17 @@ double system_time(void)
 	return diff * 1.e-6;
 }
 
-long system_epoch_ms(void)
+gint64 system_epoch_ms(void)
 {
 	GDateTime *t_now = g_date_time_new_now_utc();
-	long epoch_ms = 1000L * g_date_time_to_unix(t_now) + g_date_time_get_microsecond(t_now) / 1000L;
+	gint64 epoch_ms = 1000LL * g_date_time_to_unix(t_now) + g_date_time_get_microsecond(t_now) / 1000LL;
 	g_date_time_unref(t_now);
 	return epoch_ms;
 }
 
-char *epoch_to_iso8601(long epoch_ms, gboolean gmt, gboolean ms)
+char *epoch_to_iso8601(gint64 epoch_ms, gboolean gmt, gboolean ms)
 {
-	long epoch_s = epoch_ms / 1000L;
+	gint64 epoch_s = epoch_ms / 1000LL;
 	GDateTime *t_now = (gmt) ? g_date_time_new_from_unix_utc(epoch_s) : g_date_time_new_from_unix_local(epoch_s);
 	gchar *str = g_date_time_format(t_now, "%FT%T");
 	memcpy(iso8601_str, str, 19);

@@ -9,7 +9,7 @@
 #define MS_IN_DAY 86400000
 
 struct PhysCtx {
-	long epoch_ms;
+	gint64 epoch_ms;
 	double gmst;
 	vec2 sun_uv;
 	vec3 sun_dir;
