@@ -1,4 +1,3 @@
-- Windows build
 - Use texture compression
 - Use Uniform structs (std140)
 - Kill running threads on exit
