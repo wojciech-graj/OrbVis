@@ -16,7 +16,7 @@ void texture_init(struct Texture *texture, GLenum unit, GLenum type)
 void texture_init_from_image(struct Texture *texture, const char *filename, GLenum unit, GLenum type)
 {
 	int width, height, n_channels;
-	stbi_set_flip_vertically_on_load(true); /* TODO: Move to init */
+	stbi_set_flip_vertically_on_load(TRUE); /* TODO: Move to init */
 	unsigned char *data = stbi_load(filename, &width, &height, &n_channels, 0);
 	error_check(data, "Failed to open texture [%s].", filename);
 

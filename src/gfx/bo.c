@@ -1,6 +1,6 @@
 #include "bo.h"
 
-void bo_init(struct BO *bo, GLint type, bool dynamic)
+void bo_init(struct BO *bo, GLint type, gboolean dynamic)
 {
 	bo->type = type;
 	bo->dynamic = dynamic;

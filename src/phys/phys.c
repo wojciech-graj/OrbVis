@@ -7,8 +7,6 @@
 #include "thread.h"
 #include "timemgr.h"
 
-#include <math.h>
-
 struct PhysCtx g_phys;
 static long epoch_ms;
 static struct PhysCtx phys_ctx_sync;

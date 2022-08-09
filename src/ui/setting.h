@@ -4,9 +4,9 @@
 #include "type.h"
 #include "ui.h"
 
-extern bool gs_gmt;
-extern bool gs_clouds;
-extern bool gs_lighting;
+extern gboolean gs_gmt;
+extern gboolean gs_clouds;
+extern gboolean gs_lighting;
 
 void setting_init(GtkBuilder *builder);
 

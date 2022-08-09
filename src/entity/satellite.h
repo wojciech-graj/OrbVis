@@ -9,7 +9,7 @@ struct Satellite {
 	char name[25];
 	TLE tle;
 	struct SatCat satcat;
-	uint32_t orbit_idx;
+	guint32 orbit_idx;
 };
 
 void satellite_init(void);

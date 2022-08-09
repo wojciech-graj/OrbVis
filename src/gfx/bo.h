@@ -3,15 +3,13 @@
 
 #include "gfx.h"
 
-#include <stdbool.h>
-
 struct BO {
 	GLuint handle;
 	GLint type;
-	bool dynamic;
+	gboolean dynamic;
 };
 
-void bo_init(struct BO *bo, GLint type, bool dynamic);
+void bo_init(struct BO *bo, GLint type, gboolean dynamic);
 void bo_deinit(struct BO *bo);
 
 void bo_bind(struct BO *bo);

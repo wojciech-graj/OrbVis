@@ -4,8 +4,6 @@
 #include "type.h"
 #include "system.h"
 
-#include <stdlib.h>
-
 #define error(...)                       \
 	do {                             \
 		printf_log(__VA_ARGS__); \

@@ -3,7 +3,7 @@
 struct Setting {
 	char *id;
 	GtkToggleButton *button;
-	bool *val;
+	gboolean *val;
 };
 
 struct Setting settings[3] = {
@@ -21,9 +21,9 @@ struct Setting settings[3] = {
 	},
 };
 
-bool gs_gmt = false;
-bool gs_clouds = true;
-bool gs_lighting = true;
+gboolean gs_gmt = FALSE;
+gboolean gs_clouds = TRUE;
+gboolean gs_lighting = TRUE;
 
 static GtkWindow *window_settings;
 

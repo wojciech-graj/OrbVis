@@ -1,14 +1,12 @@
 #ifndef __TYPE_H__
 #define __TYPE_H__
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
+#include <glib.h>
 
 #define UNREACHABLE __builtin_unreachable()
 
-#define likely(x) __builtin_expect((x), true)
-#define unlikely(x) __builtin_expect((x), false)
+#define likely(x) __builtin_expect((x), TRUE)
+#define unlikely(x) __builtin_expect((x), FALSE)
 
 #define arrlen(a) (sizeof(a) / sizeof(a[0]))
 

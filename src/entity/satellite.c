@@ -9,15 +9,12 @@
 #include <curl/curl.h>
 #include <gmodule.h>
 
-#include <string.h>
-
 #include "bo.h"
 #include "camera.h"
 #include "catalog.h"
 #include "download.h"
 #include "error.h"
 #include "gfx.h"
-#include "mem.h"
 #include "phys.h"
 #include "shader.h"
 #include "status.h"
@@ -59,7 +56,7 @@ static vec3 *vert_colors_sync = NULL;
 
 static struct Satellite *satellites = NULL;
 static size_t n_satellites = 0;
-static bool satellites_renderable = false;
+static gboolean satellites_renderable = FALSE;
 static vec3 *satellite_verts = NULL;
 
 static size_t n_satellite_orbits = 0;
@@ -70,13 +67,13 @@ static vec3 *satellite_orbits = NULL;
 static GArray *satellite_orbit_idxs = NULL;
 static vec3 *satellite_orbit_colors = NULL;
 
-static void satellite_toggle_orbit(uint32_t idx);
+static void satellite_toggle_orbit(guint32 idx);
 static void satellites_get(void);
-static uint64_t sc_hash(const void *item, uint64_t seed0, uint64_t seed1);
+static guint64 sc_hash(const void *item, guint64 seed0, guint64 seed1);
 static int sc_compare(const void *a, const void *b, void *udata);
 static void set_satellite_color(char code, vec3 color);
 static void save_satellite_cache(void);
-static void load_cache(struct DLHandle *handle, uint64_t size, FILE *cache);
+static void load_cache(struct DLHandle *handle, guint64 size, FILE *cache);
 
 void satellite_init(void)
 {
@@ -87,15 +84,15 @@ void satellite_init(void)
 
 	vao_init(&vao_satellites);
 	vao_bind(&vao_satellites);
-	bo_init(&vbo_verts, GL_ARRAY_BUFFER, true);
-	bo_init(&vbo_vert_colors, GL_ARRAY_BUFFER, true);
+	bo_init(&vbo_verts, GL_ARRAY_BUFFER, TRUE);
+	bo_init(&vbo_vert_colors, GL_ARRAY_BUFFER, TRUE);
 	vao_attr(&vao_satellites, &vbo_verts, LOCL_APOS, 3, GL_FLOAT, sizeof(vec3), 0);
 	vao_attr(&vao_satellites, &vbo_vert_colors, LOCL_COLOR, 3, GL_FLOAT, sizeof(vec3), 0);
 
 	vao_init(&vao_orbits);
 	vao_bind(&vao_orbits);
-	bo_init(&vbo_orbits, GL_ARRAY_BUFFER, true);
-	bo_init(&vbo_orbit_colors, GL_ARRAY_BUFFER, true);
+	bo_init(&vbo_orbits, GL_ARRAY_BUFFER, TRUE);
+	bo_init(&vbo_orbit_colors, GL_ARRAY_BUFFER, TRUE);
 	vao_attr(&vao_orbits, &vbo_orbits, LOCL_APOS, 3, GL_FLOAT, sizeof(vec3), 0);
 	vao_attr(&vao_orbits, &vbo_orbit_colors, LOCL_COLOR, 3, GL_FLOAT, sizeof(vec3), 0);
 
@@ -106,7 +103,7 @@ void satellite_init(void)
 
 	satellite_orbit_firsts = g_array_new(FALSE, FALSE, sizeof(GLint));
 	satellite_orbit_counts = g_array_new(FALSE, FALSE, sizeof(GLsizei));
-	satellite_orbit_idxs = g_array_new(FALSE, FALSE, sizeof(uint32_t));
+	satellite_orbit_idxs = g_array_new(FALSE, FALSE, sizeof(guint32));
 }
 
 void satellite_deinit(void)
@@ -123,10 +120,10 @@ void satellite_deinit(void)
 
 	shader_deinit(&shader);
 
-	free(satellites);
-	free(satellite_verts);
-	free(satellite_orbits);
-	free(satellite_orbit_colors);
+	g_free(satellites);
+	g_free(satellite_verts);
+	g_free(satellite_orbits);
+	g_free(satellite_orbit_colors);
 	g_array_unref(satellite_orbit_firsts);
 	g_array_unref(satellite_orbit_counts);
 	g_array_unref(satellite_orbit_idxs);
@@ -145,7 +142,7 @@ void *satellites_get_thrd(void *arguments)
 	return NULL;
 }
 
-static uint64_t sc_hash(const void *item, uint64_t seed0, uint64_t seed1)
+static guint64 sc_hash(const void *item, guint64 seed0, guint64 seed1)
 {
 	(void)seed0;
 	(void)seed1;
@@ -170,10 +167,10 @@ void save_satellite_cache(void)
 	fclose(cache);
 }
 
-void load_cache(struct DLHandle *handle, uint64_t size, FILE *cache)
+void load_cache(struct DLHandle *handle, guint64 size, FILE *cache)
 {
 	handle->size = size;
-	handle->memory = safe_malloc(size);
+	handle->memory = g_malloc(size);
 	fread(handle->memory, 1, size, cache);
 }
 
@@ -191,7 +188,7 @@ void satellites_get(void)
 			dl_multi_perform(&dl_multi);
 			save_satellite_cache();
 		} else {
-			uint64_t sizes[2];
+			guint64 sizes[2];
 			fread(sizes, 8, 2, cache);
 			load_cache(&dl_multi.handles[DL_SATCAT], sizes[0], cache);
 			load_cache(&dl_multi.handles[DL_TLE], sizes[1], cache);
@@ -214,14 +211,14 @@ void satellites_get(void)
 		c += 134;
 	}
 
-	free(dl_satcat->memory);
+	g_free(dl_satcat->memory);
 	dl_satcat->memory = NULL;
 
 	struct DLHandle *dl_tle = &dl_multi.handles[DL_TLE];
 	size_t ln_cnt = count((char *)dl_tle->memory, '\n', dl_tle->size);
 	size_t max_satellites = ln_cnt / 3;
 	n_satellites_sync = 0;
-	satellites_sync = safe_malloc(sizeof(struct Satellite) * max_satellites);
+	satellites_sync = g_malloc(sizeof(struct Satellite) * max_satellites);
 
 	c = (char *)dl_tle->memory;
 	for (i = 0; i < max_satellites; i++) {
@@ -239,13 +236,13 @@ void satellites_get(void)
 	}
 
 	if (n_satellites_sync != max_satellites)
-		satellites_sync = safe_realloc(satellites_sync, sizeof(struct Satellite) * n_satellites_sync);
+		satellites_sync = g_realloc(satellites_sync, sizeof(struct Satellite) * n_satellites_sync);
 
 	hashmap_free(map);
-	free(dl_tle->memory);
+	g_free(dl_tle->memory);
 	dl_tle->memory = NULL;
 
-	vert_colors_sync = safe_malloc(sizeof(vec3) * n_satellites_sync);
+	vert_colors_sync = g_malloc(sizeof(vec3) * n_satellites_sync);
 	for (i = 0; i < n_satellites_sync; i++)
 		set_satellite_color(satellites_sync[i].satcat.opstat, vert_colors_sync[i]);
 }
@@ -272,14 +269,14 @@ static void set_satellite_color(char code, vec3 color)
 
 void satellites_get_sync(void)
 {
-	free(satellites);
+	g_free(satellites);
 	satellites = satellites_sync;
 	n_satellites = n_satellites_sync;
-	free(satellite_verts);
-	satellite_verts = safe_malloc(sizeof(vec3) * n_satellites);
+	g_free(satellite_verts);
+	satellite_verts = g_malloc(sizeof(vec3) * n_satellites);
 	bo_buffer(&vbo_vert_colors, vert_colors_sync, sizeof(vec3) * n_satellites);
-	free(vert_colors_sync);
-	satellites_renderable = false;
+	g_free(vert_colors_sync);
+	satellites_renderable = FALSE;
 	status_pop(STAT_FETCHING_SAT);
 	catalog_satellites_fill(satellites, n_satellites);
 }
@@ -290,7 +287,7 @@ void satellites_phys_sync(void)
 		return;
 
 	bo_buffer(&vbo_verts, satellite_verts, sizeof(vec3) * n_satellites);
-	satellites_renderable = true;
+	satellites_renderable = TRUE;
 }
 
 void satellites_phys(void)
@@ -331,7 +328,7 @@ void satellites_render(void)
 	}
 }
 
-static void satellite_toggle_orbit(uint32_t idx)
+static void satellite_toggle_orbit(guint32 idx)
 {
 	if (satellites[idx].orbit_idx == UINT32_MAX) { /* Enable orbit */
 		/* For similar-length line segments, apply Kepler's Third Law (T^2 prop. r^3) */
@@ -345,8 +342,8 @@ static void satellite_toggle_orbit(uint32_t idx)
 		g_array_append_val(satellite_orbit_firsts, first);
 
 		satellite_orbits_size += count * sizeof(vec3);
-		satellite_orbits = safe_realloc(satellite_orbits, satellite_orbits_size);
-		satellite_orbit_colors = safe_realloc(satellite_orbit_colors, satellite_orbits_size);
+		satellite_orbits = g_realloc(satellite_orbits, satellite_orbits_size);
+		satellite_orbit_colors = g_realloc(satellite_orbit_colors, satellite_orbits_size);
 
 		long period = MS_IN_DAY / (float)satellites[idx].tle.n;
 		int i;
@@ -363,23 +360,23 @@ static void satellite_toggle_orbit(uint32_t idx)
 
 		n_satellite_orbits++;
 	} else { /* Disable orbit */
-		uint32_t orbit_idx = satellites[idx].orbit_idx;
+		guint32 orbit_idx = satellites[idx].orbit_idx;
 		satellites[idx].orbit_idx = UINT32_MAX;
 
 		size_t count = g_array_index(satellite_orbit_counts, GLsizei, orbit_idx);
 
 		size_t count_move = 0;
-		uint32_t i;
+		guint32 i;
 		for (i = orbit_idx + 1; i < n_satellite_orbits; i++) {
 			g_array_index(satellite_orbit_firsts, GLsizei, i) -= count;
-			satellites[g_array_index(satellite_orbit_idxs, uint32_t, i)].orbit_idx--;
+			satellites[g_array_index(satellite_orbit_idxs, guint32, i)].orbit_idx--;
 			count_move += g_array_index(satellite_orbit_counts, GLsizei, i);
 		}
 
 		size_t size_move = count_move * sizeof(vec3);
 		size_t size_remove = g_array_index(satellite_orbit_counts, GLsizei, orbit_idx) * sizeof(vec3);
-		memmove(((uint8_t *)satellite_orbits) + (satellite_orbits_size - size_move - size_remove), ((uint8_t *)satellite_orbits) + (satellite_orbits_size - size_move), size_move);
-		memmove(((uint8_t *)satellite_orbit_colors) + (satellite_orbits_size - size_move - size_remove), ((uint8_t *)satellite_orbit_colors) + (satellite_orbits_size - size_move), size_move);
+		memmove(((guint8 *)satellite_orbits) + (satellite_orbits_size - size_move - size_remove), ((guint8 *)satellite_orbits) + (satellite_orbits_size - size_move), size_move);
+		memmove(((guint8 *)satellite_orbit_colors) + (satellite_orbits_size - size_move - size_remove), ((guint8 *)satellite_orbit_colors) + (satellite_orbits_size - size_move), size_move);
 		satellite_orbits_size -= size_remove;
 		bo_buffer(&vbo_orbits, satellite_orbits, satellite_orbits_size);
 		bo_buffer(&vbo_orbit_colors, satellite_orbit_colors, satellite_orbits_size);
@@ -403,7 +400,7 @@ void satellite_select(double xpos, double ypos)
 	float dir_inv_len2 = 1.f / glm_vec3_norm2(dir);
 
 	float min_dist2 = FLT_MAX;
-	uint32_t idx;
+	guint32 idx;
 
 	size_t i;
 	for (i = 0; i < n_satellites; i++) {

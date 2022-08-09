@@ -1,9 +1,6 @@
 #include "catalog.h"
 
 #include "satcat_code.h"
-#include "mem.h"
-
-#include <ctype.h>
 
 enum Column {
 	COL_SELECT = 0u,
@@ -102,7 +99,7 @@ void on_catalog_search_search_changed(GtkSearchEntry *entry, gpointer user_data)
 	const gchar *text = gtk_entry_get_text(GTK_ENTRY(entry));
 	unsigned i;
 	for (i = 0; i < 63 && text[i]; i++)
-		search_text[i] = toupper(text[i]);
+		search_text[i] = g_ascii_toupper(text[i]);
 	search_text[i] = '\0';
 	gtk_tree_model_filter_refilter(filter);
 }
@@ -280,8 +277,8 @@ void catalog_satellites_fill(struct Satellite *satellites, size_t n_satellites)
 {
 	catalog_deconstruct_views();
 	gtk_list_store_clear(satellite_store);
-	free(str_satellite_store);
-	str_satellite_store = safe_malloc(31 * n_satellites);
+	g_free(str_satellite_store);
+	str_satellite_store = g_malloc(31 * n_satellites);
 	char *str = str_satellite_store;
 	unsigned i;
 	for (i = 0; i < n_satellites; i++) {
@@ -339,5 +336,5 @@ void catalog_init(GtkBuilder *builder)
 
 void catalog_deinit(void)
 {
-	free(str_satellite_store);
+	g_free(str_satellite_store);
 }

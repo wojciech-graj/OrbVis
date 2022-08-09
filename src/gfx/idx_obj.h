@@ -14,7 +14,7 @@ struct IdxObj {
 
 	vec3 *verts;
 	vec2 *uv;
-	uint32_t *faces;
+	guint32 *faces;
 
 	struct BO vbo_verts;
 	struct BO vbo_faces;

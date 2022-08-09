@@ -1,7 +1,6 @@
 #include "download.h"
 
 #include "error.h"
-#include "mem.h"
 
 static size_t write_memory_callback(void *contents, size_t size, size_t nmemb, void *userp);
 
@@ -10,7 +9,7 @@ static size_t write_memory_callback(void *contents, size_t size, size_t nmemb, v
 	size_t realsize = size * nmemb;
 	struct DLHandle *mem = (struct DLHandle *)userp;
 
-	uint8_t *ptr = safe_realloc(mem->memory, mem->size + realsize + 1);
+	guint8 *ptr = g_realloc(mem->memory, mem->size + realsize + 1);
 
 	mem->memory = ptr;
 	memcpy(&(mem->memory[mem->size]), contents, realsize);
@@ -31,7 +30,7 @@ void dl_multi_init(struct DLMulti *dl_multi, unsigned n_ops, const char **urls)
 	dl_multi->n_ops = n_ops;
 	dl_multi->multi_handle = curl_multi_init();
 	error_check(dl_multi->multi_handle, "Failed to initialize curl multi handle.");
-	dl_multi->handles = safe_malloc(sizeof(struct DLHandle) * n_ops);
+	dl_multi->handles = g_malloc(sizeof(struct DLHandle) * n_ops);
 	unsigned i;
 	for (i = 0; i < n_ops; i++) {
 		struct DLHandle *handle = &dl_multi->handles[i];
@@ -52,7 +51,7 @@ void dl_multi_perform(struct DLMulti *dl_multi)
 	unsigned i;
 	for (i = 0; i < dl_multi->n_ops; i++) {
 		struct DLHandle *handle = &dl_multi->handles[i];
-		handle->memory = safe_malloc(1);
+		handle->memory = g_malloc(1);
 		handle->size = 0;
 	}
 
@@ -74,7 +73,7 @@ void dl_multi_deinit(struct DLMulti *dl_multi)
 		struct DLHandle *handle = &dl_multi->handles[i];
 		curl_multi_remove_handle(dl_multi->multi_handle, handle->curl);
 		curl_easy_cleanup(handle->curl);
-		free(handle->memory);
+		g_free(handle->memory);
 	}
 	curl_multi_cleanup(dl_multi->multi_handle);
 }

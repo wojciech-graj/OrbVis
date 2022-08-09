@@ -2,25 +2,22 @@
 
 #include "hashmap.h"
 
-#include "mem.h"
 #include "system.h"
-
-#include <string.h>
 
 struct Edge {
 	union {
 		struct {
-			uint32_t a : 32;
-			uint32_t b : 32;
+			guint32 a : 32;
+			guint32 b : 32;
 		} v;
 		int64_t hash;
 	} edge;
-	uint32_t mid;
+	guint32 mid;
 };
 
 struct Vertex {
-	uint32_t orig;
-	uint32_t new;
+	guint32 orig;
+	guint32 new;
 };
 
 #define N 0.f
@@ -42,7 +39,7 @@ static vec3 icosphere_verts[12] = {
 	{ -Z, -X, N },
 };
 
-static const uint32_t icosphere_faces[20][3] = {
+static const guint32 icosphere_faces[20][3] = {
 	{ 0, 4, 1 },
 	{ 0, 9, 4 },
 	{ 9, 5, 4 },
@@ -65,16 +62,16 @@ static const uint32_t icosphere_faces[20][3] = {
 	{ 7, 2, 11 },
 };
 
-static uint64_t edge_hash(const void *item, uint64_t seed0, uint64_t seed1);
+static guint64 edge_hash(const void *item, guint64 seed0, guint64 seed1);
 static int edge_compare(const void *a, const void *b, void *udata);
-static uint64_t vertex_hash(const void *item, uint64_t seed0, uint64_t seed1);
+static guint64 vertex_hash(const void *item, guint64 seed0, guint64 seed1);
 static int vertex_compare(const void *a, const void *b, void *udata);
-static void subdivide(uint32_t *face, uint32_t *next_faces, vec3 *verts, size_t *vert_cnt, struct hashmap *map);
-static void fix_uv_wrapping(vec3 *verts, uint32_t *faces, vec2 *uv, size_t *vert_cnt, size_t n_faces);
-static void separate_pole_vertex(unsigned idx, uint32_t *trig, bool *fnd, vec3 *verts, vec2 *uv, size_t *vert_cnt);
-static void separate_pole_vertices(vec3 *verts, uint32_t *faces, vec2 *uv, size_t *vert_cnt, size_t n_faces);
+static void subdivide(guint32 *face, guint32 *next_faces, vec3 *verts, size_t *vert_cnt, struct hashmap *map);
+static void fix_uv_wrapping(vec3 *verts, guint32 *faces, vec2 *uv, size_t *vert_cnt, size_t n_faces);
+static void separate_pole_vertex(unsigned idx, guint32 *trig, gboolean *fnd, vec3 *verts, vec2 *uv, size_t *vert_cnt);
+static void separate_pole_vertices(vec3 *verts, guint32 *faces, vec2 *uv, size_t *vert_cnt, size_t n_faces);
 
-static uint64_t edge_hash(const void *item, uint64_t seed0, uint64_t seed1)
+static guint64 edge_hash(const void *item, guint64 seed0, guint64 seed1)
 {
 	(void)seed0;
 	(void)seed1;
@@ -87,7 +84,7 @@ static int edge_compare(const void *a, const void *b, void *udata)
 	return ((struct Edge *)a)->edge.hash - ((struct Edge *)b)->edge.hash;
 }
 
-static uint64_t vertex_hash(const void *item, uint64_t seed0, uint64_t seed1)
+static guint64 vertex_hash(const void *item, guint64 seed0, guint64 seed1)
 {
 	(void)seed0;
 	(void)seed1;
@@ -100,7 +97,7 @@ static int vertex_compare(const void *a, const void *b, void *udata)
 	return (((struct Vertex *)a)->orig) - (((struct Vertex *)b)->orig);
 }
 
-static void subdivide(uint32_t *face, uint32_t *next_faces, vec3 *verts, size_t *vert_cnt, struct hashmap *map)
+static void subdivide(guint32 *face, guint32 *next_faces, vec3 *verts, size_t *vert_cnt, struct hashmap *map)
 {
 	/* Generate vertices */
 	static const unsigned face_idxs[3][2] = {
@@ -109,12 +106,12 @@ static void subdivide(uint32_t *face, uint32_t *next_faces, vec3 *verts, size_t 
 		{ 1, 2 },
 	};
 
-	uint32_t mid_verts[3];
+	guint32 mid_verts[3];
 	unsigned i;
 #pragma GCC unroll 3
 	for (i = 0; i < 3; i++) {
-		uint32_t f0 = face[face_idxs[i][0]];
-		uint32_t f1 = face[face_idxs[i][1]];
+		guint32 f0 = face[face_idxs[i][0]];
+		guint32 f1 = face[face_idxs[i][1]];
 		struct Edge *em;
 		if (f0 > f1)
 			SWAP(f0, f1);
@@ -153,16 +150,16 @@ static void subdivide(uint32_t *face, uint32_t *next_faces, vec3 *verts, size_t 
 }
 
 /* Algorithm based on https://schneide.blog/2016/07/15/generating-an-icosphere-in-c/ */
-void icosphere_generate(const unsigned n_sub, vec3 **verts, uint32_t **faces, vec2 **uv, size_t *n_verts, size_t *n_faces)
+void icosphere_generate(const unsigned n_sub, vec3 **verts, guint32 **faces, vec2 **uv, size_t *n_verts, size_t *n_faces)
 {
 	size_t pow_4_n_sub = 1u << (2 * n_sub); /*4^n_sub*/
 	*n_faces = 20 * pow_4_n_sub;
 	*n_verts = (10 * pow_4_n_sub + 2)
 		+ (n_sub ? (3 * (1u << n_sub) + 9) : 1); /* duplicated verts for UV wrapping + separate pole vertices */
 
-	*verts = safe_malloc(sizeof(vec3) * *n_verts);
-	*faces = safe_malloc(sizeof(uint32_t[3]) * *n_faces);
-	*uv = safe_malloc(sizeof(vec2) * *n_faces);
+	*verts = g_malloc(sizeof(vec3) * *n_verts);
+	*faces = g_malloc(sizeof(guint32[3]) * *n_faces);
+	*uv = g_malloc(sizeof(vec2) * *n_faces);
 
 	memcpy(*faces, icosphere_faces, sizeof(icosphere_faces));
 	memcpy(*verts, icosphere_verts, sizeof(icosphere_verts));
@@ -198,13 +195,13 @@ void icosphere_generate(const unsigned n_sub, vec3 **verts, uint32_t **faces, ve
 		separate_pole_vertices(*verts, *faces, *uv, &vert_cnt, *n_faces);
 }
 
-static void fix_uv_wrapping(vec3 *verts, uint32_t *faces, vec2 *uv, size_t *vert_cnt, size_t n_faces)
+static void fix_uv_wrapping(vec3 *verts, guint32 *faces, vec2 *uv, size_t *vert_cnt, size_t n_faces)
 {
 	struct hashmap *map = hashmap_new(sizeof(struct Vertex), 10, 0, 0, vertex_hash, vertex_compare, NULL, NULL);
 
 	size_t i;
 	for (i = 0; i < n_faces; i++) {
-		uint32_t *trig = faces + i * 3;
+		guint32 *trig = faces + i * 3;
 		float norm = ((uv[trig[1]][0] - uv[trig[0]][0]) * (uv[trig[2]][1] - uv[trig[0]][1]))
 			- ((uv[trig[1]][1] - uv[trig[0]][1]) * (uv[trig[2]][0] - uv[trig[0]][0]));
 		if (norm > 0) {
@@ -234,7 +231,7 @@ static void fix_uv_wrapping(vec3 *verts, uint32_t *faces, vec2 *uv, size_t *vert
 	hashmap_free(map);
 }
 
-static void separate_pole_vertex(unsigned idx, uint32_t *trig, bool *fnd, vec3 *verts, vec2 *uv, size_t *vert_cnt)
+static void separate_pole_vertex(unsigned idx, guint32 *trig, gboolean *fnd, vec3 *verts, vec2 *uv, size_t *vert_cnt)
 {
 	float u_avg;
 	switch (idx) {
@@ -259,15 +256,15 @@ static void separate_pole_vertex(unsigned idx, uint32_t *trig, bool *fnd, vec3 *
 		trig[idx] = *vert_cnt;
 		(*vert_cnt)++;
 	} else {
-		*fnd = true;
+		*fnd = TRUE;
 		uv[trig[idx]][0] = u_avg;
 	}
 }
 
-static void separate_pole_vertices(vec3 *verts, uint32_t *faces, vec2 *uv, size_t *vert_cnt, size_t n_faces)
+static void separate_pole_vertices(vec3 *verts, guint32 *faces, vec2 *uv, size_t *vert_cnt, size_t n_faces)
 {
 	size_t i;
-	uint32_t north, south;
+	guint32 north, south;
 	for (i = 0; i < *vert_cnt; i++)
 		if (verts[i][2] > 1.f - 1e-6f) {
 			north = i;
@@ -279,9 +276,9 @@ static void separate_pole_vertices(vec3 *verts, uint32_t *faces, vec2 *uv, size_
 			break;
 		}
 
-	bool fnd_north = false, fnd_south = false;
+	gboolean fnd_north = FALSE, fnd_south = FALSE;
 	for (i = 0; i < n_faces; i++) {
-		uint32_t *trig = faces + i * 3;
+		guint32 *trig = faces + i * 3;
 		unsigned j;
 #pragma GCC unroll 3
 		for (j = 0; j < 3; j++) {

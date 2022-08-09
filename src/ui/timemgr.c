@@ -114,7 +114,7 @@ void timemgr_init(GtkBuilder *builder)
 void timemgr_tic(void)
 {
 	if (!gtk_widget_has_focus(GTK_WIDGET(time_entry)))
-		gtk_entry_set_text(time_entry, epoch_to_iso8601(g_phys.epoch_ms, gs_gmt, true));
+		gtk_entry_set_text(time_entry, epoch_to_iso8601(g_phys.epoch_ms, gs_gmt, TRUE));
 	if (!gtk_widget_has_focus(GTK_WIDGET(speed_entry))) {
 		char buf[16];
 		snprintf(buf, 16, "%.3fx", (double)g_timescale);

@@ -11,16 +11,13 @@
 #include <cglm/mat4.h>
 #include <cglm/vec3.h>
 
-#include <math.h>
-#include <stdbool.h>
-
 static double cursor_press_xpos;
 static double cursor_press_ypos;
 
 static double cursor_xpos;
 static double cursor_ypos;
 
-static bool cursor_pressed = false;
+static gboolean cursor_pressed = FALSE;
 
 static gboolean on_glarea_scroll_event(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 static gboolean on_glarea_motion_notify_event(GtkWidget *widget, GdkEvent *event, gpointer user_data);
@@ -64,7 +61,7 @@ gboolean on_glarea_button_press_event(GtkWidget *widget, GdkEvent *event, gpoint
 	(void)user_data;
 	GdkEventButton *button = &event->button;
 	if (button->button == 1) {
-		cursor_pressed = true;
+		cursor_pressed = TRUE;
 		cursor_press_xpos = button->x;
 		cursor_press_ypos = button->y;
 	}
@@ -77,7 +74,7 @@ gboolean on_glarea_button_release_event(GtkWidget *widget, GdkEvent *event, gpoi
 	(void)user_data;
 	GdkEventButton *button = &event->button;
 	if (button->button == 1) {
-		cursor_pressed = false;
+		cursor_pressed = FALSE;
 		if (fabs(button->x - cursor_press_xpos) < 3 && fabs(button->y - cursor_press_ypos) < 3)
 			satellite_select(button->x, button->y);
 	}

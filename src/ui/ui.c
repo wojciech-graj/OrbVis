@@ -12,8 +12,6 @@
 #include "thread.h"
 #include "timemgr.h"
 
-#include <stdlib.h>
-
 const gchar *FILENAME_GUI = "res/ui/ui.glade";
 
 GtkWindow *g_window_main;

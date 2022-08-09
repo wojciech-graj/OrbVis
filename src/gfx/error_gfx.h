@@ -4,7 +4,6 @@
 #include "system.h"
 #include "type.h"
 #include <stdio.h>
-#include <stdlib.h>
 
 extern char gfx_info_log[512];
 

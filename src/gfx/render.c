@@ -14,8 +14,6 @@
 #include "ui.h"
 #include "vao.h"
 
-#include <stdlib.h>
-
 #include <cglm/cglm.h>
 
 void render_init(void)

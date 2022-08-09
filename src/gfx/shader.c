@@ -4,7 +4,6 @@
 
 #include "error.h"
 #include "error_gfx.h"
-#include "mem.h"
 #include "system.h"
 
 static GLint shader_compile(char *path, GLenum type);
@@ -22,7 +21,7 @@ static GLint shader_compile(char *path, GLenum type)
 	len = fsize(f);
 	error_check(len > 0, "Failed to get size of shader at [%s].", path);
 
-	buf = safe_malloc((size_t)len);
+	buf = g_malloc((size_t)len);
 	nmemb_read = fread(buf, sizeof(char), len, f);
 	error_check(nmemb_read, "Failed to read shader at [%s].", path);
 	fclose(f);
@@ -35,7 +34,7 @@ static GLint shader_compile(char *path, GLenum type)
 	glGetShaderiv(handle, GL_COMPILE_STATUS, &compiled);
 	gfx_error_check(compiled, glGetShaderInfoLog, handle, "Failed to compile shader at [%s].", path);
 
-	free(buf);
+	g_free(buf);
 	return handle;
 }
 

@@ -4,8 +4,6 @@
 
 #include <glib.h>
 
-#include <stdlib.h>
-
 static GDateTime *t_start;
 static char iso8601_str[29];
 
@@ -35,7 +33,7 @@ long system_epoch_ms(void)
 	return epoch_ms;
 }
 
-char *epoch_to_iso8601(long epoch_ms, bool gmt, bool ms)
+char *epoch_to_iso8601(long epoch_ms, gboolean gmt, gboolean ms)
 {
 	long epoch_s = epoch_ms / 1000L;
 	GDateTime *t_now = (gmt) ? g_date_time_new_from_unix_utc(epoch_s) : g_date_time_new_from_unix_local(epoch_s);

@@ -7,7 +7,7 @@
 
 struct DLHandle {
 	CURL *curl;
-	uint8_t *memory;
+	guint8 *memory;
 	size_t size;
 };
 

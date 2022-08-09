@@ -4,7 +4,6 @@
 #include "type.h"
 
 #include <stdio.h>
-#include <string.h>
 
 #define __FILENAME__ (strrchr(__FILE__, '/') ? strrchr(__FILE__, '/') + 1 : __FILE__)
 
@@ -13,7 +12,7 @@ void system_deinit(void);
 
 double system_time(void);
 long system_epoch_ms(void);
-char *epoch_to_iso8601(long epoch_ms, bool gmt, bool ms);
+char *epoch_to_iso8601(long epoch_ms, gboolean gmt, gboolean ms);
 long fsize(FILE *file);
 size_t count(char *str, char c, size_t size);
 
