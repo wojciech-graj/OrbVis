@@ -44,11 +44,11 @@ gboolean on_glarea_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer 
 	if (key->state == GDK_CONTROL_MASK) {
 		switch (key->keyval) {
 		case GDK_KEY_minus:
-			camera_zoom(&g_camera, -0.2f);
+			camera_zoom(&e_camera, -0.2f);
 			break;
 		case GDK_KEY_plus:
 		case GDK_KEY_equal:
-			camera_zoom(&g_camera, 0.2f);
+			camera_zoom(&e_camera, 0.2f);
 			break;
 		}
 	}
@@ -87,29 +87,27 @@ gboolean on_glarea_motion_notify_event(GtkWidget *widget, GdkEvent *event, gpoin
 	(void)user_data;
 	GdkEventMotion *motion = &event->motion;
 	if (cursor_pressed) {
-		float d_ang_x = (2.f * PI / g_gl_ctx.res_x);
-		float d_ang_y = (PI / g_gl_ctx.res_y);
+		float d_ang_x = (2.f * PI / e_gl_ctx.res_x);
+		float d_ang_y = (PI / e_gl_ctx.res_y);
 		float ang_x = (float)(cursor_xpos - motion->x) * d_ang_x;
 		float ang_y = (float)(cursor_ypos - motion->y) * d_ang_y;
 
 		vec3 view_dir;
-		glm_vec3_sub(g_camera.target, g_camera.pos, view_dir);
-		glm_vec3_norm(view_dir);
-		float cos_ang = glm_vec3_dot(view_dir, g_camera.up);
-		if (cos_ang * sgn(ang_y) < -0.9999f * g_camera.rad) {
-			ang_y = 0;
-		}
+		glm_vec3_sub(e_camera.target, e_camera.pos, view_dir);
+		glm_vec3_normalize(view_dir);
+		float cam_ang = acosf(glm_vec3_dot(view_dir, e_camera.up));
+		ang_y = glm_clamp(1e-2f, cam_ang + ang_y, PI - 1e-2f) - cam_ang;
 
 		vec3 right;
-		glm_vec3_cross(g_camera.up, view_dir, right);
+		glm_vec3_cross(e_camera.up, view_dir, right);
 
 		mat4 rot_mat;
 		glm_mat4_identity(rot_mat);
-		glm_rotate_at(rot_mat, g_camera.target, ang_x, g_camera.up);
-		glm_rotate_at(rot_mat, g_camera.target, ang_y, right);
-		glm_mat4_mulv3(rot_mat, g_camera.pos, 1.f, g_camera.pos);
+		glm_rotate_at(rot_mat, e_camera.target, ang_x, e_camera.up);
+		glm_rotate_at(rot_mat, e_camera.target, ang_y, right);
+		glm_mat4_mulv3(rot_mat, e_camera.pos, 1.f, e_camera.pos);
 
-		camera_view_update(&g_camera);
+		camera_view_update(&e_camera);
 	}
 	cursor_xpos = motion->x;
 	cursor_ypos = motion->y;
@@ -122,7 +120,7 @@ gboolean on_glarea_scroll_event(GtkWidget *widget, GdkEvent *event, gpointer use
 	(void)user_data;
 	GdkEventScroll *scroll = &event->scroll;
 
-	camera_zoom(&g_camera, scroll->delta_y * 0.2);
+	camera_zoom(&e_camera, scroll->delta_y * 0.2);
 
 	return TRUE;
 }

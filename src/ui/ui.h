@@ -6,6 +6,6 @@
 void ui_init(int argc, char ***argv);
 void ui_deinit(void);
 
-extern GtkWindow *g_window_main;
+extern GtkWindow *e_window_main;
 
 #endif /* __UI_H__ */

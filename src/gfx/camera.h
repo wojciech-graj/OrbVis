@@ -28,6 +28,6 @@ void camera_mvp_generate(struct Camera *camera, mat4 *model, mat4 mvp);
 
 void camera_zoom(struct Camera *camera, float offset);
 
-extern struct Camera g_camera;
+extern struct Camera e_camera;
 
 #endif /* __CAMERA_H__ */

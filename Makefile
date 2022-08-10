@@ -1,15 +1,19 @@
 TARGET := orbvis
 
+HAS_PACKAGES := $(shell pkg-config --exists gtk+-3.0 cglm libcurl epoxy ; echo $$?)
+ifneq ($(HAS_PACKAGES), 0)
+  $(error Missing packages)
+endif
+
 CC := gcc
 WARNINGS := -Wall -Wextra -Wpedantic -Wdouble-promotion -Wstrict-prototypes -Wshadow -Wduplicated-cond -Wduplicated-branches -Wjump-misses-init -Wnull-dereference -Wrestrict -Wlogical-op -Walloc-zero -Wformat-security -Wformat-signedness -Winit-self -Wlogical-op -Wmissing-declarations -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wswitch-enum -Wundef -Wwrite-strings -Wno-discarded-qualifiers
-CFLAGS := -march=native -O3
+CFLAGS := -march=native -O3 `pkg-config --cflags gtk+-3.0 cglm libcurl epoxy`
 LDFLAGS := -lm
 
 ifeq ($(MAKECMDGOALS),windows)
-  CFLAGS += `pkg-config --cflags gtk+-3.0 cglm libcurl epoxy` -flto
+  CFLAGS += -flto
   LDFLAGS += -lopengl32 `pkg-config --libs gtk+-3.0 cglm libcurl epoxy` -mwindows -flto
 else
-  CFLAGS += `pkg-config --cflags gl gtk+-3.0 cglm libcurl epoxy`
   LDFLAGS += -ldl `pkg-config --libs gl gtk+-3.0 cglm libcurl epoxy`
   ifeq ($(MAKECMDGOALS),debug)
     CFLAGS += -fsanitize=address -fsanitize=undefined -g -ftrapv -fno-omit-frame-pointer -lrt

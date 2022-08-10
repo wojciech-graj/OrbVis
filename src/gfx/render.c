@@ -18,17 +18,17 @@
 
 void render_init(void)
 {
-	glm_vec3_copy((vec3){ 0, 5.0, 0 }, g_camera.pos);
-	glm_vec3_copy((vec3){ 0, 0, 0 }, g_camera.target);
-	glm_vec3_copy((vec3){ 0, 0, 1 }, g_camera.up);
+	glm_vec3_copy((vec3){ 0, 5.0, 0 }, e_camera.pos);
+	glm_vec3_copy((vec3){ 0, 0, 0 }, e_camera.target);
+	glm_vec3_copy((vec3){ 0, 0, 1 }, e_camera.up);
 
-	g_camera.rad = 5.f;
-	g_camera.fov = PI / 2.f;
-	g_camera.near = 0.05f;
-	g_camera.far = 100.f;
+	e_camera.rad = 5.f;
+	e_camera.fov = PI / 2.f;
+	e_camera.near = 0.05f;
+	e_camera.far = 100.f;
 
-	camera_view_update(&g_camera);
-	camera_proj_update(&g_camera);
+	camera_view_update(&e_camera);
+	camera_proj_update(&e_camera);
 
 	glDepthFunc(GL_LESS);
 

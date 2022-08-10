@@ -9,8 +9,8 @@ enum Timeflow {
 	TIME_ARBITRARY,
 };
 
-extern enum Timeflow g_timeflow;
-extern float g_timescale;
+extern enum Timeflow e_timeflow;
+extern float e_timescale;
 
 void timemgr_init(GtkBuilder *builder);
 void timemgr_tic(void);

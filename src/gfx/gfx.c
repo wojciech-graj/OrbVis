@@ -6,7 +6,7 @@
 #include "thread.h"
 #include "timemgr.h"
 
-struct GLCtx g_gl_ctx;
+struct GLCtx e_gl_ctx;
 static GtkGLArea *glarea;
 
 static void on_glarea_realize(GtkWidget *widget, gpointer user_data);
@@ -35,10 +35,10 @@ void on_glarea_resize(GtkGLArea *area, int width, int height, gpointer user_data
 {
 	(void)area;
 	(void)user_data;
-	g_gl_ctx.res_x = width;
-	g_gl_ctx.res_y = height;
+	e_gl_ctx.res_x = width;
+	e_gl_ctx.res_y = height;
 	glViewport(0, 0, width, height);
-	camera_proj_update(&g_camera);
+	camera_proj_update(&e_camera);
 }
 
 /* Main Loop */

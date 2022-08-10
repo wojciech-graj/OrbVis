@@ -15,7 +15,7 @@ struct PhysCtx {
 	vec3 sun_dir;
 };
 
-extern struct PhysCtx g_phys;
+extern struct PhysCtx e_phys;
 
 void phys_init(void);
 void *phys_thrd(void *arguments);

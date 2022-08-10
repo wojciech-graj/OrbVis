@@ -65,7 +65,7 @@ void sky_render(void)
 	texture_bind(&texture);
 
 	mat4 transform;
-	camera_mvp_generate(&g_camera, &model.model_mat, transform);
+	camera_mvp_generate(&e_camera, &model.model_mat, transform);
 
 	shader_bind(&shader);
 	glUniform1i(LOCU_TEXTURE, 0);

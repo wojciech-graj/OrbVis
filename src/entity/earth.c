@@ -90,16 +90,16 @@ void earth_render(void)
 	texture_bind(&texture_gradient);
 
 	mat4 transform;
-	camera_mvp_generate(&g_camera, &model.model_mat, transform);
+	camera_mvp_generate(&e_camera, &model.model_mat, transform);
 
 	shader_bind(&shader);
-	glUniform3fv(LOCU_SUN_DIR, 1, g_phys.sun_dir);
+	glUniform3fv(LOCU_SUN_DIR, 1, e_phys.sun_dir);
 	glUniform1i(LOCU_TEXTURE_DAY, 0);
 	glUniform1i(LOCU_TEXTURE_NIGHT, 1);
 	glUniform1i(LOCU_TEXTURE_SPECULAR, 2);
 	glUniform1i(LOCU_TEXTURE_CLOUDS, 3);
 	glUniform1i(LOCU_TEXTURE_GRADIENT, 4);
-	glUniform3fv(LOCU_LOOK_POS, 1, g_camera.pos);
+	glUniform3fv(LOCU_LOOK_POS, 1, e_camera.pos);
 	glUniformMatrix4fv(LOCU_TRANSFORM, 1, GL_FALSE, (const GLfloat *)&transform);
 	glUniform1i(LOCU_CLOUDS, gs_clouds);
 	glUniform1i(LOCU_LIGHTING, gs_lighting);

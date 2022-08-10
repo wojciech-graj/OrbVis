@@ -20,7 +20,7 @@ cd share
 mkdir -p glib-2.0/schemas
 cp $MINGW_PATH/share/glib-2.0/schemas/gschemas.compiled glib-2.0/schemas/gschemas.compiled
 mkdir -p icons
-cp -r $MINGW_PATH/share/icons/Adwaita icons/Adwaita
+cp -r $MINGW_PATH/share/icons icons
 cd ..
 cp -r $MINGW_PATH/ssl ssl
 cp ../util/README_WIN.txt README.txt

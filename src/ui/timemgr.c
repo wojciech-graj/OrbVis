@@ -6,8 +6,8 @@
 
 #include <stdio.h>
 
-enum Timeflow g_timeflow = TIME_REALTIME;
-float g_timescale = 1.f;
+enum Timeflow e_timeflow = TIME_REALTIME;
+float e_timescale = 1.f;
 
 static GtkToggleToolButton *play_button;
 static GtkEntry *time_entry;
@@ -25,9 +25,9 @@ void on_play_toggled(GtkToggleToolButton *toggle_tool_button, gpointer user_data
 {
 	(void)user_data;
 	if (!gtk_toggle_tool_button_get_active(toggle_tool_button))
-		g_timeflow = TIME_PAUSE;
-	else if (g_timeflow == TIME_PAUSE)
-		g_timeflow = TIME_ARBITRARY;
+		e_timeflow = TIME_PAUSE;
+	else if (e_timeflow == TIME_PAUSE)
+		e_timeflow = TIME_ARBITRARY;
 }
 
 void on_realtime_clicked(GtkToolButton *toolbutton, gpointer user_data)
@@ -35,25 +35,25 @@ void on_realtime_clicked(GtkToolButton *toolbutton, gpointer user_data)
 	(void)toolbutton;
 	(void)user_data;
 	timeflow_set(TIME_REALTIME);
-	g_timescale = 1.f;
+	e_timescale = 1.f;
 }
 
 void on_decelerate_clicked(GtkToolButton *toolbutton, gpointer user_data)
 {
 	(void)toolbutton;
 	(void)user_data;
-	if (g_timeflow == TIME_REALTIME)
+	if (e_timeflow == TIME_REALTIME)
 		timeflow_set(TIME_ARBITRARY);
-	g_timescale *= 0.95f;
+	e_timescale *= 0.95f;
 }
 
 void on_accelerate_clicked(GtkToolButton *toolbutton, gpointer user_data)
 {
 	(void)toolbutton;
 	(void)user_data;
-	if (g_timeflow == TIME_REALTIME)
+	if (e_timeflow == TIME_REALTIME)
 		timeflow_set(TIME_ARBITRARY);
-	g_timescale *= 1.05f;
+	e_timescale *= 1.05f;
 }
 
 void on_time_activate(GtkEntry *entry, gpointer user_data)
@@ -61,13 +61,13 @@ void on_time_activate(GtkEntry *entry, gpointer user_data)
 	(void)entry;
 	(void)user_data;
 
-	gtk_window_set_focus(g_window_main, NULL);
+	gtk_window_set_focus(e_window_main, NULL);
 
 	GDateTime *dt = g_date_time_new_from_iso8601(gtk_entry_get_text(time_entry), NULL);
 	if (!dt)
 		return;
 
-	g_phys.epoch_ms = 1000LL * g_date_time_to_unix(dt) + g_date_time_get_microsecond(dt) / 1000LL;
+	e_phys.epoch_ms = 1000LL * g_date_time_to_unix(dt) + g_date_time_get_microsecond(dt) / 1000LL;
 	g_date_time_unref(dt);
 	timeflow_set(TIME_PAUSE);
 }
@@ -77,7 +77,7 @@ void on_speed_activate(GtkEntry *entry, gpointer user_data)
 	(void)entry;
 	(void)user_data;
 
-	gtk_window_set_focus(g_window_main, NULL);
+	gtk_window_set_focus(e_window_main, NULL);
 
 	const gchar *string = gtk_entry_get_text(speed_entry);
 	char *end;
@@ -85,15 +85,15 @@ void on_speed_activate(GtkEntry *entry, gpointer user_data)
 	if (end == string)
 		return;
 
-	if (g_timeflow == TIME_REALTIME)
+	if (e_timeflow == TIME_REALTIME)
 		timeflow_set(TIME_ARBITRARY);
 
-	g_timescale = speed;
+	e_timescale = speed;
 }
 
 void timeflow_set(enum Timeflow timeflow)
 {
-	g_timeflow = timeflow;
+	e_timeflow = timeflow;
 	gtk_toggle_tool_button_set_active(play_button, (timeflow == TIME_PAUSE) ? FALSE : TRUE);
 }
 
@@ -115,10 +115,10 @@ void timemgr_init(GtkBuilder *builder)
 void timemgr_tic(void)
 {
 	if (!gtk_widget_has_focus(GTK_WIDGET(time_entry)))
-		gtk_entry_set_text(time_entry, epoch_to_iso8601(g_phys.epoch_ms, gs_gmt, TRUE));
+		gtk_entry_set_text(time_entry, epoch_to_iso8601(e_phys.epoch_ms, gs_gmt, TRUE));
 	if (!gtk_widget_has_focus(GTK_WIDGET(speed_entry))) {
 		char buf[16];
-		snprintf(buf, 16, "%.3fx", (double)g_timescale);
+		snprintf(buf, 16, "%.3fx", (double)e_timescale);
 		gtk_entry_set_text(speed_entry, buf);
 	}
 }

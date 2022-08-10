@@ -4,7 +4,7 @@
 
 #include "gfx.h"
 
-struct Camera g_camera;
+struct Camera e_camera;
 
 void camera_view_update(struct Camera *camera)
 {
@@ -13,7 +13,7 @@ void camera_view_update(struct Camera *camera)
 
 void camera_proj_update(struct Camera *camera)
 {
-	glm_perspective(camera->fov, g_gl_ctx.res_x / (float)g_gl_ctx.res_y, camera->near, camera->far, camera->proj_mat);
+	glm_perspective(camera->fov, e_gl_ctx.res_x / (float)e_gl_ctx.res_y, camera->near, camera->far, camera->proj_mat);
 }
 
 void camera_mvp_generate(struct Camera *camera, mat4 *model, mat4 mvp)

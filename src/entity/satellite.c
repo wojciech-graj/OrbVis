@@ -297,7 +297,7 @@ void satellites_phys(void)
 
 	mat3 t;
 	glm_vec3_copy((vec3){ 0.f, 0.f, 1.f }, t[2]);
-	glm_vec3_copy((vec3){ (float)cos(g_phys.gmst), (float)-sin(g_phys.gmst), 0.f }, t[0]);
+	glm_vec3_copy((vec3){ (float)cos(e_phys.gmst), (float)-sin(e_phys.gmst), 0.f }, t[0]);
 	glm_vec3_cross(t[2], t[0], t[1]);
 	glm_vec3_norm(t[1]);
 	glm_mat3_scale(t, 1.f / 6371.f);
@@ -306,7 +306,7 @@ void satellites_phys(void)
 	size_t i;
 	for (i = 0; i < n_satellites; i++) {
 		double r[3], v[3];
-		getRVForDate(&satellites[i].tle, g_phys.epoch_ms, r, v);
+		getRVForDate(&satellites[i].tle, e_phys.epoch_ms, r, v);
 		glm_vec3_copy((vec3){ r[0], r[1], r[2] }, satellite_verts[i]);
 	}
 }
@@ -314,7 +314,7 @@ void satellites_phys(void)
 void satellites_render(void)
 {
 	shader_bind(&shader);
-	camera_mvp_generate(&g_camera, &teme_to_world, transform);
+	camera_mvp_generate(&e_camera, &teme_to_world, transform);
 	glUniformMatrix4fv(LOCU_TRANSFORM, 1, GL_FALSE, (const GLfloat *)&transform);
 
 	if (satellites_renderable) {
@@ -348,7 +348,7 @@ static void satellite_toggle_orbit(guint32 idx)
 		gint64 period = MS_IN_DAY / (float)satellites[idx].tle.n;
 		int i;
 		for (i = 0; i < count; i++) {
-			gint64 epoch_ms = g_phys.epoch_ms + period * i / count;
+			gint64 epoch_ms = e_phys.epoch_ms + period * i / count;
 			double r[3], v[3];
 			getRVForDate(&satellites[idx].tle, epoch_ms, r, v);
 			glm_vec3_copy((vec3){ r[0], r[1], r[2] }, satellite_orbits[first + i]);
@@ -392,8 +392,8 @@ static void satellite_toggle_orbit(guint32 idx)
 void satellite_select(double xpos, double ypos)
 {
 	vec3 p1, p2;
-	glm_unproject((vec3){ xpos, g_gl_ctx.res_y - ypos, 0 }, transform, (vec4){ 0, 0, g_gl_ctx.res_x, g_gl_ctx.res_y }, p1);
-	glm_unproject((vec3){ xpos, g_gl_ctx.res_y - ypos, 1 }, transform, (vec4){ 0, 0, g_gl_ctx.res_x, g_gl_ctx.res_y }, p2);
+	glm_unproject((vec3){ xpos, e_gl_ctx.res_y - ypos, 0 }, transform, (vec4){ 0, 0, e_gl_ctx.res_x, e_gl_ctx.res_y }, p1);
+	glm_unproject((vec3){ xpos, e_gl_ctx.res_y - ypos, 1 }, transform, (vec4){ 0, 0, e_gl_ctx.res_x, e_gl_ctx.res_y }, p2);
 
 	vec3 dir;
 	glm_vec3_sub(p2, p1, dir);

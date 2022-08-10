@@ -12,6 +12,6 @@ struct GLCtx {
 
 void gfx_init(GtkBuilder *builder);
 
-extern struct GLCtx g_gl_ctx;
+extern struct GLCtx e_gl_ctx;
 
 #endif /* __GFX_H__ */
