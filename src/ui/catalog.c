@@ -1,6 +1,7 @@
 #include "catalog.h"
 
 #include "satcat_code.h"
+#include "info.h"
 
 enum Column {
 	COL_SELECT = 0u,
@@ -15,6 +16,11 @@ enum Column {
 	COL_APOGEE,
 	COL_PERIGEE,
 	NUM_COLS,
+};
+
+enum Page {
+	PAGE_CATALOG = 0u,
+	PAGE_INFO,
 };
 
 static const char *column_ids[] = {
@@ -40,6 +46,7 @@ static GtkSortType sort_type = GTK_SORT_ASCENDING;
 static GtkTreeModelFilter *filter = NULL;
 static GtkTreeView *satellite_view;
 static GtkListStore *satellite_store;
+static GtkTreeSelection *selection;
 static char *str_satellite_store = NULL;
 
 static const unsigned OFFSET_ID = offsetof(struct Satellite, satcat) + offsetof(struct SatCat, id);
@@ -50,6 +57,7 @@ static void on_catalog_clicked(GtkToolButton *toolbutton, gpointer user_data);
 static void on_column_select_cell_toggled(GtkCellRendererToggle *cell_renderer, char *path, gpointer user_data);
 static void on_catalog_search_search_changed(GtkSearchEntry *entry, gpointer user_data);
 static void on_col_clicked(GtkTreeViewColumn *treeviewcolumn, gpointer user_data);
+static void on_catalog_notebook_switch_page(GtkNotebook *notebook, GtkWidget *page, guint page_num, gpointer user_data);
 
 static gboolean catalog_view_filter_visible_func(GtkTreeModel *model, GtkTreeIter *iter, gpointer data);
 static gint catalog_view_search_compare_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer data);
@@ -120,6 +128,31 @@ void on_col_clicked(GtkTreeViewColumn *treeviewcolumn, gpointer user_data)
 	}
 	gtk_tree_view_column_set_sort_order(treeviewcolumn, sort_type);
 	gtk_tree_sortable_set_sort_column_id(sort, 1, sort_type);
+}
+
+void on_catalog_notebook_switch_page(GtkNotebook *notebook, GtkWidget *page, guint page_num, gpointer user_data)
+{
+	(void)notebook;
+	(void)page;
+	(void)user_data;
+	switch (page_num) {
+	case PAGE_CATALOG:
+		info_hide();
+		break;
+	case PAGE_INFO: {
+		GtkTreeModel *model;
+		GtkTreeIter iter;
+		gboolean selected = gtk_tree_selection_get_selected(selection, &model, &iter);
+		if (selected) {
+			struct Satellite *satellite;
+			gtk_tree_model_get(model, &iter,
+				0, &satellite,
+				-1);
+			info_show(satellite);
+		}
+	}
+		break;
+	}
 }
 
 void catalog_construct_views(void)
@@ -307,12 +340,14 @@ void catalog_init(GtkBuilder *builder)
 		"on_window_catalog_delete_event", G_CALLBACK(on_window_catalog_delete_event),
 		"on_catalog_search_search_changed", G_CALLBACK(on_catalog_search_search_changed),
 		"on_col_clicked", G_CALLBACK(on_col_clicked),
+					 "on_catalog_notebook_switch_page", G_CALLBACK(on_catalog_notebook_switch_page),
 		NULL);
 
 	window_catalog = GTK_WINDOW(gtk_builder_get_object(builder, "window_catalog"));
 	satellite_store = GTK_LIST_STORE(gtk_builder_get_object(builder, "satellite_store"));
 	g_object_ref(satellite_store);
 	satellite_view = GTK_TREE_VIEW(gtk_builder_get_object(builder, "catalog_view"));
+	selection = GTK_TREE_SELECTION(gtk_builder_get_object(builder, "catalog_selection"));
 
 	GtkCellRenderer *render_select = gtk_cell_renderer_toggle_new();
 	init_col_with_data_func(render_select, gtk_builder_get_object(builder, column_ids[COL_SELECT]), cell_data_func_select, NULL, 0);

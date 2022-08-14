@@ -11,6 +11,7 @@
 #include "system.h"
 #include "thread.h"
 #include "timemgr.h"
+#include "info.h"
 
 const gchar *FILENAME_GUI = "res/ui/ui.glade";
 
@@ -66,6 +67,7 @@ void ui_init(int argc, char ***argv)
 	timemgr_init(builder);
 	catalog_init(builder);
 	setting_init(builder);
+	info_init(builder);
 
 	gtk_builder_connect_signals(builder, NULL);
 

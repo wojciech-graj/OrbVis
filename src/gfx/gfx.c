@@ -5,6 +5,7 @@
 #include "render.h"
 #include "thread.h"
 #include "timemgr.h"
+#include "info.h"
 
 struct GLCtx e_gl_ctx;
 static GtkGLArea *glarea;
@@ -51,6 +52,7 @@ gboolean on_glarea_render(GtkGLArea *area, GdkGLContext *context, gpointer user_
 	thread_dispatch(THRD_PHYS, NULL);
 	render_process();
 	timemgr_tic();
+	info_tic();
 #ifndef NO_SATELLITE
 	thread_join_if_finished(THRD_SATELLITES_GET);
 #endif

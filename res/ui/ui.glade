@@ -28,142 +28,667 @@
     <property name="default-height">480</property>
     <signal name="delete-event" handler="on_window_catalog_delete_event" swapped="no"/>
     <child>
-      <object class="GtkBox">
+      <object class="GtkNotebook" id="catalog_notebook">
         <property name="visible">True</property>
-        <property name="can-focus">False</property>
-        <property name="orientation">vertical</property>
+        <property name="can-focus">True</property>
+        <signal name="switch-page" handler="on_catalog_notebook_switch_page" swapped="no"/>
         <child>
-          <object class="GtkSearchEntry" id="catalog_search">
+          <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="primary-icon-name">edit-find-symbolic</property>
-            <property name="primary-icon-activatable">False</property>
-            <property name="primary-icon-sensitive">False</property>
-            <signal name="search-changed" handler="on_catalog_search_search_changed" swapped="no"/>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
-        <child>
-          <object class="GtkScrolledWindow">
-            <property name="visible">True</property>
-            <property name="can-focus">True</property>
-            <property name="hscrollbar-policy">never</property>
-            <property name="vscrollbar-policy">always</property>
-            <property name="shadow-type">in</property>
-            <property name="overlay-scrolling">False</property>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
             <child>
-              <object class="GtkTreeView" id="catalog_view">
+              <object class="GtkSearchEntry" id="catalog_search">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                <property name="search-column">0</property>
-                <property name="fixed-height-mode">True</property>
-                <property name="enable-grid-lines">both</property>
-                <child internal-child="selection">
-                  <object class="GtkTreeSelection">
-                    <property name="mode">browse</property>
-                  </object>
-                </child>
+                <property name="primary-icon-name">edit-find-symbolic</property>
+                <property name="primary-icon-activatable">False</property>
+                <property name="primary-icon-sensitive">False</property>
+                <signal name="search-changed" handler="on_catalog_search_search_changed" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkScrolledWindow">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="hscrollbar-policy">never</property>
+                <property name="vscrollbar-policy">always</property>
+                <property name="shadow-type">in</property>
+                <property name="overlay-scrolling">False</property>
                 <child>
-                  <object class="GtkTreeViewColumn" id="col_select">
-                    <property name="sizing">fixed</property>
-                    <property name="title" translatable="yes">Select</property>
-                    <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_col_clicked" swapped="no"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkTreeViewColumn" id="col_catnum">
-                    <property name="sizing">fixed</property>
-                    <property name="title" translatable="yes">ID   </property>
-                    <property name="clickable">True</property>
-                    <property name="sort-indicator">True</property>
-                    <signal name="clicked" handler="on_col_clicked" swapped="no"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkTreeViewColumn" id="col_name">
-                    <property name="sizing">fixed</property>
-                    <property name="title" translatable="yes">Name                    </property>
-                    <property name="clickable">True</property>
-                    <property name="sort-order">descending</property>
-                    <signal name="clicked" handler="on_col_clicked" swapped="no"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkTreeViewColumn" id="col_id">
-                    <property name="sizing">fixed</property>
-                    <property name="title" translatable="yes">Intl Des   </property>
-                    <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_col_clicked" swapped="no"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkTreeViewColumn" id="col_status">
-                    <property name="sizing">fixed</property>
-                    <property name="title" translatable="yes">Status               </property>
-                    <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_col_clicked" swapped="no"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkTreeViewColumn" id="col_source">
-                    <property name="sizing">fixed</property>
-                    <property name="title" translatable="yes">Owner</property>
-                    <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_col_clicked" swapped="no"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkTreeViewColumn" id="col_launch_date">
-                    <property name="sizing">fixed</property>
-                    <property name="title" translatable="yes">Launch Date</property>
-                    <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_col_clicked" swapped="no"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkTreeViewColumn" id="col_period">
-                    <property name="sizing">fixed</property>
-                    <property name="title" translatable="yes">Period (min)</property>
-                    <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_col_clicked" swapped="no"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkTreeViewColumn" id="col_inclination">
-                    <property name="sizing">fixed</property>
-                    <property name="title" translatable="yes">Incl (°)</property>
-                    <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_col_clicked" swapped="no"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkTreeViewColumn" id="col_apogee">
-                    <property name="sizing">fixed</property>
-                    <property name="title" translatable="yes">Apo (km)</property>
-                    <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_col_clicked" swapped="no"/>
-                  </object>
-                </child>
-                <child>
-                  <object class="GtkTreeViewColumn" id="col_perigee">
-                    <property name="sizing">fixed</property>
-                    <property name="title" translatable="yes">Peri (km)</property>
-                    <property name="clickable">True</property>
-                    <signal name="clicked" handler="on_col_clicked" swapped="no"/>
+                  <object class="GtkTreeView" id="catalog_view">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="search-column">0</property>
+                    <property name="fixed-height-mode">True</property>
+                    <property name="enable-grid-lines">both</property>
+                    <child internal-child="selection">
+                      <object class="GtkTreeSelection" id="catalog_selection"/>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="col_select">
+                        <property name="sizing">fixed</property>
+                        <property name="title" translatable="yes">Select</property>
+                        <property name="clickable">True</property>
+                        <signal name="clicked" handler="on_col_clicked" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="col_catnum">
+                        <property name="sizing">fixed</property>
+                        <property name="title" translatable="yes">ID   </property>
+                        <property name="clickable">True</property>
+                        <property name="sort-indicator">True</property>
+                        <signal name="clicked" handler="on_col_clicked" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="col_name">
+                        <property name="sizing">fixed</property>
+                        <property name="title" translatable="yes">Name                    </property>
+                        <property name="clickable">True</property>
+                        <property name="sort-order">descending</property>
+                        <signal name="clicked" handler="on_col_clicked" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="col_id">
+                        <property name="sizing">fixed</property>
+                        <property name="title" translatable="yes">Intl Des   </property>
+                        <property name="clickable">True</property>
+                        <signal name="clicked" handler="on_col_clicked" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="col_status">
+                        <property name="sizing">fixed</property>
+                        <property name="title" translatable="yes">Status               </property>
+                        <property name="clickable">True</property>
+                        <signal name="clicked" handler="on_col_clicked" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="col_source">
+                        <property name="sizing">fixed</property>
+                        <property name="title" translatable="yes">Owner</property>
+                        <property name="clickable">True</property>
+                        <signal name="clicked" handler="on_col_clicked" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="col_launch_date">
+                        <property name="sizing">fixed</property>
+                        <property name="title" translatable="yes">Launch Date</property>
+                        <property name="clickable">True</property>
+                        <signal name="clicked" handler="on_col_clicked" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="col_period">
+                        <property name="sizing">fixed</property>
+                        <property name="title" translatable="yes">Period (min)</property>
+                        <property name="clickable">True</property>
+                        <signal name="clicked" handler="on_col_clicked" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="col_inclination">
+                        <property name="sizing">fixed</property>
+                        <property name="title" translatable="yes">Incl (°)</property>
+                        <property name="clickable">True</property>
+                        <signal name="clicked" handler="on_col_clicked" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="col_apogee">
+                        <property name="sizing">fixed</property>
+                        <property name="title" translatable="yes">Apo (km)</property>
+                        <property name="clickable">True</property>
+                        <signal name="clicked" handler="on_col_clicked" swapped="no"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkTreeViewColumn" id="col_perigee">
+                        <property name="sizing">fixed</property>
+                        <property name="title" translatable="yes">Peri (km)</property>
+                        <property name="clickable">True</property>
+                        <signal name="clicked" handler="on_col_clicked" swapped="no"/>
+                      </object>
+                    </child>
                   </object>
                 </child>
               </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
+            </child>
+          </object>
+        </child>
+        <child type="tab">
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Catalog</property>
+          </object>
+          <packing>
+            <property name="tab-fill">False</property>
+          </packing>
+        </child>
+        <child>
+          <object class="GtkBox">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="orientation">vertical</property>
+            <child>
+              <object class="GtkFrame">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label-xalign">0</property>
+                <property name="shadow-type">none</property>
+                <child>
+                  <object class="GtkAlignment">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="left-padding">12</property>
+                    <child>
+                      <!-- n-columns=6 n-rows=5 -->
+                      <object class="GtkGrid">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="row-homogeneous">True</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Name</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">0</property>
+                            <property name="top-attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">ID</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">0</property>
+                            <property name="top-attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Payload</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">0</property>
+                            <property name="top-attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Intl Des</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">0</property>
+                            <property name="top-attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Launch Site</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">2</property>
+                            <property name="top-attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Launch Date</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">2</property>
+                            <property name="top-attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Owner</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">2</property>
+                            <property name="top-attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Decay Date</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">2</property>
+                            <property name="top-attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Period (min)</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">4</property>
+                            <property name="top-attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Incl (°)</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">4</property>
+                            <property name="top-attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Apogee (km)</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">4</property>
+                            <property name="top-attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Perigee (km)</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">4</property>
+                            <property name="top-attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Status</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">0</property>
+                            <property name="top-attach">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Radar Cross Section (m²)</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">4</property>
+                            <property name="top-attach">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_name">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">24</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">1</property>
+                            <property name="top-attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_catnum">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">5</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">1</property>
+                            <property name="top-attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_id">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">11</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">1</property>
+                            <property name="top-attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_status">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">21</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">1</property>
+                            <property name="top-attach">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_launch_site">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">52</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">3</property>
+                            <property name="top-attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_launch_date">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">10</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">3</property>
+                            <property name="top-attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_source">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">66</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">3</property>
+                            <property name="top-attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_decay_date">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">10</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">3</property>
+                            <property name="top-attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_period">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">7</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">5</property>
+                            <property name="top-attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_inclination">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">5</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">5</property>
+                            <property name="top-attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_apogee">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">6</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">5</property>
+                            <property name="top-attach">2</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_perigee">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">21</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">5</property>
+                            <property name="top-attach">3</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_radar_cs">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">8</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">5</property>
+                            <property name="top-attach">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Orbital Status</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">2</property>
+                            <property name="top-attach">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_status_code">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">3</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">3</property>
+                            <property name="top-attach">4</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_payload">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">3</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">1</property>
+                            <property name="top-attach">3</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child type="label">
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Info</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkFrame">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label-xalign">0</property>
+                <property name="shadow-type">none</property>
+                <child>
+                  <object class="GtkAlignment">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="left-padding">12</property>
+                    <child>
+                      <!-- n-columns=4 n-rows=2 -->
+                      <object class="GtkGrid">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="row-homogeneous">True</property>
+                        <property name="column-homogeneous">True</property>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Position (TEME) (km)</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">0</property>
+                            <property name="top-attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Position (ECEF) (km)</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">0</property>
+                            <property name="top-attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Velocity (km/s)</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">2</property>
+                            <property name="top-attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="label" translatable="yes">Position (LLH) (°,km)</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">2</property>
+                            <property name="top-attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_position_teme">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">24</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">1</property>
+                            <property name="top-attach">0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_position_ecef">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">24</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">1</property>
+                            <property name="top-attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_position_llh">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">24</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">3</property>
+                            <property name="top-attach">1</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkLabel" id="info_velocity">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="max-width-chars">24</property>
+                          </object>
+                          <packing>
+                            <property name="left-attach">3</property>
+                            <property name="top-attach">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                  </object>
+                </child>
+                <child type="label">
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Orbit</property>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">True</property>
+                <property name="fill">True</property>
+                <property name="position">1</property>
+              </packing>
             </child>
           </object>
           <packing>
-            <property name="expand">True</property>
-            <property name="fill">True</property>
             <property name="position">1</property>
+          </packing>
+        </child>
+        <child type="tab">
+          <object class="GtkLabel">
+            <property name="visible">True</property>
+            <property name="can-focus">False</property>
+            <property name="label" translatable="yes">Details</property>
+          </object>
+          <packing>
+            <property name="position">1</property>
+            <property name="tab-fill">False</property>
           </packing>
         </child>
       </object>
