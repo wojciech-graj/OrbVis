@@ -44,7 +44,7 @@ void sky_init(void)
 										      { LOCL_ATEXCOORD, "in_uv" },
 									      });
 
-	texture_init_from_image(&texture, "res/texture/8k_stars.jpg", GL_TEXTURE0, GL_TEXTURE_2D);
+	texture_init_from_image(&texture, "res/texture/stars.jpg", GL_TEXTURE0, GL_TEXTURE_2D);
 
 	vao_attr(&vao, &obj.vbo_verts, 0, 3, GL_FLOAT, sizeof(vec3), 0);
 	vao_attr(&vao, &obj.vbo_uv, 1, 2, GL_FLOAT, sizeof(vec2), 0);

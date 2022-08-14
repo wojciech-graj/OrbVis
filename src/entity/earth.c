@@ -57,10 +57,10 @@ void earth_init(void)
 											  { LOCL_ATEXCOORD, "in_uv" },
 										  });
 
-	texture_init_from_image(&texture_day, "res/texture/8k_earth_daymap.jpg", GL_TEXTURE0, GL_TEXTURE_2D);
-	texture_init_from_image(&texture_night, "res/texture/8k_earth_nightmap.jpg", GL_TEXTURE1, GL_TEXTURE_2D);
-	texture_init_from_image(&texture_specular, "res/texture/8k_earth_specular_map.jpg", GL_TEXTURE2, GL_TEXTURE_2D);
-	texture_init_from_image(&texture_clouds, "res/texture/8k_earth_clouds.jpg", GL_TEXTURE3, GL_TEXTURE_2D);
+	texture_init_from_image(&texture_day, "res/texture/earth_daymap.jpg", GL_TEXTURE0, GL_TEXTURE_2D);
+	texture_init_from_image(&texture_night, "res/texture/earth_nightmap.jpg", GL_TEXTURE1, GL_TEXTURE_2D);
+	texture_init_from_image(&texture_specular, "res/texture/earth_specular_map.jpg", GL_TEXTURE2, GL_TEXTURE_2D);
+	texture_init_from_image(&texture_clouds, "res/texture/earth_clouds.jpg", GL_TEXTURE3, GL_TEXTURE_2D);
 	texture_init_from_image(&texture_clouds, "res/texture/sky_gradient.jpg", GL_TEXTURE4, GL_TEXTURE_1D);
 
 	vao_attr(&vao_earth, &obj_earth.vbo_verts, 0, 3, GL_FLOAT, sizeof(vec3), 0);
