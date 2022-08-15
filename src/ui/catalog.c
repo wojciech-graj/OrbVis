@@ -1,7 +1,7 @@
 #include "catalog.h"
 
-#include "satcat_code.h"
 #include "info.h"
+#include "satcat_code.h"
 
 enum Column {
 	COL_SELECT = 0u,
@@ -150,8 +150,7 @@ void on_catalog_notebook_switch_page(GtkNotebook *notebook, GtkWidget *page, gui
 				-1);
 			info_show(satellite);
 		}
-	}
-		break;
+	} break;
 	}
 }
 
@@ -340,7 +339,7 @@ void catalog_init(GtkBuilder *builder)
 		"on_window_catalog_delete_event", G_CALLBACK(on_window_catalog_delete_event),
 		"on_catalog_search_search_changed", G_CALLBACK(on_catalog_search_search_changed),
 		"on_col_clicked", G_CALLBACK(on_col_clicked),
-					 "on_catalog_notebook_switch_page", G_CALLBACK(on_catalog_notebook_switch_page),
+		"on_catalog_notebook_switch_page", G_CALLBACK(on_catalog_notebook_switch_page),
 		NULL);
 
 	window_catalog = GTK_WINDOW(gtk_builder_get_object(builder, "window_catalog"));

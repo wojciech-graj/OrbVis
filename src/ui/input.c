@@ -87,8 +87,8 @@ gboolean on_glarea_motion_notify_event(GtkWidget *widget, GdkEvent *event, gpoin
 	(void)user_data;
 	GdkEventMotion *motion = &event->motion;
 	if (cursor_pressed) {
-		float d_ang_x = (2.f * PI / e_gl_ctx.res_x);
-		float d_ang_y = (PI / e_gl_ctx.res_y);
+		float d_ang_x = (2.f * (float)G_PI / e_gl_ctx.res_x);
+		float d_ang_y = ((float)G_PI / e_gl_ctx.res_y);
 		float ang_x = (float)(cursor_xpos - motion->x) * d_ang_x;
 		float ang_y = (float)(cursor_ypos - motion->y) * d_ang_y;
 
@@ -96,7 +96,7 @@ gboolean on_glarea_motion_notify_event(GtkWidget *widget, GdkEvent *event, gpoin
 		glm_vec3_sub(e_camera.target, e_camera.pos, view_dir);
 		glm_vec3_normalize(view_dir);
 		float cam_ang = acosf(glm_vec3_dot(view_dir, e_camera.up));
-		ang_y = glm_clamp(1e-2f, cam_ang + ang_y, PI - 1e-2f) - cam_ang;
+		ang_y = glm_clamp(1e-2f, cam_ang + ang_y, (float)G_PI - 1e-2f) - cam_ang;
 
 		vec3 right;
 		glm_vec3_cross(e_camera.up, view_dir, right);

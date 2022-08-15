@@ -2,10 +2,10 @@
 
 #include "camera.h"
 #include "error.h"
+#include "info.h"
 #include "render.h"
 #include "thread.h"
 #include "timemgr.h"
-#include "info.h"
 
 struct GLCtx e_gl_ctx;
 static GtkGLArea *glarea;

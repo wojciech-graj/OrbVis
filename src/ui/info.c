@@ -5,10 +5,10 @@
 
 #include "TLE.h"
 #include "satcat_code.h"
-#include <cglm/vec2.h>
-#include <cglm/vec3.h>
 #include <cglm/mat3.h>
 #include <cglm/mat4.h>
+#include <cglm/vec2.h>
+#include <cglm/vec3.h>
 
 #include <math.h>
 
@@ -140,7 +140,7 @@ void info_tic(void)
 		glm_vec3_norm(t[1]);
 
 		vec3 rf, recef;
-		glm_vec3_copy((vec3){r[0], r[1], r[2]}, rf);
+		glm_vec3_copy((vec3){ r[0], r[1], r[2] }, rf);
 		glm_mat3_mulv(t, rf, recef);
 		fmt_coords(buf, 48, recef[0], recef[1], recef[2]);
 		gtk_label_set_text(info_items[INFO_POSITION_ECEF], buf);
@@ -151,9 +151,9 @@ void info_tic(void)
 		float alat = fabsf(lat);
 		float tmp;
 		g_snprintf(buf, 48, "%02u\u00B0%02u'%c\n%03u\u00B0%02u'%c\n%011.3f",
-			   (unsigned)alat, (unsigned)(modff(alat, &tmp) * 60.f), ((signbit(lat)) ? 'S' : 'N'),
-			   (unsigned)algt, (unsigned)(modff(algt, &tmp) * 60.f), ((signbit(lgt)) ? 'W' : 'E'),
-			   (double)glm_vec3_norm(recef));
+			(unsigned)alat, (unsigned)(modff(alat, &tmp) * 60.f), ((signbit(lat)) ? 'S' : 'N'),
+			(unsigned)algt, (unsigned)(modff(algt, &tmp) * 60.f), ((signbit(lgt)) ? 'W' : 'E'),
+			(double)glm_vec3_norm(recef));
 		gtk_label_set_text(info_items[INFO_POSITION_LLH], buf);
 	}
 }

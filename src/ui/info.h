@@ -1,8 +1,8 @@
 #ifndef __INFO_H__
 #define __INFO_H__
 
-#include "ui.h"
 #include "satellite.h"
+#include "ui.h"
 
 void info_init(GtkBuilder *builder);
 

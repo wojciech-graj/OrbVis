@@ -4,7 +4,5 @@
 - Replace hashmap.c with glib HashTable
 - Improve atmosphere shader
 - Clean up multithreading sync functions
-- Ensure all GObjects are correctly ref'd and unref'd
-- Re-implement timeline (maybe)
 - Improve settings menu
 - Web build? (broadway)

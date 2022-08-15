@@ -40,13 +40,13 @@ void phys_phys(void)
 	double n = fmod(jd_epoch, 365.25); /* Days elapsed since Jan 1 Midnight */
 	glm_vec2_copy((vec2){
 			      1.0 - modf(jd_epoch, &temp), /* Omitted Equation of Time */
-			      ((float)asin(0.39779 * cos(0.017203 * (n + 10) + 0.0334 * sin(0.017203 * (n - 2)))) + PI) / (2.f * PI),
+			      ((float)asin(0.39779 * cos(0.017203 * (n + 10) + 0.0334 * sin(0.017203 * (n - 2)))) + (float)G_PI) / (2.f * (float)G_PI),
 		      },
 		phys_ctx_sync.sun_uv);
 	glm_vec3_copy((vec3){
-			      -cosf(phys_ctx_sync.sun_uv[0] * 2.f * PI) * sinf(phys_ctx_sync.sun_uv[1] * PI),
-			      -sinf(phys_ctx_sync.sun_uv[0] * 2.f * PI) * sinf(phys_ctx_sync.sun_uv[1] * PI),
-			      cosf(phys_ctx_sync.sun_uv[1] * PI),
+			      -cosf(phys_ctx_sync.sun_uv[0] * 2.f * (float)G_PI) * sinf(phys_ctx_sync.sun_uv[1] * (float)G_PI),
+			      -sinf(phys_ctx_sync.sun_uv[0] * 2.f * (float)G_PI) * sinf(phys_ctx_sync.sun_uv[1] * (float)G_PI),
+			      cosf(phys_ctx_sync.sun_uv[1] * (float)G_PI),
 		      },
 		phys_ctx_sync.sun_dir);
 }

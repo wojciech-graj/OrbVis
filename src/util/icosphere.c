@@ -182,8 +182,8 @@ void icosphere_generate(const unsigned n_sub, vec3 **verts, guint32 **faces, vec
 	/* Generate UVs */
 	for (i = 0; i < *n_verts; i++) {
 		glm_vec2_copy((vec2){
-				      (atan2f((*verts)[i][1], (*verts)[i][0]) + PI) * (1.f / (2.f * PI)),
-				      acosf(-((*verts)[i][2])) * (1.f / PI) },
+				      (atan2f((*verts)[i][1], (*verts)[i][0]) + (float)G_PI) * (1.f / (2.f * (float)G_PI)),
+				      acosf(-((*verts)[i][2])) * (1.f / (float)G_PI) },
 			(*uv)[i]);
 	}
 

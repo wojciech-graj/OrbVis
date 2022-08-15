@@ -23,7 +23,7 @@ void render_init(void)
 	glm_vec3_copy((vec3){ 0, 0, 1 }, e_camera.up);
 
 	e_camera.rad = 5.f;
-	e_camera.fov = PI / 2.f;
+	e_camera.fov = (float)G_PI / 2.f;
 	e_camera.near = 0.05f;
 	e_camera.far = 100.f;
 

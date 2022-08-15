@@ -1,8 +1,8 @@
 #ifndef __ERROR_H__
 #define __ERROR_H__
 
-#include "type.h"
 #include "system.h"
+#include "type.h"
 
 #define error(...)                       \
 	do {                             \

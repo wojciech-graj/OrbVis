@@ -4,6 +4,7 @@
 #include "entity.h"
 #include "error.h"
 #include "gfx.h"
+#include "info.h"
 #include "input.h"
 #include "render.h"
 #include "setting.h"
@@ -11,7 +12,6 @@
 #include "system.h"
 #include "thread.h"
 #include "timemgr.h"
-#include "info.h"
 
 const gchar *FILENAME_GUI = "res/ui/ui.glade";
 

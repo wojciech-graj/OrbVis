@@ -19,6 +19,4 @@
 
 #define sgn(x) (signbit(x) ? -1 : 1)
 
-#define PI 3.1415927f
-
 #endif /* __TYPE_H__ */
