@@ -316,7 +316,7 @@ void catalog_satellites_fill(struct Satellite *satellites, size_t n_satellites)
 	unsigned i;
 	for (i = 0; i < n_satellites; i++) {
 		const struct SCDate *date = &satellites[i].satcat.launch_date;
-		snprintf(str, 31, "%04u-%02u-%02u %07.1f %05.1f %.5s", date->year, date->month, date->day, satellites[i].satcat.period, satellites[i].satcat.inc_deg, satellites[i].satcat.source);
+		g_snprintf(str, 31, "%04u-%02u-%02u %07.1f %05.1f %.5s", date->year, date->month, date->day, satellites[i].satcat.period, satellites[i].satcat.inc_deg, satellites[i].satcat.source);
 		str[10] = str[18] = str[24] = '\0';
 		gtk_list_store_insert_with_values(satellite_store, NULL, -1,
 			0, &satellites[i],

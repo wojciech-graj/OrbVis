@@ -81,7 +81,7 @@ void on_speed_activate(GtkEntry *entry, gpointer user_data)
 
 	const gchar *string = gtk_entry_get_text(speed_entry);
 	char *end;
-	float speed = strtof(string, &end);
+	float speed = g_ascii_strtod(string, &end);
 	if (end == string)
 		return;
 
@@ -118,7 +118,7 @@ void timemgr_tic(void)
 		gtk_entry_set_text(time_entry, epoch_to_iso8601(e_phys.epoch_ms, gs_gmt, TRUE));
 	if (!gtk_widget_has_focus(GTK_WIDGET(speed_entry))) {
 		char buf[16];
-		snprintf(buf, 16, "%.3fx", (double)e_timescale);
+		g_snprintf(buf, 16, "%.3fx", (double)e_timescale);
 		gtk_entry_set_text(speed_entry, buf);
 	}
 }

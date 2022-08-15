@@ -42,7 +42,7 @@ char *epoch_to_iso8601(gint64 epoch_ms, gboolean gmt, gboolean ms)
 	g_free(str);
 	unsigned str_idx;
 	if (ms) {
-		sprintf(iso8601_str + 19, ".%03ld", epoch_ms % 1000);
+		g_snprintf(iso8601_str + 19, 5, ".%03ld", epoch_ms % 1000);
 		str_idx = 23;
 	} else {
 		str_idx = 19;
