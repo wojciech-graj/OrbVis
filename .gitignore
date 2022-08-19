@@ -1,3 +1,4 @@
 .sat_cache
 obj/
 orbvis
+*.glade~

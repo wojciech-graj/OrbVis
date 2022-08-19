@@ -3,6 +3,7 @@
 #include "catalog.h"
 #include "entity.h"
 #include "error.h"
+#include "filter.h"
 #include "gfx.h"
 #include "info.h"
 #include "input.h"
@@ -68,6 +69,7 @@ void ui_init(int argc, char ***argv)
 	catalog_init(builder);
 	setting_init(builder);
 	info_init(builder);
+	filter_init(builder);
 
 	gtk_builder_connect_signals(builder, NULL);
 

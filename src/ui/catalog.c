@@ -1,5 +1,6 @@
 #include "catalog.h"
 
+#include "filter.h"
 #include "info.h"
 #include "satcat_code.h"
 
@@ -21,6 +22,7 @@ enum Column {
 enum Page {
 	PAGE_CATALOG = 0u,
 	PAGE_INFO,
+	PAGE_FILTER,
 };
 
 static const char *column_ids[] = {
@@ -37,13 +39,14 @@ static const char *column_ids[] = {
 	[COL_PERIGEE] = "col_perigee",
 };
 
+GtkTreeModelFilter *e_catalog_filter = NULL;
+
 static GtkTreeViewColumn *columns[NUM_COLS];
 static GtkWindow *window_catalog;
 static GtkTreeSortable *sort = NULL;
 static gchar search_text[64] = { 0 };
 static enum Column sort_col = COL_CATNUM;
 static GtkSortType sort_type = GTK_SORT_ASCENDING;
-static GtkTreeModelFilter *filter = NULL;
 static GtkTreeView *satellite_view;
 static GtkListStore *satellite_store;
 static GtkTreeSelection *selection;
@@ -93,9 +96,9 @@ void on_column_select_cell_toggled(GtkCellRendererToggle *cell_renderer, char *p
 	(void)cell_renderer;
 	(void)user_data;
 	GtkTreeIter iter;
-	gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(filter), &iter, path);
+	gtk_tree_model_get_iter_from_string(GTK_TREE_MODEL(e_catalog_filter), &iter, path);
 	struct Satellite *satellite;
-	gtk_tree_model_get(GTK_TREE_MODEL(filter), &iter,
+	gtk_tree_model_get(GTK_TREE_MODEL(e_catalog_filter), &iter,
 		0, &satellite,
 		-1);
 	satellite_select_ptr(satellite);
@@ -109,7 +112,7 @@ void on_catalog_search_search_changed(GtkSearchEntry *entry, gpointer user_data)
 	for (i = 0; i < 63 && text[i]; i++)
 		search_text[i] = g_ascii_toupper(text[i]);
 	search_text[i] = '\0';
-	gtk_tree_model_filter_refilter(filter);
+	gtk_tree_model_filter_refilter(e_catalog_filter);
 }
 
 void on_col_clicked(GtkTreeViewColumn *treeviewcolumn, gpointer user_data)
@@ -159,20 +162,20 @@ void catalog_construct_views(void)
 	sort = GTK_TREE_SORTABLE(gtk_tree_model_sort_new_with_model(GTK_TREE_MODEL(satellite_store)));
 	gtk_tree_sortable_set_sort_func(sort, 1, catalog_view_search_compare_func, NULL, NULL);
 
-	filter = GTK_TREE_MODEL_FILTER(gtk_tree_model_filter_new(GTK_TREE_MODEL(sort), NULL));
-	gtk_tree_model_filter_set_visible_func(filter, catalog_view_filter_visible_func, NULL, NULL);
+	e_catalog_filter = GTK_TREE_MODEL_FILTER(gtk_tree_model_filter_new(GTK_TREE_MODEL(sort), NULL));
+	gtk_tree_model_filter_set_visible_func(e_catalog_filter, catalog_view_filter_visible_func, NULL, NULL);
 	g_object_unref(sort);
 
-	gtk_tree_view_set_model(satellite_view, GTK_TREE_MODEL(filter));
-	g_object_unref(filter);
+	gtk_tree_view_set_model(satellite_view, GTK_TREE_MODEL(e_catalog_filter));
+	g_object_unref(e_catalog_filter);
 }
 
 void catalog_deconstruct_views(void)
 {
 	gtk_tree_view_set_model(satellite_view, NULL);
 
-	if (filter)
-		g_object_unref(filter);
+	if (e_catalog_filter)
+		g_object_unref(e_catalog_filter);
 	if (sort)
 		g_object_unref(sort);
 }
@@ -180,16 +183,18 @@ void catalog_deconstruct_views(void)
 void catalog_satellite_changed(struct Satellite *satellite)
 {
 	GtkTreeIter iter;
-	GtkTreeModel *model = GTK_TREE_MODEL(filter);
-	gtk_tree_model_get_iter_first(model, &iter);
+	GtkTreeModel *model = GTK_TREE_MODEL(e_catalog_filter);
+	if (!gtk_tree_model_get_iter_first(model, &iter))
+		return;
 	struct Satellite *iter_satellite;
 	gtk_tree_model_get(model, &iter, 0, &iter_satellite, -1);
 	while (iter_satellite != satellite) {
-		gtk_tree_model_iter_next(model, &iter);
+		if (!gtk_tree_model_iter_next(model, &iter))
+			return;
 		gtk_tree_model_get(model, &iter, 0, &iter_satellite, -1);
 	}
-	GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(filter), &iter);
-	gtk_tree_model_row_changed(GTK_TREE_MODEL(filter), path, &iter);
+	GtkTreePath *path = gtk_tree_model_get_path(GTK_TREE_MODEL(e_catalog_filter), &iter);
+	gtk_tree_model_row_changed(GTK_TREE_MODEL(e_catalog_filter), path, &iter);
 	gtk_tree_path_free(path);
 }
 
@@ -200,7 +205,7 @@ gboolean catalog_view_filter_visible_func(GtkTreeModel *model, GtkTreeIter *iter
 	gtk_tree_model_get(model, iter,
 		0, &satellite,
 		-1);
-	return g_strstr_len(satellite->satcat.name, 24, search_text) != NULL;
+	return (g_strstr_len(satellite->satcat.name, 24, search_text) != NULL) && (filter_func(satellite));
 }
 
 gint catalog_view_search_compare_func(GtkTreeModel *model, GtkTreeIter *a, GtkTreeIter *b, gpointer data)
