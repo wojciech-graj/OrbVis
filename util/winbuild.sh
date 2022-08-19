@@ -22,7 +22,10 @@ cp $MINGW_PATH/share/glib-2.0/schemas/gschemas.compiled glib-2.0/schemas/gschema
 mkdir -p icons
 cp -r $MINGW_PATH/share/icons icons
 cd ..
-cp -r $MINGW_PATH/ssl ssl
+mkdir -p ssl/certs
+cd ssl/certs
+cp -r $MINGW_PATH/ssl/certs/ca-bundle.crt ca-bundle.crt
+cd ../..
 cp ../util/README_WIN.txt README.txt
 cp ../LICENSE LICENSE.txt
 cd ..
