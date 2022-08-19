@@ -3,6 +3,7 @@
 #include "camera.h"
 #include "error.h"
 #include "info.h"
+#include "perf.h"
 #include "render.h"
 #include "thread.h"
 #include "timemgr.h"
@@ -53,6 +54,7 @@ gboolean on_glarea_render(GtkGLArea *area, GdkGLContext *context, gpointer user_
 	render_process();
 	timemgr_tic();
 	info_tic();
+	perf_tic();
 #ifndef NO_SATELLITE
 	thread_join_if_finished(THRD_SATELLITES_GET);
 #endif

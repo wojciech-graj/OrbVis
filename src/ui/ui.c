@@ -7,6 +7,7 @@
 #include "gfx.h"
 #include "info.h"
 #include "input.h"
+#include "perf.h"
 #include "render.h"
 #include "setting.h"
 #include "status.h"
@@ -70,6 +71,7 @@ void ui_init(int argc, char ***argv)
 	setting_init(builder);
 	info_init(builder);
 	filter_init(builder);
+	perf_init(builder);
 
 	gtk_builder_connect_signals(builder, NULL);
 

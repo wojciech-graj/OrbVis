@@ -1,5 +1,7 @@
 #include "setting.h"
 
+#include "perf.h"
+
 struct Setting {
 	char *id;
 	GtkToggleButton *button;
@@ -36,6 +38,7 @@ void on_settings_clicked(GtkToolButton *toolbutton, gpointer user_data)
 	(void)toolbutton;
 	(void)user_data;
 	gtk_widget_show_all(GTK_WIDGET(window_settings));
+	perf_show();
 }
 
 gboolean on_window_settings_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data)
@@ -44,6 +47,7 @@ gboolean on_window_settings_delete_event(GtkWidget *widget, GdkEvent *event, gpo
 	(void)event;
 	(void)user_data;
 	gtk_widget_hide(GTK_WIDGET(window_settings));
+	perf_hide();
 	return TRUE;
 }
 

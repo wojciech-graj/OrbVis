@@ -15,6 +15,7 @@
 #include "download.h"
 #include "error.h"
 #include "gfx.h"
+#include "perf.h"
 #include "phys.h"
 #include "shader.h"
 #include "status.h"
@@ -279,6 +280,7 @@ void satellites_get_sync(void)
 	satellites_renderable = FALSE;
 	status_pop(STAT_FETCHING_SAT);
 	catalog_satellites_fill(satellites, n_satellites);
+	perf_set_num_satellites(n_satellites);
 }
 
 void satellites_phys_sync(void)
