@@ -192,7 +192,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Name</property>
+                            <property name="label" translatable="yes">Name: </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">0</property>
@@ -203,7 +204,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">ID</property>
+                            <property name="label" translatable="yes">ID: </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">0</property>
@@ -214,7 +216,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Payload</property>
+                            <property name="label" translatable="yes">Payload: </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">0</property>
@@ -225,7 +228,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Intl Des</property>
+                            <property name="label" translatable="yes">Intl Des: </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">0</property>
@@ -236,7 +240,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Launch Site</property>
+                            <property name="label" translatable="yes">Launch Site: </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">2</property>
@@ -247,7 +252,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Launch Date</property>
+                            <property name="label" translatable="yes">Launch Date: </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">2</property>
@@ -258,7 +264,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Owner</property>
+                            <property name="label" translatable="yes">Owner: </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">2</property>
@@ -269,7 +276,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Decay Date</property>
+                            <property name="label" translatable="yes">Decay Date: </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">2</property>
@@ -280,7 +288,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Period (min)</property>
+                            <property name="label" translatable="yes">Period (min): </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">4</property>
@@ -291,7 +300,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Incl (°)</property>
+                            <property name="label" translatable="yes">Incl (°): </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">4</property>
@@ -302,7 +312,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Apogee (km)</property>
+                            <property name="label" translatable="yes">Apogee (km): </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">4</property>
@@ -313,7 +324,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Perigee (km)</property>
+                            <property name="label" translatable="yes">Perigee (km): </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">4</property>
@@ -324,7 +336,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Status</property>
+                            <property name="label" translatable="yes">Status: </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">0</property>
@@ -335,7 +348,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Radar Cross Section (m²)</property>
+                            <property name="label" translatable="yes">Radar Cross Section (m²): </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">4</property>
@@ -347,6 +361,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">24</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">1</property>
@@ -358,6 +373,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">5</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">1</property>
@@ -369,6 +385,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">11</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">1</property>
@@ -380,6 +397,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">21</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">1</property>
@@ -391,6 +409,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">52</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">3</property>
@@ -402,6 +421,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">10</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">3</property>
@@ -413,6 +433,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">66</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">3</property>
@@ -424,6 +445,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">10</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">3</property>
@@ -435,6 +457,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">7</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">5</property>
@@ -446,6 +469,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">5</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">5</property>
@@ -457,6 +481,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">6</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">5</property>
@@ -468,6 +493,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">21</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">5</property>
@@ -479,6 +505,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">8</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">5</property>
@@ -489,7 +516,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Orbital Status</property>
+                            <property name="label" translatable="yes">Orbital Status: </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">2</property>
@@ -501,6 +529,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">3</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">3</property>
@@ -512,6 +541,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">3</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">1</property>
@@ -558,7 +588,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Position (TEME) (km)</property>
+                            <property name="label" translatable="yes">Position (TEME) (km): </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">0</property>
@@ -569,7 +600,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Position (ECEF) (km)</property>
+                            <property name="label" translatable="yes">Position (ECEF) (km): </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">0</property>
@@ -580,7 +612,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Velocity (km/s)</property>
+                            <property name="label" translatable="yes">Velocity (km/s): </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">2</property>
@@ -591,7 +624,8 @@
                           <object class="GtkLabel">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Position (LLH) (°,km)</property>
+                            <property name="label" translatable="yes">Position (LLH) (°,km): </property>
+                            <property name="xalign">1</property>
                           </object>
                           <packing>
                             <property name="left-attach">2</property>
@@ -603,6 +637,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">24</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">1</property>
@@ -614,6 +649,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">24</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">1</property>
@@ -625,6 +661,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">24</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">3</property>
@@ -636,6 +673,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="max-width-chars">24</property>
+                            <property name="xalign">0</property>
                           </object>
                           <packing>
                             <property name="left-attach">3</property>
@@ -690,7 +728,8 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Status</property>
+                    <property name="label" translatable="yes">Status: </property>
+                    <property name="xalign">1</property>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -701,7 +740,8 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Launch Site</property>
+                    <property name="label" translatable="yes">Launch Site: </property>
+                    <property name="xalign">1</property>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -758,7 +798,8 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Launch Date</property>
+                    <property name="label" translatable="yes">Launch Date: </property>
+                    <property name="xalign">1</property>
                   </object>
                   <packing>
                     <property name="left-attach">2</property>
@@ -769,7 +810,8 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Owner</property>
+                    <property name="label" translatable="yes">Owner: </property>
+                    <property name="xalign">1</property>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -780,7 +822,8 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Period (min)</property>
+                    <property name="label" translatable="yes">Period (min): </property>
+                    <property name="xalign">1</property>
                   </object>
                   <packing>
                     <property name="left-attach">2</property>
@@ -837,7 +880,8 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Incl (deg)</property>
+                    <property name="label" translatable="yes">Incl (deg): </property>
+                    <property name="xalign">1</property>
                   </object>
                   <packing>
                     <property name="left-attach">2</property>
@@ -894,7 +938,8 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Apogee (km)</property>
+                    <property name="label" translatable="yes">Apogee (km): </property>
+                    <property name="xalign">1</property>
                   </object>
                   <packing>
                     <property name="left-attach">2</property>
@@ -905,7 +950,8 @@
                   <object class="GtkLabel">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">Perigee (km)</property>
+                    <property name="label" translatable="yes">Perigee (km):</property>
+                    <property name="xalign">1</property>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -969,7 +1015,7 @@
                         <property name="input-purpose">number</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="fill">True</property>
                         <property name="position">0</property>
                       </packing>
@@ -993,7 +1039,7 @@
                         <property name="input-purpose">number</property>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
+                        <property name="expand">True</property>
                         <property name="fill">True</property>
                         <property name="position">2</property>
                       </packing>
@@ -1482,6 +1528,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">False</property>
+            <property name="xalign">0</property>
             <property name="active">True</property>
             <property name="draw-indicator">True</property>
             <signal name="toggled" handler="on_setting_toggled" swapped="no"/>
@@ -1498,6 +1545,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">False</property>
+            <property name="xalign">0</property>
             <property name="active">True</property>
             <property name="draw-indicator">True</property>
             <signal name="toggled" handler="on_setting_toggled" swapped="no"/>
@@ -1514,6 +1562,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="receives-default">False</property>
+            <property name="xalign">0</property>
             <property name="active">True</property>
             <property name="draw-indicator">True</property>
             <signal name="toggled" handler="on_setting_toggled" swapped="no"/>
@@ -1545,6 +1594,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">FPS: </property>
+                        <property name="xalign">1</property>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>
@@ -1556,6 +1606,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Satellites: </property>
+                        <property name="xalign">1</property>
                       </object>
                       <packing>
                         <property name="left-attach">0</property>
@@ -1567,6 +1618,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">-</property>
+                        <property name="xalign">0</property>
                       </object>
                       <packing>
                         <property name="left-attach">1</property>
@@ -1578,6 +1630,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">-</property>
+                        <property name="xalign">0</property>
                       </object>
                       <packing>
                         <property name="left-attach">1</property>
