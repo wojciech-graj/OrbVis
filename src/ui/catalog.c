@@ -173,11 +173,6 @@ void catalog_construct_views(void)
 void catalog_deconstruct_views(void)
 {
 	gtk_tree_view_set_model(satellite_view, NULL);
-
-	if (e_catalog_filter)
-		g_object_unref(e_catalog_filter);
-	if (sort)
-		g_object_unref(sort);
 }
 
 void catalog_satellite_changed(struct Satellite *satellite)

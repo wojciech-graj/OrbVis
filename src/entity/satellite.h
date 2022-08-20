@@ -26,4 +26,6 @@ void satellites_get_sync(void);
 void satellite_select(double xpos, double ypos);
 void satellite_select_ptr(struct Satellite *satellite);
 
+void satellite_clear_cache(void);
+
 #endif /* __SATELLITE_H__ */

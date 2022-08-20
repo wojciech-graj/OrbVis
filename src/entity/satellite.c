@@ -7,6 +7,7 @@
 #include <cglm/project.h>
 #include <cglm/vec3.h>
 #include <curl/curl.h>
+#include <glib/gstdio.h>
 #include <gmodule.h>
 
 #include "bo.h"
@@ -67,6 +68,10 @@ static GArray *satellite_orbit_counts = NULL;
 static vec3 *satellite_orbits = NULL;
 static GArray *satellite_orbit_idxs = NULL;
 static vec3 *satellite_orbit_colors = NULL;
+
+static gboolean recache = FALSE;
+
+static const char *CACHE_FILENAME = ".sat_cache";
 
 static void satellite_toggle_orbit(guint32 idx);
 static void satellites_get(void);
@@ -156,9 +161,15 @@ static int sc_compare(const void *a, const void *b, void *udata)
 	return (int)(((struct SatCat *)a)->catnum) - (int)(((struct SatCat *)b)->catnum);
 }
 
+void satellite_clear_cache(void)
+{
+	g_remove(CACHE_FILENAME);
+	recache = TRUE;
+}
+
 void save_satellite_cache(void)
 {
-	FILE *cache = fopen(".sat_cache", "w");
+	FILE *cache = fopen(CACHE_FILENAME, "w");
 	gint64 epoch_ms = system_epoch_ms();
 	fwrite(&epoch_ms, 8, 1, cache);
 	fwrite(&dl_multi.handles[DL_SATCAT].size, 8, 1, cache);
@@ -177,25 +188,34 @@ void load_cache(struct DLHandle *handle, guint64 size, FILE *cache)
 
 void satellites_get(void)
 {
-	FILE *cache = fopen(".sat_cache", "r");
-	if (!cache) {
+	if (recache) {
+		recache = FALSE;
 		dl_multi_perform(&dl_multi);
 		save_satellite_cache();
-	} else {
-		gint64 cache_time;
-		fread(&cache_time, 8, 1, cache);
-		if (system_epoch_ms() - cache_time > 43200000LL) {
-			fclose(cache);
+		goto DL_FINISH;
+	}
+	{
+		FILE *cache = fopen(CACHE_FILENAME, "r");
+		if (!cache) {
 			dl_multi_perform(&dl_multi);
 			save_satellite_cache();
 		} else {
-			guint64 sizes[2];
-			fread(sizes, 8, 2, cache);
-			load_cache(&dl_multi.handles[DL_SATCAT], sizes[0], cache);
-			load_cache(&dl_multi.handles[DL_TLE], sizes[1], cache);
-			fclose(cache);
+			gint64 cache_time;
+			fread(&cache_time, 8, 1, cache);
+			if (system_epoch_ms() - cache_time > 43200000LL) {
+				fclose(cache);
+				dl_multi_perform(&dl_multi);
+				save_satellite_cache();
+			} else {
+				guint64 sizes[2];
+				fread(sizes, 8, 2, cache);
+				load_cache(&dl_multi.handles[DL_SATCAT], sizes[0], cache);
+				load_cache(&dl_multi.handles[DL_TLE], sizes[1], cache);
+				fclose(cache);
+			}
 		}
 	}
+DL_FINISH:;
 
 	struct DLHandle *dl_satcat = &dl_multi.handles[DL_SATCAT];
 	size_t n_satcat = count((char *)dl_satcat->memory, '\n', dl_satcat->size);

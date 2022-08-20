@@ -10,7 +10,7 @@ struct ThreadParams {
 	void (*sync)(void);
 };
 
-static struct Thread threads[NUM_THRDS] = {
+struct Thread e_threads[NUM_THRDS] = {
 	[THRD_SATELLITES_GET] = { 0 },
 	[THRD_PHYS] = { 0 },
 };
@@ -33,20 +33,21 @@ void thread_dispatch(enum ThreadID id, void *data)
 	if (params[id].prep)
 		params[id].prep();
 
-	threads[id].data = data;
-	threads[id].thread = g_thread_new(NULL, params[id].start_routine, &threads[id]);
+	e_threads[id].data = data;
+	e_threads[id].thread = g_thread_new(NULL, params[id].start_routine, &e_threads[id]);
 }
 
 void thread_join(enum ThreadID id)
 {
-	g_atomic_int_set(&threads[id].finished, 0);
-	g_thread_join(threads[id].thread);
+	g_atomic_int_set(&e_threads[id].finished, 0);
+	g_thread_join(e_threads[id].thread);
+	e_threads[id].thread = NULL;
 	params[id].sync();
 }
 
 void thread_join_if_finished(enum ThreadID id)
 {
-	if (g_atomic_int_get(&threads[id].finished))
+	if (g_atomic_int_get(&e_threads[id].finished))
 		thread_join(id);
 }
 

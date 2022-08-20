@@ -1,6 +1,8 @@
 #include "setting.h"
 
 #include "perf.h"
+#include "satellite.h"
+#include "thread.h"
 
 struct Setting {
 	char *id;
@@ -32,6 +34,7 @@ static GtkWindow *window_settings;
 static void on_settings_clicked(GtkToolButton *toolbutton, gpointer user_data);
 static gboolean on_window_settings_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 static void on_setting_toggled(GtkToggleButton *togglebutton, gpointer user_data);
+static void on_fetch_data_clicked(GtkButton *button, gpointer user_data);
 
 void on_settings_clicked(GtkToolButton *toolbutton, gpointer user_data)
 {
@@ -60,12 +63,23 @@ void on_setting_toggled(GtkToggleButton *togglebutton, gpointer user_data)
 	*settings[i].val = !*settings[i].val;
 }
 
+void on_fetch_data_clicked(GtkButton *button, gpointer user_data)
+{
+	(void)button;
+	(void)user_data;
+	if (!e_threads[THRD_SATELLITES_GET].thread) {
+		satellite_clear_cache();
+		thread_dispatch(THRD_SATELLITES_GET, NULL);
+	}
+}
+
 void setting_init(GtkBuilder *builder)
 {
 	gtk_builder_add_callback_symbols(builder,
 		"on_settings_clicked", G_CALLBACK(on_settings_clicked),
 		"on_setting_toggled", G_CALLBACK(on_setting_toggled),
 		"on_window_settings_delete_event", G_CALLBACK(on_window_settings_delete_event),
+		"on_fetch_data_clicked", G_CALLBACK(on_fetch_data_clicked),
 		NULL);
 
 	window_settings = GTK_WINDOW(gtk_builder_get_object(builder, "window_settings"));

@@ -25,4 +25,6 @@ void thread_dispatch(enum ThreadID id, void *data);
 void thread_join(enum ThreadID id);
 void thread_join_if_finished(enum ThreadID id);
 
+extern struct Thread e_threads[NUM_THRDS];
+
 #endif /* __THREAD_H__ */

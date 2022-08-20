@@ -55,10 +55,10 @@ gboolean on_glarea_render(GtkGLArea *area, GdkGLContext *context, gpointer user_
 	timemgr_tic();
 	info_tic();
 	perf_tic();
+	thread_join(THRD_PHYS);
 #ifndef NO_SATELLITE
 	thread_join_if_finished(THRD_SATELLITES_GET);
 #endif
-	thread_join(THRD_PHYS);
 
 	return TRUE;
 }
