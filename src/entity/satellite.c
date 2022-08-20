@@ -37,6 +37,12 @@ enum DLMultiLoc {
 	DL_TLE,
 };
 
+struct OrbitData {
+	guint32 idx;
+	gint64 start_epoch_ms;
+	gint64 max_delta_ms;
+};
+
 static struct DLMulti dl_multi;
 
 static struct VAO vao_satellites;
@@ -66,15 +72,19 @@ static size_t satellite_orbits_size = 0;
 static GArray *satellite_orbit_firsts = NULL;
 static GArray *satellite_orbit_counts = NULL;
 static vec3 *satellite_orbits = NULL;
-static GArray *satellite_orbit_idxs = NULL;
+static GArray *satellite_orbit_data = NULL;
 static vec3 *satellite_orbit_colors = NULL;
+static gboolean orbits_changed_phys = FALSE;
 
 static gboolean recache = FALSE;
 
 static const char *CACHE_FILENAME = ".sat_cache";
 
 static void satellite_toggle_orbit(guint32 idx);
+static void gen_satellite_orbit(guint32 idx);
 static void satellites_get(void);
+static void alloc_orbit_arrays(void);
+static void dealloc_orbit_arrays(void);
 static guint64 sc_hash(const void *item, guint64 seed0, guint64 seed1);
 static int sc_compare(const void *a, const void *b, void *udata);
 static void set_satellite_color(char code, vec3 color);
@@ -107,9 +117,21 @@ void satellite_init(void)
 												  { LOCL_COLOR, "in_color" },
 											  });
 
+	alloc_orbit_arrays();
+}
+
+void alloc_orbit_arrays(void)
+{
 	satellite_orbit_firsts = g_array_new(FALSE, FALSE, sizeof(GLint));
 	satellite_orbit_counts = g_array_new(FALSE, FALSE, sizeof(GLsizei));
-	satellite_orbit_idxs = g_array_new(FALSE, FALSE, sizeof(guint32));
+	satellite_orbit_data = g_array_new(FALSE, FALSE, sizeof(struct OrbitData));
+}
+
+void dealloc_orbit_arrays(void)
+{
+	g_array_unref(satellite_orbit_firsts);
+	g_array_unref(satellite_orbit_counts);
+	g_array_unref(satellite_orbit_data);
 }
 
 void satellite_deinit(void)
@@ -130,9 +152,8 @@ void satellite_deinit(void)
 	g_free(satellite_verts);
 	g_free(satellite_orbits);
 	g_free(satellite_orbit_colors);
-	g_array_unref(satellite_orbit_firsts);
-	g_array_unref(satellite_orbit_counts);
-	g_array_unref(satellite_orbit_idxs);
+
+	dealloc_orbit_arrays();
 }
 
 void satellites_get_prep(void)
@@ -192,9 +213,7 @@ void satellites_get(void)
 		recache = FALSE;
 		dl_multi_perform(&dl_multi);
 		save_satellite_cache();
-		goto DL_FINISH;
-	}
-	{
+	} else {
 		FILE *cache = fopen(CACHE_FILENAME, "r");
 		if (!cache) {
 			dl_multi_perform(&dl_multi);
@@ -215,7 +234,6 @@ void satellites_get(void)
 			}
 		}
 	}
-DL_FINISH:;
 
 	struct DLHandle *dl_satcat = &dl_multi.handles[DL_SATCAT];
 	size_t n_satcat = count((char *)dl_satcat->memory, '\n', dl_satcat->size);
@@ -290,6 +308,7 @@ static void set_satellite_color(char code, vec3 color)
 
 void satellites_get_sync(void)
 {
+	satellites_renderable = FALSE;
 	g_free(satellites);
 	satellites = satellites_sync;
 	n_satellites = n_satellites_sync;
@@ -297,10 +316,20 @@ void satellites_get_sync(void)
 	satellite_verts = g_malloc(sizeof(vec3) * n_satellites);
 	bo_buffer(&vbo_vert_colors, vert_colors_sync, sizeof(vec3) * n_satellites);
 	g_free(vert_colors_sync);
-	satellites_renderable = FALSE;
-	status_pop(STAT_FETCHING_SAT);
+
+	n_satellite_orbits = 0;
+	satellite_orbits_size = 0;
+	dealloc_orbit_arrays();
+	alloc_orbit_arrays();
+	g_free(satellite_orbits);
+	satellite_orbits = NULL;
+	g_free(satellite_orbit_colors);
+	satellite_orbit_colors = NULL;
+
 	catalog_satellites_fill(satellites, n_satellites);
 	perf_set_num_satellites(n_satellites);
+
+	status_pop(STAT_FETCHING_SAT);
 }
 
 void satellites_phys_sync(void)
@@ -310,6 +339,11 @@ void satellites_phys_sync(void)
 
 	bo_buffer(&vbo_verts, satellite_verts, sizeof(vec3) * n_satellites);
 	satellites_renderable = TRUE;
+
+	if (orbits_changed_phys) {
+		orbits_changed_phys = FALSE;
+		bo_buffer(&vbo_orbits, satellite_orbits, satellite_orbits_size);
+	}
 }
 
 void satellites_phys(void)
@@ -331,6 +365,16 @@ void satellites_phys(void)
 		getRVForDate(&satellites[i].tle, e_phys.epoch_ms, r, v);
 		glm_vec3_copy((vec3){ r[0], r[1], r[2] }, satellite_verts[i]);
 	}
+
+	for (i = 0; i < n_satellite_orbits; i++) {
+		struct OrbitData *data = &g_array_index(satellite_orbit_data, struct OrbitData, i);
+		gint64 diff = e_phys.epoch_ms - data->start_epoch_ms;
+		if (ABS(diff) > data->max_delta_ms) {
+			orbits_changed_phys = TRUE;
+			data->start_epoch_ms = e_phys.epoch_ms;
+			gen_satellite_orbit(data->idx);
+		}
+	}
 }
 
 void satellites_render(void)
@@ -350,6 +394,21 @@ void satellites_render(void)
 	}
 }
 
+void gen_satellite_orbit(guint32 idx)
+{
+	gint64 period = MS_IN_DAY / (float)satellites[idx].tle.n;
+	int count = (int)g_array_index(satellite_orbit_counts, GLsizei, satellites[idx].orbit_idx);
+	GLint first = g_array_index(satellite_orbit_firsts, GLint, satellites[idx].orbit_idx);
+	int i;
+	for (i = 0; i < count; i++) {
+		gint64 epoch_ms = e_phys.epoch_ms + period * i / count;
+		double r[3], v[3];
+		getRVForDate(&satellites[idx].tle, epoch_ms, r, v);
+		glm_vec3_copy((vec3){ r[0], r[1], r[2] }, satellite_orbits[first + i]);
+		set_satellite_color(satellites[idx].satcat.opstat, satellite_orbit_colors[first + i]);
+	}
+}
+
 static void satellite_toggle_orbit(guint32 idx)
 {
 	if (satellites[idx].orbit_idx == UINT32_MAX) { /* Enable orbit */
@@ -358,7 +417,12 @@ static void satellite_toggle_orbit(guint32 idx)
 
 		satellites[idx].orbit_idx = n_satellite_orbits;
 
-		g_array_append_val(satellite_orbit_idxs, idx);
+		struct OrbitData new_orbit_data = (struct OrbitData){
+			.idx = idx,
+			.start_epoch_ms = e_phys.epoch_ms,
+			.max_delta_ms = satellites[idx].satcat.period * (60000L / 4L),
+		};
+		g_array_append_val(satellite_orbit_data, new_orbit_data);
 		g_array_append_val(satellite_orbit_counts, count);
 		GLint first = n_satellite_orbits ? (g_array_index(satellite_orbit_firsts, GLint, n_satellite_orbits - 1) + g_array_index(satellite_orbit_counts, GLsizei, n_satellite_orbits - 1)) : 0;
 		g_array_append_val(satellite_orbit_firsts, first);
@@ -367,15 +431,7 @@ static void satellite_toggle_orbit(guint32 idx)
 		satellite_orbits = g_realloc(satellite_orbits, satellite_orbits_size);
 		satellite_orbit_colors = g_realloc(satellite_orbit_colors, satellite_orbits_size);
 
-		gint64 period = MS_IN_DAY / (float)satellites[idx].tle.n;
-		int i;
-		for (i = 0; i < count; i++) {
-			gint64 epoch_ms = e_phys.epoch_ms + period * i / count;
-			double r[3], v[3];
-			getRVForDate(&satellites[idx].tle, epoch_ms, r, v);
-			glm_vec3_copy((vec3){ r[0], r[1], r[2] }, satellite_orbits[first + i]);
-			set_satellite_color(satellites[idx].satcat.opstat, satellite_orbit_colors[first + i]);
-		}
+		gen_satellite_orbit(idx);
 
 		bo_buffer(&vbo_orbits, satellite_orbits, satellite_orbits_size);
 		bo_buffer(&vbo_orbit_colors, satellite_orbit_colors, satellite_orbits_size);
@@ -391,7 +447,7 @@ static void satellite_toggle_orbit(guint32 idx)
 		guint32 i;
 		for (i = orbit_idx + 1; i < n_satellite_orbits; i++) {
 			g_array_index(satellite_orbit_firsts, GLsizei, i) -= count;
-			satellites[g_array_index(satellite_orbit_idxs, guint32, i)].orbit_idx--;
+			satellites[g_array_index(satellite_orbit_data, struct OrbitData, i).idx].orbit_idx--;
 			count_move += g_array_index(satellite_orbit_counts, GLsizei, i);
 		}
 
@@ -405,7 +461,7 @@ static void satellite_toggle_orbit(guint32 idx)
 
 		g_array_remove_index(satellite_orbit_firsts, orbit_idx);
 		g_array_remove_index(satellite_orbit_counts, orbit_idx);
-		g_array_remove_index(satellite_orbit_idxs, orbit_idx);
+		g_array_remove_index(satellite_orbit_data, orbit_idx);
 
 		n_satellite_orbits--;
 	}
