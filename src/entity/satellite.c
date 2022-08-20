@@ -23,6 +23,13 @@
 #include "thread.h"
 #include "vao.h"
 
+#define SATELLITE_COLOR_ACTIVE ((vec3){ 0.f, 0.9f, 0.f })
+#define SATELLITE_COLOR_NONOPERATIONAL ((vec3){ 0.9f, 0.0f, 0.f })
+#define SATELLITE_COLOR_OTHER ((vec3){ 0.6f, 0.6f, 0.6f })
+#define ORBIT_SEGMENT_LENGTH 250.f
+#define ORBIT_MAX_DELTA_DIV 4L
+#define SATELLITE_SELECT_MIN_COS_ANG2 0.9995f
+
 enum LayoutLoc {
 	LOCL_APOS = 0u,
 	LOCL_COLOR,
@@ -294,15 +301,15 @@ static void set_satellite_color(char code, vec3 color)
 	case SCSTAT_BACKUP:
 	case SCSTAT_SPARE:
 	case SCSTAT_EXTENDED_MISSION:
-		glm_vec3_copy((vec3){ 0.f, 0.9f, 0.f }, color);
+		glm_vec3_copy(SATELLITE_COLOR_ACTIVE, color);
 		break;
 	case SCSTAT_NONOPERATIONAL:
-		glm_vec3_copy((vec3){ 0.9f, 0.0f, 0.f }, color);
+		glm_vec3_copy(SATELLITE_COLOR_NONOPERATIONAL, color);
 		break;
 	/*case SCSTAT_UNKNOWN:
 	case ' ':*/
 	default:
-		glm_vec3_copy((vec3){ 0.6f, 0.6f, 0.6f }, color);
+		glm_vec3_copy(SATELLITE_COLOR_OTHER, color);
 	}
 }
 
@@ -413,14 +420,14 @@ static void satellite_toggle_orbit(guint32 idx)
 {
 	if (satellites[idx].orbit_idx == UINT32_MAX) { /* Enable orbit */
 		/* For similar-length line segments, apply Kepler's Third Law (T^2 prop. r^3) */
-		int count = 250.f / cbrtf(satellites[idx].tle.n * satellites[idx].tle.n);
+		int count = ORBIT_SEGMENT_LENGTH / cbrtf(satellites[idx].tle.n * satellites[idx].tle.n);
 
 		satellites[idx].orbit_idx = n_satellite_orbits;
 
 		struct OrbitData new_orbit_data = (struct OrbitData){
 			.idx = idx,
 			.start_epoch_ms = e_phys.epoch_ms,
-			.max_delta_ms = satellites[idx].satcat.period * (60000L / 4L),
+			.max_delta_ms = satellites[idx].satcat.period * (60000L / ORBIT_MAX_DELTA_DIV),
 		};
 		g_array_append_val(satellite_orbit_data, new_orbit_data);
 		g_array_append_val(satellite_orbit_counts, count);
@@ -487,7 +494,7 @@ void satellite_select(double xpos, double ypos)
 		float dp = glm_vec3_dot(dir, p1sat);
 		float dist2 = glm_vec3_norm2(p1sat);
 		float cos_ang2 = (dp * dp * dir_inv_len2) / dist2;
-		if (unlikely(cos_ang2 > 0.9994f && dp > 0 && dist2 < min_dist2)) {
+		if (unlikely(cos_ang2 > SATELLITE_SELECT_MIN_COS_ANG2 && dp > 0 && dist2 < min_dist2)) {
 			idx = i;
 			min_dist2 = dist2;
 		}

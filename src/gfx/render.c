@@ -16,16 +16,22 @@
 
 #include <cglm/cglm.h>
 
+#define DEFAULT_CAMERA_POS ((vec3){ 0.f, 5.f, 0.f })
+#define DEFAULT_CAMERA_RAD 5.f
+#define CAMERA_FOV ((float)G_PI / 2.f)
+#define CAMERA_NEAR 0.05f
+#define CAMERA_FAR 100.f
+
 void render_init(void)
 {
-	glm_vec3_copy((vec3){ 0, 5.0, 0 }, e_camera.pos);
+	glm_vec3_copy(DEFAULT_CAMERA_POS, e_camera.pos);
 	glm_vec3_copy((vec3){ 0, 0, 0 }, e_camera.target);
 	glm_vec3_copy((vec3){ 0, 0, 1 }, e_camera.up);
 
-	e_camera.rad = 5.f;
-	e_camera.fov = (float)G_PI / 2.f;
-	e_camera.near = 0.05f;
-	e_camera.far = 100.f;
+	e_camera.rad = DEFAULT_CAMERA_RAD;
+	e_camera.fov = CAMERA_FOV;
+	e_camera.near = CAMERA_NEAR;
+	e_camera.far = CAMERA_FAR;
 
 	camera_view_update(&e_camera);
 	camera_proj_update(&e_camera);
@@ -38,15 +44,10 @@ void render_init(void)
 	glEnable(GL_STENCIL_TEST);
 }
 
-void render_deinit(void)
-{
-}
-
 void render_process(void)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	entity_render();
-	//ui_render();
 }

@@ -29,7 +29,6 @@ gboolean on_window_main_delete_event(GtkWidget *widget, GdkEvent *event, gpointe
 	(void)user_data;
 
 	thread_deinit();
-	render_deinit();
 	entity_deinit();
 	ui_deinit();
 	system_deinit();
