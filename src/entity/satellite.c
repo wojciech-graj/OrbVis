@@ -43,6 +43,9 @@
 #define ORBIT_SEGMENT_LENGTH 250.f
 #define ORBIT_MAX_DELTA_DIV 4L
 #define SATELLITE_SELECT_MIN_COS_ANG2 0.9995f
+#define WAIT_USEC 100UL
+#define SATELLITE_CALC_STEP 2000
+#define MAX_THREAD_TIC 2
 
 enum LayoutLoc {
 	LOCL_APOS = 0u,
@@ -101,6 +104,12 @@ static gboolean recache = FALSE;
 
 static const char *CACHE_FILENAME = ".sat_cache";
 
+static GThreadPool *thread_pool;
+static guint32 *thread_pool_indices_sync;
+static guint32 n_thread_pool_indices_sync;
+static guint32 *thread_pool_indices = NULL;
+static guint32 n_thread_pool_indices = 0;
+
 static void satellite_toggle_orbit(guint32 idx);
 static void gen_satellite_orbit(guint32 idx);
 static void satellites_get(void);
@@ -111,6 +120,7 @@ static int sc_compare(const void *a, const void *b, void *udata);
 static void set_satellite_color(char code, vec3 color);
 static void save_satellite_cache(void);
 static void load_cache(struct DLHandle *handle, guint64 size, FILE *cache);
+static void satellites_calc_pos(gpointer data, gpointer user_data);
 
 void satellite_init(void)
 {
@@ -139,6 +149,9 @@ void satellite_init(void)
 											  });
 
 	alloc_orbit_arrays();
+
+	guint num_proc = g_get_num_processors();
+	thread_pool = g_thread_pool_new(satellites_calc_pos, NULL, MIN(num_proc, MAX_THREAD_TIC), TRUE, NULL);
 }
 
 void alloc_orbit_arrays(void)
@@ -175,6 +188,8 @@ void satellite_deinit(void)
 	g_free(satellite_orbit_colors);
 
 	dealloc_orbit_arrays();
+
+	g_thread_pool_free(thread_pool, TRUE, FALSE);
 }
 
 void satellites_get_prep(void)
@@ -305,6 +320,11 @@ void satellites_get(void)
 	vert_colors_sync = g_malloc(sizeof(vec3) * n_satellites_sync);
 	for (i = 0; i < n_satellites_sync; i++)
 		set_satellite_color(satellites_sync[i].satcat.opstat, vert_colors_sync[i]);
+
+	n_thread_pool_indices_sync = (SATELLITE_CALC_STEP - 1 + n_satellites_sync) / SATELLITE_CALC_STEP;
+	thread_pool_indices_sync = g_malloc(sizeof(guint32) * n_thread_pool_indices_sync);
+	for (i = 0; i < n_thread_pool_indices_sync; i++)
+		thread_pool_indices_sync[i] = SATELLITE_CALC_STEP * i;
 }
 
 static void set_satellite_color(char code, vec3 color)
@@ -347,23 +367,48 @@ void satellites_get_sync(void)
 	g_free(satellite_orbit_colors);
 	satellite_orbit_colors = NULL;
 
+	g_free(thread_pool_indices);
+	thread_pool_indices = thread_pool_indices_sync;
+	n_thread_pool_indices = n_thread_pool_indices_sync;
+
 	catalog_satellites_fill(satellites, n_satellites);
 	perf_set_num_satellites(n_satellites);
 
 	status_pop(STAT_FETCHING_SAT);
 }
 
-void satellites_phys_sync(void)
+void satellites_tic_sync(void)
 {
 	if (!n_satellites)
 		return;
 
+	while (g_thread_pool_unprocessed(thread_pool))
+		g_usleep(WAIT_USEC);
+
 	bo_buffer(&vbo_verts, satellite_verts, sizeof(vec3) * n_satellites);
 	satellites_renderable = TRUE;
+}
 
-	if (orbits_changed_phys) {
-		orbits_changed_phys = FALSE;
-		bo_buffer(&vbo_orbits, satellite_orbits, satellite_orbits_size);
+void satellites_tic(void)
+{
+	if (!n_satellites)
+		return;
+
+	guint32 i;
+	for (i = 0; i < n_thread_pool_indices; i++)
+		g_thread_pool_push(thread_pool, &thread_pool_indices[i], NULL);
+}
+
+void satellites_calc_pos(gpointer data, gpointer user_data)
+{
+	(void)user_data;
+	guint32 start = *((guint32*)data);
+	guint32 end = MIN(n_satellites, start + SATELLITE_CALC_STEP);
+	guint32 i;
+	for (i = start; i < end; i++) {
+		double r[3], v[3];
+		getRVForDate(&satellites[i].tle, e_phys.epoch_ms, r, v);
+		glm_vec3_copy((vec3){ r[0], r[1], r[2] }, satellite_verts[i]);
 	}
 }
 
@@ -381,12 +426,6 @@ void satellites_phys(void)
 	glm_mat4_ins3(t, teme_to_world);
 
 	size_t i;
-	for (i = 0; i < n_satellites; i++) {
-		double r[3], v[3];
-		getRVForDate(&satellites[i].tle, e_phys.epoch_ms, r, v);
-		glm_vec3_copy((vec3){ r[0], r[1], r[2] }, satellite_verts[i]);
-	}
-
 	for (i = 0; i < n_satellite_orbits; i++) {
 		struct OrbitData *data = &g_array_index(satellite_orbit_data, struct OrbitData, i);
 		gint64 diff = e_phys.epoch_ms - data->start_epoch_ms;
@@ -395,6 +434,17 @@ void satellites_phys(void)
 			data->start_epoch_ms = e_phys.epoch_ms;
 			gen_satellite_orbit(data->idx);
 		}
+	}
+}
+
+void satellites_phys_sync(void)
+{
+	if (!n_satellites)
+		return;
+
+	if (orbits_changed_phys) {
+		orbits_changed_phys = FALSE;
+		bo_buffer(&vbo_orbits, satellite_orbits, satellite_orbits_size);
 	}
 }
 

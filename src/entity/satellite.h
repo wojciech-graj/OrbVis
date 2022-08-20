@@ -33,6 +33,9 @@ void satellites_render(void);
 void satellites_phys(void);
 void satellites_phys_sync(void);
 
+void satellites_tic(void);
+void satellites_tic_sync(void);
+
 void satellites_get_prep(void);
 void *satellites_get_thrd(void *arguments);
 void satellites_get_sync(void);

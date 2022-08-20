@@ -53,8 +53,8 @@ void thread_dispatch(enum ThreadID id, void *data)
 
 void thread_join(enum ThreadID id)
 {
-	g_atomic_int_set(&e_threads[id].finished, 0);
 	g_thread_join(e_threads[id].thread);
+	g_atomic_int_set(&e_threads[id].finished, 0);
 	e_threads[id].thread = NULL;
 	params[id].sync();
 }
