@@ -45,4 +45,6 @@ void satellite_select_ptr(struct Satellite *satellite);
 
 void satellite_clear_cache(void);
 
+void satellites_filter(void);
+
 #endif /* __SATELLITE_H__ */

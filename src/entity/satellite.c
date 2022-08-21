@@ -29,6 +29,7 @@
 #include "catalog.h"
 #include "download.h"
 #include "error.h"
+#include "filter.h"
 #include "gfx.h"
 #include "perf.h"
 #include "phys.h"
@@ -46,6 +47,7 @@
 #define WAIT_USEC 100UL
 #define SATELLITE_CALC_STEP 2000
 #define MAX_THREAD_TIC 2
+#define CACHE_INVAL_MS 43200000LL
 
 enum LayoutLoc {
 	LOCL_APOS = 0u,
@@ -90,6 +92,8 @@ static struct Satellite *satellites = NULL;
 static size_t n_satellites = 0;
 static gboolean satellites_renderable = FALSE;
 static vec3 *satellite_verts = NULL;
+static size_t n_satellites_render = 0;
+static GLuint *satellite_indices = NULL;
 
 static size_t n_satellite_orbits = 0;
 static size_t satellite_orbits_size = 0;
@@ -192,6 +196,19 @@ void satellite_deinit(void)
 	g_thread_pool_free(thread_pool, TRUE, FALSE);
 }
 
+void satellites_filter(void)
+{
+	n_satellites_render = 0;
+	size_t i;
+	for (i = 0; i < n_satellites; i++) {
+		if (filter_func(&satellites[i])) {
+			satellite_indices[n_satellites_render] = i;
+			n_satellites_render++;
+		} else if (satellites[i].orbit_idx != UINT32_MAX)
+			satellite_select_ptr(&satellites[i]);
+	}
+}
+
 void satellites_get_prep(void)
 {
 	status_push(STAT_FETCHING_SAT, "Fetching satellite data...");
@@ -257,7 +274,7 @@ void satellites_get(void)
 		} else {
 			gint64 cache_time;
 			fread(&cache_time, 8, 1, cache);
-			if (system_epoch_ms() - cache_time > 43200000LL) {
+			if (system_epoch_ms() - cache_time > CACHE_INVAL_MS) {
 				fclose(cache);
 				dl_multi_perform(&dl_multi);
 				save_satellite_cache();
@@ -358,6 +375,9 @@ void satellites_get_sync(void)
 	bo_buffer(&vbo_vert_colors, vert_colors_sync, sizeof(vec3) * n_satellites);
 	g_free(vert_colors_sync);
 
+	g_free(satellite_indices);
+	satellite_indices = g_malloc(sizeof(GLuint) * n_satellites);
+
 	n_satellite_orbits = 0;
 	satellite_orbits_size = 0;
 	dealloc_orbit_arrays();
@@ -373,6 +393,7 @@ void satellites_get_sync(void)
 
 	catalog_satellites_fill(satellites, n_satellites);
 	perf_set_num_satellites(n_satellites);
+	satellites_filter();
 
 	status_pop(STAT_FETCHING_SAT);
 }
@@ -402,7 +423,7 @@ void satellites_tic(void)
 void satellites_calc_pos(gpointer data, gpointer user_data)
 {
 	(void)user_data;
-	guint32 start = *((guint32*)data);
+	guint32 start = *((guint32 *)data);
 	guint32 end = MIN(n_satellites, start + SATELLITE_CALC_STEP);
 	guint32 i;
 	for (i = start; i < end; i++) {
@@ -457,7 +478,7 @@ void satellites_render(void)
 	if (satellites_renderable) {
 		vao_bind(&vao_satellites);
 		glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
-		glDrawArrays(GL_POINTS, 0, n_satellites);
+		glDrawElements(GL_POINTS, n_satellites_render, GL_UNSIGNED_INT, satellite_indices);
 		glDisable(GL_VERTEX_PROGRAM_POINT_SIZE);
 
 		vao_bind(&vao_orbits);

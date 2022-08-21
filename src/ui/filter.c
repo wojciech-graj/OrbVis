@@ -148,6 +148,7 @@ void on_filter_clear_clicked(GtkButton *button, gpointer user_data)
 
 	active = FALSE;
 	gtk_tree_model_filter_refilter(e_catalog_filter);
+	satellites_filter();
 }
 
 void filter_set_from_entry(enum FilterEntry entry, enum FilterField field, double *target, double dflt[2])
@@ -205,6 +206,7 @@ void on_filter_apply_clicked(GtkButton *button, gpointer user_data)
 
 	active = TRUE;
 	gtk_tree_model_filter_refilter(e_catalog_filter);
+	satellites_filter();
 }
 
 gboolean filter_func(struct Satellite *satellite)
