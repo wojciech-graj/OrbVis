@@ -7,20 +7,23 @@ endif
 
 CC := gcc
 WARNINGS := -Wall -Wextra -Wpedantic -Wdouble-promotion -Wstrict-prototypes -Wshadow -Wduplicated-cond -Wduplicated-branches -Wjump-misses-init -Wnull-dereference -Wrestrict -Wlogical-op -Walloc-zero -Wformat-security -Wformat-signedness -Winit-self -Wlogical-op -Wmissing-declarations -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wswitch-enum -Wundef -Wwrite-strings -Wno-discarded-qualifiers
-CFLAGS := -march=native -O3 `pkg-config --cflags gtk+-3.0 cglm libcurl epoxy`
+CFLAGS := -O3 `pkg-config --cflags gtk+-3.0 cglm libcurl epoxy`
 LDFLAGS := -lm
 
 ifeq ($(MAKECMDGOALS),windows)
-  CFLAGS += -flto
+  CFLAGS += -march=core2 -flto
   LDFLAGS += -lopengl32 `pkg-config --libs gtk+-3.0 cglm libcurl epoxy` -mwindows -flto
 else
   LDFLAGS += -ldl `pkg-config --libs gl gtk+-3.0 cglm libcurl epoxy`
   ifeq ($(MAKECMDGOALS),debug)
-    CFLAGS += -fsanitize=address -fsanitize=undefined -g -ftrapv -fno-omit-frame-pointer -lrt -DDEBUG
+    CFLAGS += -march=native -fsanitize=address -fsanitize=undefined -g -ftrapv -fno-omit-frame-pointer -lrt -DDEBUG
     LDFLAGS += -fsanitize=address -fsanitize=undefined -g -ftrapv -fno-omit-frame-pointer -lrt
   else
     CFLAGS += -flto
     LDFLAGS += -flto
+    ifeq ($(MAKECMDGOALS),release)
+      CFLAGS += -march=native
+    endif
   endif
 endif
 
@@ -77,5 +80,6 @@ clean:
 
 windows: $(TARGET)
 debug: $(TARGET)
+release: $(TARGET)
 
 -include $(DEPS)
