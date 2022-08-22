@@ -16,7 +16,7 @@ ifeq ($(MAKECMDGOALS),windows)
 else
   LDFLAGS += -ldl `pkg-config --libs gl gtk+-3.0 cglm libcurl epoxy`
   ifeq ($(MAKECMDGOALS),debug)
-    CFLAGS += -fsanitize=address -fsanitize=undefined -g -ftrapv -fno-omit-frame-pointer -lrt
+    CFLAGS += -fsanitize=address -fsanitize=undefined -g -ftrapv -fno-omit-frame-pointer -lrt -DDEBUG
     LDFLAGS += -fsanitize=address -fsanitize=undefined -g -ftrapv -fno-omit-frame-pointer -lrt
   else
     CFLAGS += -flto

@@ -12,28 +12,26 @@
  * GNU General Public License for more details.
  **/
 
-#ifndef __TYPE_H__
-#define __TYPE_H__
+#ifndef __VERSION_H__
+#define __VERSION_H__
 
-#include <glib.h>
+#include "type.h"
 
-#define UNREACHABLE __builtin_unreachable()
+#define VERSION_MAJOR 0
+#define VERSION_MINOR 2
+#define VERSION_PATCH 1
 
-#define likely(x) __builtin_expect((x), TRUE)
-#define unlikely(x) __builtin_expect((x), FALSE)
+#ifdef DEBUG
+#define DEBUG_STRING "-debug"
+#else
+#define DEBUG_STRING
+#endif
 
-#define arrlen(a) (sizeof(a) / sizeof(a[0]))
+#define VERSION_STRING      \
+	XSTR(VERSION_MAJOR) \
+	"." XSTR(VERSION_MINOR) "." XSTR(VERSION_PATCH) DEBUG_STRING
 
-#define SWAP(a, b)                       \
-	do {                             \
-		__typeof__(a) temp_ = a; \
-		a = b;                   \
-		b = temp_;               \
-	} while (0)
+#define ABOUT_STRING "OrbVis " VERSION_STRING "\nCopyright (c) 2022 Wojciech Graj" \
+		     "\nLicense GPLv2+: GNU GPL version 2 or later."
 
-#define sgn(x) (signbit(x) ? -1 : 1)
-
-#define XSTR(s) STR(s)
-#define STR(s) #s
-
-#endif /* __TYPE_H__ */
+#endif /* __VERSION_H__ */

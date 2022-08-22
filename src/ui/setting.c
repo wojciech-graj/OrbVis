@@ -17,6 +17,7 @@
 #include "perf.h"
 #include "satellite.h"
 #include "thread.h"
+#include "version.h"
 
 struct Setting {
 	char *id;
@@ -110,6 +111,9 @@ void setting_init(GtkBuilder *builder)
 		NULL);
 
 	window_settings = GTK_WINDOW(gtk_builder_get_object(builder, "window_settings"));
+
+	GtkLabel *about = GTK_LABEL(gtk_builder_get_object(builder, "about"));
+	gtk_label_set_text(about, ABOUT_STRING);
 
 	unsigned i;
 	for (i = 0; i < 3; i++)
