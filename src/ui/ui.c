@@ -27,7 +27,7 @@
 #include "status.h"
 #include "system.h"
 #include "thread.h"
-#include "timemgr.h"
+#include "toolbar.h"
 
 const gchar *FILENAME_GUI = "res/ui/ui.glade";
 
@@ -79,7 +79,7 @@ void ui_init(int argc, char ***argv)
 	gfx_init(builder);
 	input_init(builder);
 	status_init(builder);
-	timemgr_init(builder);
+	toolbar_init(builder);
 	catalog_init(builder);
 	setting_init(builder);
 	info_init(builder);

@@ -1316,7 +1316,6 @@
               <object class="GtkToggleToolButton" id="play">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">toolbutton</property>
                 <property name="use-underline">True</property>
                 <property name="icon-name">media-playback-start</property>
                 <property name="active">True</property>
@@ -1354,7 +1353,6 @@
               <object class="GtkToolButton" id="decelerate">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">__glade_unnamed_11</property>
                 <property name="use-underline">True</property>
                 <property name="icon-name">media-seek-backward</property>
                 <signal name="clicked" handler="on_decelerate_clicked" swapped="no"/>
@@ -1386,7 +1384,6 @@
               <object class="GtkToolButton" id="accelerate">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">__glade_unnamed_13</property>
                 <property name="use-underline">True</property>
                 <property name="icon-name">media-seek-forward</property>
                 <signal name="clicked" handler="on_accelerate_clicked" swapped="no"/>
@@ -1400,6 +1397,32 @@
               <object class="GtkSeparatorToolItem">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="zoom_out">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="use-underline">True</property>
+                <property name="icon-name">zoom-out</property>
+                <signal name="clicked" handler="on_zoom_out_clicked" swapped="no"/>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="homogeneous">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkToolButton" id="zoom_in">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="use-underline">True</property>
+                <property name="icon-name">zoom-in</property>
+                <signal name="clicked" handler="on_zoom_in_clicked" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -1435,7 +1458,7 @@
                 <property name="can-focus">False</property>
               </object>
               <packing>
-                <property name="expand">True</property>
+                <property name="expand">False</property>
                 <property name="homogeneous">True</property>
               </packing>
             </child>

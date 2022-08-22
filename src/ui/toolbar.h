@@ -12,21 +12,12 @@
  * GNU General Public License for more details.
  **/
 
-#ifndef __TIMEMGR_H__
-#define __TIMEMGR_H__
+#ifndef __TOOLBAR_H__
+#define __TOOLBAR_H__
 
 #include "ui.h"
 
-enum Timeflow {
-	TIME_REALTIME = 0u,
-	TIME_PAUSE,
-	TIME_ARBITRARY,
-};
+void toolbar_init(GtkBuilder *builder);
+void toolbar_tic(void);
 
-extern enum Timeflow e_timeflow;
-extern float e_timescale;
-
-void timemgr_init(GtkBuilder *builder);
-void timemgr_tic(void);
-
-#endif /* __TIMEMGR_H__ */
+#endif /* __TOOLBAR_H__ */

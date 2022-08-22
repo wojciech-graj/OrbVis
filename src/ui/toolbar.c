@@ -12,16 +12,16 @@
  * GNU General Public License for more details.
  **/
 
-#include "timemgr.h"
+#include "toolbar.h"
 
+#include "camera.h"
 #include "phys.h"
 #include "setting.h"
 #include "system.h"
 
 #include <stdio.h>
 
-enum Timeflow e_timeflow = TIME_REALTIME;
-float e_timescale = 1.f;
+#define ZOOM_DIST 0.2
 
 static GtkToggleToolButton *play_button;
 static GtkEntry *time_entry;
@@ -31,6 +31,8 @@ static void on_play_toggled(GtkToggleToolButton *toggle_tool_button, gpointer us
 static void on_realtime_clicked(GtkToolButton *toolbutton, gpointer user_data);
 static void on_decelerate_clicked(GtkToolButton *toolbutton, gpointer user_data);
 static void on_accelerate_clicked(GtkToolButton *toolbutton, gpointer user_data);
+static void on_zoom_out_clicked(GtkToolButton *toolbutton, gpointer user_data);
+static void on_zoom_in_clicked(GtkToolButton *toolbutton, gpointer user_data);
 static void on_time_activate(GtkEntry *entry, gpointer user_data);
 static void on_speed_activate(GtkEntry *entry, gpointer user_data);
 static void timeflow_set(enum Timeflow timeflow);
@@ -68,6 +70,22 @@ void on_accelerate_clicked(GtkToolButton *toolbutton, gpointer user_data)
 	if (e_timeflow == TIME_REALTIME)
 		timeflow_set(TIME_ARBITRARY);
 	e_timescale *= 1.05f;
+}
+
+static void on_zoom_out_clicked(GtkToolButton *toolbutton, gpointer user_data)
+{
+	(void)toolbutton;
+	(void)user_data;
+
+	camera_zoom(&e_camera, -ZOOM_DIST);
+}
+
+static void on_zoom_in_clicked(GtkToolButton *toolbutton, gpointer user_data)
+{
+	(void)toolbutton;
+	(void)user_data;
+
+	camera_zoom(&e_camera, ZOOM_DIST);
 }
 
 void on_time_activate(GtkEntry *entry, gpointer user_data)
@@ -111,7 +129,7 @@ void timeflow_set(enum Timeflow timeflow)
 	gtk_toggle_tool_button_set_active(play_button, (timeflow == TIME_PAUSE) ? FALSE : TRUE);
 }
 
-void timemgr_init(GtkBuilder *builder)
+void toolbar_init(GtkBuilder *builder)
 {
 	gtk_builder_add_callback_symbols(builder,
 		"on_play_toggled", G_CALLBACK(on_play_toggled),
@@ -120,13 +138,15 @@ void timemgr_init(GtkBuilder *builder)
 		"on_accelerate_clicked", G_CALLBACK(on_accelerate_clicked),
 		"on_time_activate", G_CALLBACK(on_time_activate),
 		"on_speed_activate", G_CALLBACK(on_speed_activate),
+		"on_zoom_in_clicked", G_CALLBACK(on_zoom_in_clicked),
+		"on_zoom_out_clicked", G_CALLBACK(on_zoom_out_clicked),
 		NULL);
 	play_button = GTK_TOGGLE_TOOL_BUTTON(gtk_builder_get_object(builder, "play"));
 	time_entry = GTK_ENTRY(gtk_builder_get_object(builder, "time"));
 	speed_entry = GTK_ENTRY(gtk_builder_get_object(builder, "speed"));
 }
 
-void timemgr_tic(void)
+void toolbar_tic(void)
 {
 	if (!gtk_widget_has_focus(GTK_WIDGET(time_entry)))
 		gtk_entry_set_text(time_entry, epoch_to_iso8601(e_phys.epoch_ms, gs_gmt, TRUE));

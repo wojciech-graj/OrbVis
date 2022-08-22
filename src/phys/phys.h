@@ -29,6 +29,14 @@ struct PhysCtx {
 	vec3 sun_dir;
 };
 
+enum Timeflow {
+	TIME_REALTIME = 0u,
+	TIME_PAUSE,
+	TIME_ARBITRARY,
+};
+
+extern enum Timeflow e_timeflow;
+extern float e_timescale;
 extern struct PhysCtx e_phys;
 
 void phys_init(void);

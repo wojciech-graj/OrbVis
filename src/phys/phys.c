@@ -21,8 +21,9 @@
 #include "setting.h"
 #include "system.h"
 #include "thread.h"
-#include "timemgr.h"
 
+enum Timeflow e_timeflow = TIME_REALTIME;
+float e_timescale = 1.f;
 struct PhysCtx e_phys;
 static gint64 epoch_ms;
 static struct PhysCtx phys_ctx_sync;
