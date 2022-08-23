@@ -37,6 +37,14 @@ enum UniformLoc {
 	LOCU_TRANSFORM,
 };
 
+extern const unsigned char res_shader_sky_vert[];
+extern const unsigned int res_shader_sky_vert_len;
+extern const unsigned char res_shader_sky_frag[];
+extern const unsigned int res_shader_sky_frag_len;
+
+extern const unsigned char res_texture_stars_jpg[];
+extern const unsigned int res_texture_stars_jpg_len;
+
 static struct IdxObj obj;
 static struct VAO vao;
 static struct Model model;
@@ -53,12 +61,12 @@ void sky_init(void)
 	glm_scale_make(model.scl, (vec3){ 50.f, 50.f, 50.f });
 	model_transform(&model);
 
-	shader_init(&shader, "res/shader/sky.vert", "res/shader/sky.frag", 2, (struct ShaderAttr[]){
-										      { LOCL_APOS, "in_pos" },
-										      { LOCL_ATEXCOORD, "in_uv" },
-									      });
+	shader_init(&shader, res_shader_sky_vert, res_shader_sky_vert_len, res_shader_sky_frag, res_shader_sky_frag_len, 2, (struct ShaderAttr[]){
+																    { LOCL_APOS, "in_pos" },
+																    { LOCL_ATEXCOORD, "in_uv" },
+															    });
 
-	texture_init_from_image(&texture, "res/texture/stars.jpg", GL_TEXTURE0, GL_TEXTURE_2D);
+	texture_init_from_image(&texture, res_texture_stars_jpg, res_texture_stars_jpg_len, GL_TEXTURE0, GL_TEXTURE_2D);
 
 	vao_attr(&vao, &obj.vbo_verts, 0, 3, GL_FLOAT, sizeof(vec3), 0);
 	vao_attr(&vao, &obj.vbo_uv, 1, 2, GL_FLOAT, sizeof(vec2), 0);

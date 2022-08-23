@@ -62,7 +62,7 @@ void perf_tic(void)
 	frame_idx = (frame_idx + 1) % NUM_FRAMETIMES;
 
 	if (visible) {
-		gchar *text = g_strdup_printf("%.1f", (NUM_FRAMETIMES * 1000.f) / frametime_total);
+		gchar *text = g_strdup_printf("%.1f", (NUM_FRAMETIMES * 1000.0) / frametime_total);
 		gtk_label_set_text(fps_lbl, text);
 		g_free(text);
 	}

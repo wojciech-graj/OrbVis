@@ -14,48 +14,29 @@
 
 #include "shader.h"
 
-#include <stdio.h>
-
 #include "error.h"
 #include "error_gfx.h"
 #include "system.h"
 
-static GLint shader_compile(char *path, GLenum type);
+static GLint shader_compile(char *str, unsigned int len, GLenum type);
 
-static GLint shader_compile(char *path, GLenum type)
+static GLint shader_compile(char *str, unsigned int len, GLenum type)
 {
-	FILE *f;
-	char *buf;
-	long len;
-	size_t nmemb_read;
-
-	f = fopen(path, "rb");
-	error_check(f, "Error opening shader at [%s].", path);
-
-	len = fsize(f);
-	error_check(len > 0, "Failed to get size of shader at [%s].", path);
-
-	buf = g_malloc((size_t)len);
-	nmemb_read = fread(buf, sizeof(char), len, f);
-	error_check(nmemb_read, "Failed to read shader at [%s].", path);
-	fclose(f);
-
 	GLuint handle = glCreateShader(type);
-	glShaderSource(handle, 1, (const GLchar *const *)&buf, (const GLint *)&len);
+	glShaderSource(handle, 1, (const GLchar *const *)&str, (const GLint *)&len);
 	glCompileShader(handle);
 
 	GLint compiled;
 	glGetShaderiv(handle, GL_COMPILE_STATUS, &compiled);
-	gfx_error_check(compiled, glGetShaderInfoLog, handle, "Failed to compile shader at [%s].", path);
+	gfx_error_check(compiled, glGetShaderInfoLog, handle, "Failed to compile shader.");
 
-	g_free(buf);
 	return handle;
 }
 
-void shader_init(struct Shader *shader, char *vs_path, char *fs_path, size_t n_vertex_attr, struct ShaderAttr vertex_attr[])
+void shader_init(struct Shader *shader, char *vs, unsigned int vs_len, char *fs, unsigned int fs_len, size_t n_vertex_attr, struct ShaderAttr vertex_attr[])
 {
-	GLuint vs_handle = shader_compile(vs_path, GL_VERTEX_SHADER);
-	GLuint fs_handle = shader_compile(fs_path, GL_FRAGMENT_SHADER);
+	GLuint vs_handle = shader_compile(vs, vs_len, GL_VERTEX_SHADER);
+	GLuint fs_handle = shader_compile(fs, fs_len, GL_FRAGMENT_SHADER);
 	shader->handle = glCreateProgram();
 
 	glAttachShader(shader->handle, vs_handle);

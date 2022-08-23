@@ -25,7 +25,7 @@ struct Texture {
 
 void texture_init(struct Texture *texture, GLenum unit, GLenum type);
 
-void texture_init_from_image(struct Texture *texture, const char *filename, GLenum unit, GLenum type);
+void texture_init_from_image(struct Texture *texture, unsigned char *buffer, unsigned int len, GLenum unit, GLenum type);
 
 void texture_deinit(struct Texture *texture);
 

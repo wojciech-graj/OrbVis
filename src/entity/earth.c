@@ -46,6 +46,22 @@ enum UniformLoc {
 	LOCU_LIGHTING,
 };
 
+extern const unsigned char res_shader_earth_vert[];
+extern const unsigned int res_shader_earth_vert_len;
+extern const unsigned char res_shader_earth_frag[];
+extern const unsigned int res_shader_earth_frag_len;
+
+extern const unsigned char res_texture_earth_daymap_jpg[];
+extern const unsigned int res_texture_earth_daymap_jpg_len;
+extern const unsigned char res_texture_earth_nightmap_jpg[];
+extern const unsigned int res_texture_earth_nightmap_jpg_len;
+extern const unsigned char res_texture_earth_specular_map_jpg[];
+extern const unsigned int res_texture_earth_specular_map_jpg_len;
+extern const unsigned char res_texture_earth_clouds_jpg[];
+extern const unsigned int res_texture_earth_clouds_jpg_len;
+extern const unsigned char res_texture_sky_gradient_jpg[];
+extern const unsigned int res_texture_sky_gradient_jpg_len;
+
 struct IdxObj obj_earth;
 struct VAO vao_earth;
 static struct Model model;
@@ -66,16 +82,16 @@ void earth_init(void)
 	idx_obj_init(&obj_earth);
 	model_init(&model, &obj_earth);
 
-	shader_init(&shader, "res/shader/earth.vert", "res/shader/earth.frag", 2, (struct ShaderAttr[]){
-											  { LOCL_APOS, "in_pos" },
-											  { LOCL_ATEXCOORD, "in_uv" },
-										  });
+	shader_init(&shader, res_shader_earth_vert, res_shader_earth_vert_len, res_shader_earth_frag, res_shader_earth_frag_len, 2, (struct ShaderAttr[]){
+																	    { LOCL_APOS, "in_pos" },
+																	    { LOCL_ATEXCOORD, "in_uv" },
+																    });
 
-	texture_init_from_image(&texture_day, "res/texture/earth_daymap.jpg", GL_TEXTURE0, GL_TEXTURE_2D);
-	texture_init_from_image(&texture_night, "res/texture/earth_nightmap.jpg", GL_TEXTURE1, GL_TEXTURE_2D);
-	texture_init_from_image(&texture_specular, "res/texture/earth_specular_map.jpg", GL_TEXTURE2, GL_TEXTURE_2D);
-	texture_init_from_image(&texture_clouds, "res/texture/earth_clouds.jpg", GL_TEXTURE3, GL_TEXTURE_2D);
-	texture_init_from_image(&texture_clouds, "res/texture/sky_gradient.jpg", GL_TEXTURE4, GL_TEXTURE_1D);
+	texture_init_from_image(&texture_day, res_texture_earth_daymap_jpg, res_texture_earth_daymap_jpg_len, GL_TEXTURE0, GL_TEXTURE_2D);
+	texture_init_from_image(&texture_night, res_texture_earth_nightmap_jpg, res_texture_earth_nightmap_jpg_len, GL_TEXTURE1, GL_TEXTURE_2D);
+	texture_init_from_image(&texture_specular, res_texture_earth_specular_map_jpg, res_texture_earth_specular_map_jpg_len, GL_TEXTURE2, GL_TEXTURE_2D);
+	texture_init_from_image(&texture_clouds, res_texture_earth_clouds_jpg, res_texture_earth_clouds_jpg_len, GL_TEXTURE3, GL_TEXTURE_2D);
+	texture_init_from_image(&texture_gradient, res_texture_sky_gradient_jpg, res_texture_sky_gradient_jpg_len, GL_TEXTURE4, GL_TEXTURE_1D);
 
 	vao_attr(&vao_earth, &obj_earth.vbo_verts, 0, 3, GL_FLOAT, sizeof(vec3), 0);
 	vao_attr(&vao_earth, &obj_earth.vbo_uv, 1, 2, GL_FLOAT, sizeof(vec2), 0);

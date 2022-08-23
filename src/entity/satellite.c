@@ -69,6 +69,11 @@ struct OrbitData {
 	gint64 max_delta_ms;
 };
 
+extern const unsigned char res_shader_satellite_vert[];
+extern const unsigned int res_shader_satellite_vert_len;
+extern const unsigned char res_shader_satellite_frag[];
+extern const unsigned int res_shader_satellite_frag_len;
+
 static struct DLMulti dl_multi;
 
 static struct VAO vao_satellites;
@@ -145,10 +150,10 @@ void satellite_init(void)
 	vao_attr(&vao_orbits, &vbo_orbits, LOCL_APOS, 3, GL_FLOAT, sizeof(vec3), 0);
 	vao_attr(&vao_orbits, &vbo_orbit_colors, LOCL_COLOR, 3, GL_FLOAT, sizeof(vec3), 0);
 
-	shader_init(&shader, "res/shader/satellite.vert", "res/shader/satellite.frag", 2, (struct ShaderAttr[]){
-												  { LOCL_APOS, "in_pos" },
-												  { LOCL_COLOR, "in_color" },
-											  });
+	shader_init(&shader, res_shader_satellite_vert, res_shader_satellite_vert_len, res_shader_satellite_frag, res_shader_satellite_frag_len, 2, (struct ShaderAttr[]){
+																			    { LOCL_APOS, "in_pos" },
+																			    { LOCL_COLOR, "in_color" },
+																		    });
 
 	alloc_orbit_arrays();
 

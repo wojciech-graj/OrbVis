@@ -19,8 +19,6 @@
 #include "setting.h"
 #include "system.h"
 
-#include <stdio.h>
-
 #define ZOOM_DIST 0.2
 
 static GtkToggleToolButton *play_button;
