@@ -12,7 +12,9 @@ The following packages have to be installed prior to compilation: `gcc pkg-confi
 ```
 apt-get install gcc pkg-config libgtk-3-dev libcglm-dev libcurl4-openssl-dev libepoxy-dev
 ```
-Then to compile, simply:
+The makefile automatically checks that the above dependencies are satisfied.
+
+To compile, simply:
 ```
 make
 ```
@@ -26,10 +28,6 @@ To run the program:
 Windows binaries are provided with github releases. These releases provide the executable `bin/orbvis.exe`, which cannot be moved from the directory structure, but a shortcut can be created and used.
 
 To compile for windows, MSYS2 is used. First verify that all required packages are installed by calling `util/wininit.sh`, then compile with `util/winbuild.sh`. This creates the `release` directory containing windows binaries and all other required files.
-
-## Contributing
-
-The program is in a functional state, but it still needs a lot of work to be done on it. A list of things that need to be improved or implemented can be found in the `TODO.txt` file. If you'd want to contribute to the project, please file an issue before commencing any work, since the code will still be undergoing some major changes in the near future.
 
 ## License
 

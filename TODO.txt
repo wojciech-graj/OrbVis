@@ -1,8 +1,0 @@
-- Use texture compression
-- Use Uniform structs (std140)
-- Kill running threads on exit
-- Replace hashmap.c with glib HashTable
-- Improve atmosphere shader
-- Clean up multithreading sync functions
-- Improve settings menu
-- Web build? (broadway)
