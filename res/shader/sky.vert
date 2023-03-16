@@ -1,4 +1,6 @@
-#version 430 core
+#version 410 core
+#extension GL_ARB_explicit_uniform_location : enable
+
 layout (location = 0) in vec3 in_pos;
 layout (location = 1) in vec2 in_uv;
 

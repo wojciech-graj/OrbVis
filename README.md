@@ -32,7 +32,7 @@ To compile for windows, MSYS2 is used. First verify that all required packages a
 ## License
 
 ```
-Copyright (c) 2022 Wojciech Graj
+Copyright (c) 2022-2023 Wojciech Graj
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License

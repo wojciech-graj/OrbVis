@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -88,5 +88,5 @@ void gfx_init(GtkBuilder *builder)
 		NULL);
 
 	glarea = GTK_GL_AREA(gtk_builder_get_object(builder, "glarea"));
-	gtk_gl_area_set_required_version(glarea, 4, 3);
+	gtk_gl_area_set_required_version(glarea, 4, 1);
 }
