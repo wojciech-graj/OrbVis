@@ -1,6 +1,6 @@
 To run the program, execute bin/orbvis.exe . A shortcut to this file can safely be created, but the executable cannot be removed from the surrounding directory structure.
 
-Copyright (c) 2022 Wojciech Graj
+Copyright (c) 2022-2023 Wojciech Graj
 
 This program is free software; you can redistribute it and/or
 modify it under the terms of the GNU General Public License

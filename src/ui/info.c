@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,6 +14,7 @@
 
 #include "info.h"
 
+#include "camera.h"
 #include "phys.h"
 #include "type.h"
 
@@ -21,6 +22,7 @@
 #include "satcat_code.h"
 #include <cglm/mat3.h>
 #include <cglm/mat4.h>
+#include <cglm/util.h>
 #include <cglm/vec2.h>
 #include <cglm/vec3.h>
 
@@ -71,6 +73,9 @@ static const char *info_item_ids[] = {
 	[INFO_VELOCITY] = "info_velocity",
 };
 
+static GtkButton *jump_to_button;
+
+static void on_info_jump_to_clicked(GtkButton *button, gpointer user_data);
 static void fmt_scdate(gchar *buf, gulong n, struct SCDate *date);
 static void fmt_coords(gchar *buf, gulong n, double x, double y, double z);
 
@@ -82,6 +87,33 @@ void info_init(GtkBuilder *builder)
 	unsigned i;
 	for (i = 0; i < NUM_INFO_ITEMS; i++)
 		info_items[i] = GTK_LABEL(gtk_builder_get_object(builder, info_item_ids[i]));
+	gtk_builder_add_callback_symbols(builder,
+		"on_info_jump_to_clicked", G_CALLBACK(on_info_jump_to_clicked),
+		NULL);
+	jump_to_button = GTK_BUTTON(gtk_builder_get_object(builder, "info_jump_to"));
+}
+
+void on_info_jump_to_clicked(GtkButton *button, gpointer user_data)
+{
+	(void)button;
+	(void)user_data;
+
+	double r[3], v[3];
+	getRVForDate(&satellite->tle, e_phys.epoch_ms, r, v);
+
+	mat3 t;
+	glm_vec3_copy((vec3){ 0.f, 0.f, 1.f }, t[2]);
+	glm_vec3_copy((vec3){ (float)cos(e_phys.gmst), (float)-sin(e_phys.gmst), 0.f }, t[0]);
+	glm_vec3_cross(t[2], t[0], t[1]);
+	glm_vec3_norm(t[1]);
+	glm_mat3_scale(t, 1.05f / 6371.f);
+
+	vec3 pos;
+	glm_mat3_mulv(t, (vec3){ r[0], r[1], r[2] }, pos);
+	float rad = glm_vec3_norm(pos);
+	e_camera.rad = glm_clamp(rad, 1.1f, 10.f);
+	glm_vec3_scale(pos, e_camera.rad / rad, e_camera.pos);
+	camera_view_update(&e_camera);
 }
 
 void fmt_scdate(gchar *buf, gulong n, struct SCDate *date)
@@ -118,6 +150,8 @@ void info_show(struct Satellite *sat)
 	gtk_label_set_text(info_items[INFO_PERIGEE], buf);
 	g_snprintf(buf, 11, "%08.4f", satellite->satcat.radar_cs);
 	gtk_label_set_text(info_items[INFO_RADAR_CS], buf);
+
+	gtk_widget_set_sensitive(GTK_WIDGET(jump_to_button), TRUE);
 }
 
 void info_hide(void)
@@ -126,6 +160,8 @@ void info_hide(void)
 	unsigned i;
 	for (i = 0; i < NUM_INFO_ITEMS; i++)
 		gtk_label_set_text(info_items[i], "");
+
+	gtk_widget_set_sensitive(GTK_WIDGET(jump_to_button), FALSE);
 }
 
 void fmt_coords(gchar *buf, gulong n, double x, double y, double z)
