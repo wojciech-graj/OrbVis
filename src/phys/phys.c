@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -21,6 +21,8 @@
 #include "setting.h"
 #include "system.h"
 #include "thread.h"
+
+#include <cglm/mat3.h>
 
 enum Timeflow e_timeflow = TIME_REALTIME;
 float e_timescale = 1.f;
@@ -66,10 +68,19 @@ void phys_phys(void)
 			      cosf(phys_ctx_sync.sun_uv[1] * (float)G_PI),
 		      },
 		phys_ctx_sync.sun_dir);
+
+	mat3 t;
+	glm_vec3_copy((vec3){ 0.f, 0.f, 1.f }, t[2]);
+	glm_vec3_copy((vec3){ (float)cos(phys_ctx_sync.gmst), (float)-sin(phys_ctx_sync.gmst), 0.f }, t[0]);
+	glm_vec3_cross(t[2], t[0], t[1]);
+	glm_vec3_norm(t[1]);
+	glm_mat3_scale(t, 1.f / 6371.f);
+	glm_mat4_ins3(t, phys_ctx_sync.teme_to_world);
 }
 
 void phys_init(void)
 {
+	glm_mat4_identity(phys_ctx_sync.teme_to_world);
 	phys_phys();
 	phys_phys_sync();
 }

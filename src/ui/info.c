@@ -101,15 +101,8 @@ void on_info_jump_to_clicked(GtkButton *button, gpointer user_data)
 	double r[3], v[3];
 	getRVForDate(&satellite->tle, e_phys.epoch_ms, r, v);
 
-	mat3 t;
-	glm_vec3_copy((vec3){ 0.f, 0.f, 1.f }, t[2]);
-	glm_vec3_copy((vec3){ (float)cos(e_phys.gmst), (float)-sin(e_phys.gmst), 0.f }, t[0]);
-	glm_vec3_cross(t[2], t[0], t[1]);
-	glm_vec3_norm(t[1]);
-	glm_mat3_scale(t, 1.05f / 6371.f);
-
 	vec3 pos;
-	glm_mat3_mulv(t, (vec3){ r[0], r[1], r[2] }, pos);
+	glm_mat4_mulv3(e_phys.teme_to_world, (vec3){ r[0], r[1], r[2] }, 1.f, pos);
 	float rad = glm_vec3_norm(pos);
 	e_camera.rad = glm_clamp(rad, 1.1f, 10.f);
 	glm_vec3_scale(pos, e_camera.rad / rad, e_camera.pos);

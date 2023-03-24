@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -86,7 +86,6 @@ static struct BO vbo_orbit_colors;
 
 static struct Shader shader;
 
-static mat4 teme_to_world;
 static mat4 transform;
 
 static size_t n_satellites_sync = 0;
@@ -133,8 +132,6 @@ void satellite_init(void)
 {
 	const char *urls[] = { "https://celestrak.org/pub/satcat.txt", "https://celestrak.org/pub/TLE/catalog.txt" };
 	dl_multi_init(&dl_multi, 2, urls);
-
-	glm_mat4_identity(teme_to_world);
 
 	vao_init(&vao_satellites);
 	vao_bind(&vao_satellites);
@@ -442,14 +439,6 @@ void satellites_phys(void)
 	if (!n_satellites)
 		return;
 
-	mat3 t;
-	glm_vec3_copy((vec3){ 0.f, 0.f, 1.f }, t[2]);
-	glm_vec3_copy((vec3){ (float)cos(e_phys.gmst), (float)-sin(e_phys.gmst), 0.f }, t[0]);
-	glm_vec3_cross(t[2], t[0], t[1]);
-	glm_vec3_norm(t[1]);
-	glm_mat3_scale(t, 1.f / 6371.f);
-	glm_mat4_ins3(t, teme_to_world);
-
 	size_t i;
 	for (i = 0; i < n_satellite_orbits; i++) {
 		struct OrbitData *data = &g_array_index(satellite_orbit_data, struct OrbitData, i);
@@ -476,7 +465,7 @@ void satellites_phys_sync(void)
 void satellites_render(void)
 {
 	shader_bind(&shader);
-	camera_mvp_generate(&e_camera, &teme_to_world, transform);
+	camera_mvp_generate(&e_camera, &e_phys.teme_to_world, transform);
 	glUniformMatrix4fv(LOCU_TRANSFORM, 1, GL_FALSE, (const GLfloat *)&transform);
 
 	if (satellites_renderable) {

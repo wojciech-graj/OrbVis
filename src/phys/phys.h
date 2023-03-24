@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -17,6 +17,7 @@
 
 #include "type.h"
 
+#include <cglm/mat4.h>
 #include <cglm/vec2.h>
 #include <cglm/vec3.h>
 
@@ -27,6 +28,7 @@ struct PhysCtx {
 	double gmst;
 	vec2 sun_uv;
 	vec3 sun_dir;
+	mat4 teme_to_world;
 };
 
 enum Timeflow {
