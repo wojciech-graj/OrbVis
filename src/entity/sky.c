@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -58,7 +58,7 @@ void sky_init(void)
 	vao_init(&vao);
 	idx_obj_init(&obj);
 	model_init(&model, &obj);
-	glm_scale_make(model.scl, (vec3){ 50.f, 50.f, 50.f });
+	glm_scale_make(model.scl, (vec3){ 70.f, 70.f, 70.f });
 	model_transform(&model);
 
 	shader_init(&shader, res_shader_sky_vert, res_shader_sky_vert_len, res_shader_sky_frag, res_shader_sky_frag_len, 2, (struct ShaderAttr[]){
@@ -86,6 +86,8 @@ void sky_render(void)
 	bo_bind(&obj.vbo_faces);
 	texture_bind(&texture);
 
+	glm_translate_make(model.trans, e_camera.pos);
+	model_transform(&model);
 	mat4 transform;
 	camera_mvp_generate(&e_camera, &model.model_mat, transform);
 
