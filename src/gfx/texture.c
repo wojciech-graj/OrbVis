@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,6 +18,11 @@
 
 #include "error.h"
 
+void textures_init(void)
+{
+	stbi_set_flip_vertically_on_load(TRUE);
+}
+
 void texture_init(struct Texture *texture, GLenum unit, GLenum type)
 {
 	texture->unit = unit;
@@ -30,7 +35,6 @@ void texture_init(struct Texture *texture, GLenum unit, GLenum type)
 void texture_init_from_image(struct Texture *texture, unsigned char *buffer, unsigned int len, GLenum unit, GLenum type)
 {
 	int width, height, n_channels;
-	stbi_set_flip_vertically_on_load(TRUE); /* TODO: Move to init */
 	unsigned char *data = stbi_load_from_memory(buffer, len, &width, &height, &n_channels, 0);
 	error_check(data, "Failed to open texture.");
 

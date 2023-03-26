@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Wojciech Graj
+ * Copyright (c) 2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,30 +12,9 @@
  * GNU General Public License for more details.
  **/
 
-#include "download.h"
-#include "entity.h"
-#include "phys.h"
-#include "render.h"
-#include "system.h"
-#include "thread.h"
-#include "ui.h"
+#ifndef __MAINLOOP_H__
+#define __MAINLOOP_H__
 
-int main(int argc, char *argv[]);
+void mainloop(void);
 
-int main(int argc, char *argv[])
-{
-	(void)argc;
-	(void)argv;
-
-	system_init();
-	dl_init();
-	ui_init(argc, &argv);
-	render_init();
-	phys_init();
-	entity_init();
-	thread_dispatch(THRD_SATELLITES_GET, NULL);
-
-	gtk_main();
-
-	return 0;
-}
+#endif /* __MAINLOOP_H__ */

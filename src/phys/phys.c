@@ -85,12 +85,10 @@ void phys_init(void)
 	phys_phys_sync();
 }
 
-static void phys(void)
+void phys(void)
 {
 	phys_phys();
-#ifndef NO_SATELLITE
 	satellites_phys();
-#endif
 }
 
 void *phys_thrd(void *arguments)
@@ -117,7 +115,5 @@ void phys_phys_sync(void)
 void phys_sync(void)
 {
 	phys_phys_sync();
-#ifndef NO_SATELLITE
 	satellites_phys_sync();
-#endif
 }

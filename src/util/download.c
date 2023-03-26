@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -18,7 +18,7 @@
 
 static size_t write_memory_callback(void *contents, size_t size, size_t nmemb, void *userp);
 
-static size_t write_memory_callback(void *contents, size_t size, size_t nmemb, void *userp)
+size_t write_memory_callback(void *contents, size_t size, size_t nmemb, void *userp)
 {
 	size_t realsize = size * nmemb;
 	struct DLHandle *mem = (struct DLHandle *)userp;

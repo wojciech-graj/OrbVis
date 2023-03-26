@@ -3,15 +3,15 @@ TARGET := orbvis
 CC := gcc
 WARNINGS := -Wall -Wextra -Wpedantic -Wdouble-promotion -Wstrict-prototypes -Wshadow -Wduplicated-cond -Wduplicated-branches -Wjump-misses-init -Wnull-dereference -Wrestrict -Wlogical-op -Walloc-zero -Wformat-security -Wformat-signedness -Winit-self -Wlogical-op -Wmissing-declarations -Wstrict-prototypes -Wmissing-prototypes -Wmissing-declarations -Wswitch-enum -Wundef -Wwrite-strings -Wno-discarded-qualifiers
 CFLAGS := -O3 `pkg-config --cflags gtk+-3.0 cglm libcurl epoxy` -std=c11
-LDFLAGS := -lm
+LDFLAGS := -lm `pkg-config --libs gtk+-3.0 cglm libcurl epoxy`
 COMMANDS := $(CC) pkg-config xxd sed
 PACKAGES := gtk+-3.0 cglm libcurl epoxy
 
 ifeq ($(MAKECMDGOALS),windows)
   CFLAGS += -march=core2 -flto
-  LDFLAGS += -lopengl32 `pkg-config --libs gtk+-3.0 cglm libcurl epoxy` -mwindows -flto
+  LDFLAGS += -lopengl32 -mwindows -flto
 else
-  LDFLAGS += -ldl `pkg-config --libs gl gtk+-3.0 cglm libcurl epoxy`
+  LDFLAGS += -ldl
   ifeq ($(MAKECMDGOALS),debug)
     CFLAGS += -march=native -fsanitize=address -fsanitize=undefined -g -ftrapv -fno-omit-frame-pointer -lrt -DDEBUG
     LDFLAGS += -fsanitize=address -fsanitize=undefined -g -ftrapv -fno-omit-frame-pointer -lrt

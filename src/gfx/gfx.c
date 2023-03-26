@@ -16,14 +16,9 @@
 
 #include "camera.h"
 #include "error.h"
-#include "info.h"
-#include "perf.h"
-#include "render.h"
-#include "thread.h"
-#include "toolbar.h"
+#include "mainloop.h"
 
 struct GLCtx e_gl_ctx;
-static GtkGLArea *glarea;
 
 static void on_glarea_realize(GtkWidget *widget, gpointer user_data);
 static void on_glarea_resize(GtkGLArea *area, int width, int height, gpointer user_data);
@@ -32,7 +27,8 @@ static gboolean on_glarea_render(GtkGLArea *area, GdkGLContext *context, gpointe
 void on_glarea_realize(GtkWidget *widget, gpointer user_data)
 {
 	(void)user_data;
-	(void)widget;
+
+	GtkGLArea *glarea = GTK_GL_AREA(widget);
 
 	error_check(!gtk_gl_area_get_error(glarea), "Failed to create OpenGL context");
 
@@ -57,24 +53,13 @@ void on_glarea_resize(GtkGLArea *area, int width, int height, gpointer user_data
 	camera_proj_update(&e_camera);
 }
 
-/* Main Loop */
 gboolean on_glarea_render(GtkGLArea *area, GdkGLContext *context, gpointer user_data)
 {
 	(void)area;
 	(void)context;
 	(void)user_data;
 
-	thread_dispatch(THRD_PHYS, NULL);
-	satellites_tic();
-	render_process();
-	toolbar_tic();
-	info_tic();
-	perf_tic();
-	thread_join(THRD_PHYS);
-	satellites_tic_sync();
-#ifndef NO_SATELLITE
-	thread_join_if_finished(THRD_SATELLITES_GET);
-#endif
+	mainloop();
 
 	return TRUE;
 }
@@ -87,6 +72,6 @@ void gfx_init(GtkBuilder *builder)
 		"on_glarea_realize", G_CALLBACK(on_glarea_realize),
 		NULL);
 
-	glarea = GTK_GL_AREA(gtk_builder_get_object(builder, "glarea"));
+	GtkGLArea *glarea = GTK_GL_AREA(gtk_builder_get_object(builder, "glarea"));
 	gtk_gl_area_set_required_version(glarea, 4, 1);
 }

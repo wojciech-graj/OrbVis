@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -85,33 +85,33 @@ static void fix_uv_wrapping(vec3 *verts, guint32 *faces, vec2 *uv, size_t *vert_
 static void separate_pole_vertex(unsigned idx, guint32 *trig, gboolean *fnd, vec3 *verts, vec2 *uv, size_t *vert_cnt);
 static void separate_pole_vertices(vec3 *verts, guint32 *faces, vec2 *uv, size_t *vert_cnt, size_t n_faces);
 
-static guint64 edge_hash(const void *item, guint64 seed0, guint64 seed1)
+guint64 edge_hash(const void *item, guint64 seed0, guint64 seed1)
 {
 	(void)seed0;
 	(void)seed1;
 	return ((struct Edge *)item)->edge.hash;
 }
 
-static int edge_compare(const void *a, const void *b, void *udata)
+int edge_compare(const void *a, const void *b, void *udata)
 {
 	(void)udata;
 	return ((struct Edge *)a)->edge.hash - ((struct Edge *)b)->edge.hash;
 }
 
-static guint64 vertex_hash(const void *item, guint64 seed0, guint64 seed1)
+guint64 vertex_hash(const void *item, guint64 seed0, guint64 seed1)
 {
 	(void)seed0;
 	(void)seed1;
 	return ((struct Vertex *)item)->orig;
 }
 
-static int vertex_compare(const void *a, const void *b, void *udata)
+int vertex_compare(const void *a, const void *b, void *udata)
 {
 	(void)udata;
 	return (((struct Vertex *)a)->orig) - (((struct Vertex *)b)->orig);
 }
 
-static void subdivide(guint32 *face, guint32 *next_faces, vec3 *verts, size_t *vert_cnt, struct hashmap *map)
+void subdivide(guint32 *face, guint32 *next_faces, vec3 *verts, size_t *vert_cnt, struct hashmap *map)
 {
 	/* Generate vertices */
 	static const unsigned face_idxs[3][2] = {
@@ -209,7 +209,7 @@ void icosphere_generate(const unsigned n_sub, vec3 **verts, guint32 **faces, vec
 		separate_pole_vertices(*verts, *faces, *uv, &vert_cnt, *n_faces);
 }
 
-static void fix_uv_wrapping(vec3 *verts, guint32 *faces, vec2 *uv, size_t *vert_cnt, size_t n_faces)
+void fix_uv_wrapping(vec3 *verts, guint32 *faces, vec2 *uv, size_t *vert_cnt, size_t n_faces)
 {
 	struct hashmap *map = hashmap_new(sizeof(struct Vertex), 10, 0, 0, vertex_hash, vertex_compare, NULL, NULL);
 
@@ -245,7 +245,7 @@ static void fix_uv_wrapping(vec3 *verts, guint32 *faces, vec2 *uv, size_t *vert_
 	hashmap_free(map);
 }
 
-static void separate_pole_vertex(unsigned idx, guint32 *trig, gboolean *fnd, vec3 *verts, vec2 *uv, size_t *vert_cnt)
+void separate_pole_vertex(unsigned idx, guint32 *trig, gboolean *fnd, vec3 *verts, vec2 *uv, size_t *vert_cnt)
 {
 	float u_avg;
 	switch (idx) {
@@ -275,7 +275,7 @@ static void separate_pole_vertex(unsigned idx, guint32 *trig, gboolean *fnd, vec
 	}
 }
 
-static void separate_pole_vertices(vec3 *verts, guint32 *faces, vec2 *uv, size_t *vert_cnt, size_t n_faces)
+void separate_pole_vertices(vec3 *verts, guint32 *faces, vec2 *uv, size_t *vert_cnt, size_t n_faces)
 {
 	size_t i;
 	guint32 north, south;

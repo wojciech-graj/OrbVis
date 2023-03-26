@@ -31,7 +31,7 @@
 	XSTR(VERSION_MAJOR) \
 	"." XSTR(VERSION_MINOR) "." XSTR(VERSION_PATCH) DEBUG_STRING
 
-#define ABOUT_STRING "OrbVis " VERSION_STRING "\nCopyright (c) 2022 Wojciech Graj" \
+#define ABOUT_STRING "OrbVis " VERSION_STRING "\nCopyright (c) 2022-2023 Wojciech Graj" \
 		     "\nLicense GPLv2+: GNU GPL version 2 or later."
 
 #endif /* __VERSION_H__ */

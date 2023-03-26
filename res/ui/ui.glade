@@ -1560,7 +1560,6 @@
                 <property name="can-focus">False</property>
                 <property name="has-alpha">True</property>
                 <property name="has-depth-buffer">True</property>
-                <property name="has-stencil-buffer">True</property>
                 <signal name="realize" handler="on_glarea_realize" swapped="no"/>
                 <signal name="render" handler="on_glarea_render" swapped="no"/>
                 <signal name="resize" handler="on_glarea_resize" swapped="no"/>

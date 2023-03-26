@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -22,16 +22,12 @@
 #define likely(x) __builtin_expect((x), TRUE)
 #define unlikely(x) __builtin_expect((x), FALSE)
 
-#define arrlen(a) (sizeof(a) / sizeof(a[0]))
-
 #define SWAP(a, b)                       \
 	do {                             \
 		__typeof__(a) temp_ = a; \
 		a = b;                   \
 		b = temp_;               \
 	} while (0)
-
-#define sgn(x) (signbit(x) ? -1 : 1)
 
 #define XSTR(s) STR(s)
 #define STR(s) #s

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -14,21 +14,13 @@
 
 #include "render.h"
 
-#include "bo.h"
 #include "camera.h"
 #include "entity.h"
-#include "error.h"
 #include "gfx.h"
-#include "icosphere.h"
-#include "idx_obj.h"
-#include "model.h"
-#include "shader.h"
-#include "system.h"
 #include "texture.h"
-#include "ui.h"
-#include "vao.h"
+#include "type.h"
 
-#include <cglm/cglm.h>
+#include <cglm/vec3.h>
 
 #define DEFAULT_CAMERA_POS ((vec3){ 0.f, 5.f, 0.f })
 #define DEFAULT_CAMERA_RAD 5.f
@@ -50,18 +42,19 @@ void render_init(void)
 	camera_view_update(&e_camera);
 	camera_proj_update(&e_camera);
 
+	textures_init();
+
+	glEnable(GL_DEPTH_TEST);
 	glDepthFunc(GL_LESS);
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-	glEnable(GL_STENCIL_TEST);
 }
 
 void render_process(void)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	entity_render();
 }

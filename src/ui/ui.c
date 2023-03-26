@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -32,8 +32,6 @@
 extern const unsigned char res_ui_ui_glade[];
 extern const unsigned int res_ui_ui_glade_len;
 
-const gchar *FILENAME_GUI = "res/ui/ui.glade";
-
 GtkWindow *e_window_main;
 
 static void on_window_main_destroy(GtkWidget *widget, gpointer user_data);
@@ -65,7 +63,7 @@ void ui_init(int argc, char ***argv)
 {
 	gtk_init(&argc, argv);
 
-	GtkBuilder *builder = gtk_builder_new_from_string(res_ui_ui_glade, res_ui_ui_glade_len);
+	GtkBuilder *builder = gtk_builder_new_from_string((const gchar *)res_ui_ui_glade, res_ui_ui_glade_len);
 
 	gtk_builder_add_callback_symbols(builder,
 		"on_window_main_destroy", G_CALLBACK(on_window_main_destroy),

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -70,7 +70,7 @@ void on_accelerate_clicked(GtkToolButton *toolbutton, gpointer user_data)
 	e_timescale *= 1.05f;
 }
 
-static void on_zoom_out_clicked(GtkToolButton *toolbutton, gpointer user_data)
+void on_zoom_out_clicked(GtkToolButton *toolbutton, gpointer user_data)
 {
 	(void)toolbutton;
 	(void)user_data;
@@ -78,7 +78,7 @@ static void on_zoom_out_clicked(GtkToolButton *toolbutton, gpointer user_data)
 	camera_zoom(&e_camera, -ZOOM_DIST);
 }
 
-static void on_zoom_in_clicked(GtkToolButton *toolbutton, gpointer user_data)
+void on_zoom_in_clicked(GtkToolButton *toolbutton, gpointer user_data)
 {
 	(void)toolbutton;
 	(void)user_data;

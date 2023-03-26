@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,7 +20,7 @@
 
 static GLint shader_compile(char *str, unsigned int len, GLenum type);
 
-static GLint shader_compile(char *str, unsigned int len, GLenum type)
+GLint shader_compile(char *str, unsigned int len, GLenum type)
 {
 	GLuint handle = glCreateShader(type);
 	glShaderSource(handle, 1, (const GLchar *const *)&str, (const GLint *)&len);

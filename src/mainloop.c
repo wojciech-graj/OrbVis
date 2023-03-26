@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Wojciech Graj
+ * Copyright (c) 2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -12,30 +12,24 @@
  * GNU General Public License for more details.
  **/
 
-#include "download.h"
-#include "entity.h"
-#include "phys.h"
+#include "mainloop.h"
+
+#include "info.h"
+#include "perf.h"
 #include "render.h"
-#include "system.h"
+#include "satellite.h"
 #include "thread.h"
-#include "ui.h"
+#include "toolbar.h"
 
-int main(int argc, char *argv[]);
-
-int main(int argc, char *argv[])
+void mainloop(void)
 {
-	(void)argc;
-	(void)argv;
-
-	system_init();
-	dl_init();
-	ui_init(argc, &argv);
-	render_init();
-	phys_init();
-	entity_init();
-	thread_dispatch(THRD_SATELLITES_GET, NULL);
-
-	gtk_main();
-
-	return 0;
+	thread_dispatch(THRD_PHYS, NULL);
+	satellites_tic();
+	render_process();
+	toolbar_tic();
+	info_tic();
+	perf_tic();
+	thread_join(THRD_PHYS);
+	satellites_tic_sync();
+	thread_join_if_finished(THRD_SATELLITES_GET);
 }

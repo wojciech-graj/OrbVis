@@ -222,14 +222,14 @@ void *satellites_get_thrd(void *arguments)
 	return NULL;
 }
 
-static guint64 sc_hash(const void *item, guint64 seed0, guint64 seed1)
+guint64 sc_hash(const void *item, guint64 seed0, guint64 seed1)
 {
 	(void)seed0;
 	(void)seed1;
 	return ((struct SatCat *)item)->catnum;
 }
 
-static int sc_compare(const void *a, const void *b, void *udata)
+int sc_compare(const void *a, const void *b, void *udata)
 {
 	(void)udata;
 	return (int)(((struct SatCat *)a)->catnum) - (int)(((struct SatCat *)b)->catnum);
@@ -344,7 +344,7 @@ void satellites_get(void)
 		thread_pool_indices_sync[i] = SATELLITE_CALC_STEP * i;
 }
 
-static void set_satellite_color(char code, vec3 color)
+void set_satellite_color(char code, vec3 color)
 {
 	switch (code) {
 	case SCSTAT_OPERATIONAL:
@@ -494,7 +494,7 @@ void gen_satellite_orbit(guint32 idx)
 	}
 }
 
-static void satellite_toggle_orbit(guint32 idx)
+void satellite_toggle_orbit(guint32 idx)
 {
 	if (satellites[idx].orbit_idx == UINT32_MAX) { /* Enable orbit */
 		/* For similar-length line segments, apply Kepler's Third Law (T^2 prop. r^3) */
