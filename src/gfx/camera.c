@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -37,7 +37,7 @@ void camera_mvp_generate(struct Camera *camera, mat4 *model, mat4 mvp)
 
 void camera_zoom(struct Camera *camera, float offset)
 {
-	float rad = glm_clamp(camera->rad - offset, 1.1f, 10.f);
+	float rad = glm_clamp(camera->rad - offset, CAMERA_MIN_RAD, CAMERA_MAX_RAD);
 	float d_rad = rad - camera->rad;
 	float d_rad_pct = (camera->rad + d_rad) / (camera->rad);
 	camera->rad = rad;

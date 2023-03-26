@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -20,6 +20,9 @@
 
 #undef near
 #undef far
+
+#define CAMERA_MIN_RAD 1.1f
+#define CAMERA_MAX_RAD 10.f
 
 struct Camera {
 	vec3 pos;

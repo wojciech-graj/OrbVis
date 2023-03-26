@@ -104,7 +104,7 @@ void on_info_jump_to_clicked(GtkButton *button, gpointer user_data)
 	vec3 pos;
 	glm_mat4_mulv3(e_phys.teme_to_world, (vec3){ r[0], r[1], r[2] }, 1.f, pos);
 	float rad = glm_vec3_norm(pos);
-	e_camera.rad = glm_clamp(rad, 1.1f, 10.f);
+	e_camera.rad = glm_clamp(rad + .1f, CAMERA_MIN_RAD, CAMERA_MAX_RAD);
 	glm_vec3_scale(pos, e_camera.rad / rad, e_camera.pos);
 	camera_view_update(&e_camera);
 }
