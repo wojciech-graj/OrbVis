@@ -2,7 +2,8 @@
 
 View and propagate the full CelesTrak satellite catalog in realtime.
 
-![DEMO](demo.gif)
+![scr02](screenshot/scr02.png)
+![scr03](screenshot/scr03.png)
 
 ## Build
 
