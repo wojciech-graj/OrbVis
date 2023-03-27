@@ -1,10 +1,8 @@
-prog_xxd = find_program('xxd')
-prog_sed = find_program('sed')
-prog_sh = find_program('sh')
+prog_python3 = find_program('python3')
 
-gen = generator(prog_sh,
+gen = generator(prog_python3,
   output : '@PLAINNAME@.c',
-  arguments : ['@CURRENT_SOURCE_DIR@/gen_c.sh', '@INPUT@'],
+  arguments : ['@SOURCE_DIR@/util/xxd.py', '@INPUT@'],
   capture : true,
 )
 
