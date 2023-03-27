@@ -8,15 +8,15 @@ View and propagate the full CelesTrak satellite catalog in realtime.
 
 ### Linux
 
-The following packages have to be installed prior to compilation: `gcc pkg-config gtk+-3.0 cglm libcurl epoxy`. On Debian-based systems, run the following command to install them:
+The following packages have to be installed prior to compilation: `gcc pkg-config gtk+-3.0 cglm libcurl epoxy meson`. On Debian-based systems, run the following command to install them:
 ```
-apt-get install gcc pkg-config libgtk-3-dev libcglm-dev libcurl4-openssl-dev libepoxy-dev
+apt-get install gcc pkg-config libgtk-3-dev libcglm-dev libcurl4-openssl-dev libepoxy-dev meson
 ```
-The makefile automatically checks that the above dependencies are satisfied.
 
-To compile, simply:
+To compile:
 ```
-make
+meson builddir
+meson compile -C builddir
 ```
 To run the program:
 ```
@@ -27,7 +27,7 @@ To run the program:
 
 Windows binaries are provided with github releases. These releases provide the executable `bin/orbvis.exe`, which cannot be moved from the directory structure, but a shortcut can be created and used.
 
-To compile for windows, MSYS2 is used. First verify that all required packages are installed by calling `util/wininit.sh`, then compile with `util/winbuild.sh`. This creates the `release` directory containing windows binaries and all other required files.
+If you wish to compile for windows yourself, use MSYS2. First verify that all required packages are installed by calling `util/wininit.sh`, then compile with `util/winbuild.sh`. This creates the `release` directory containing windows binaries and all other required files.
 
 ## License
 

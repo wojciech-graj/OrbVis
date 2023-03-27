@@ -3,9 +3,8 @@
 BIN_NAME=orbvis.exe
 MINGW_PATH=/c/msys64/mingw64
 
-rm -rf release
-make clean
-make -j8 windows
+meson setup builddir
+meson compile -C builddir
 mkdir -p release/bin
 cd release/bin
 mv ../../$BIN_NAME $BIN_NAME
@@ -28,4 +27,3 @@ cd ../..
 cp ../util/README_WIN.txt README.txt
 cp ../LICENSE LICENSE.txt
 cd ..
-make clean

@@ -21,7 +21,6 @@ deps = [
   dependency('libcurl'),
   dependency('epoxy'),
   cc.find_library('m', required : false),
-  cc.find_library('dl', required : false),
 ]
 
 subdir('src')
