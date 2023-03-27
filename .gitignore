@@ -2,3 +2,4 @@
 obj/
 orbvis
 *.glade~
+builddir/
