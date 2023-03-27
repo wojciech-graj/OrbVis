@@ -41,3 +41,10 @@ orbvis_incdir = include_directories([
   'ui',
   'util',
 ])
+
+conf_data = configuration_data()
+conf_data.set('version', meson.project_version())
+configure_file(input: 'version.h.in',
+  output : 'version.h',
+  configuration : conf_data
+)

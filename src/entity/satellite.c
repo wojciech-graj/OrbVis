@@ -148,9 +148,9 @@ void satellite_init(void)
 	vao_attr(&vao_orbits, &vbo_orbit_colors, LOCL_COLOR, 3, GL_FLOAT, sizeof(vec3), 0);
 
 	shader_init(&shader, (const char *)res_shader_satellite_vert, res_shader_satellite_vert_len, (const char *)res_shader_satellite_frag, res_shader_satellite_frag_len, 2, (struct ShaderAttr[]){
-																			    { LOCL_APOS, "in_pos" },
-																			    { LOCL_COLOR, "in_color" },
-																		    });
+																							{ LOCL_APOS, "in_pos" },
+																							{ LOCL_COLOR, "in_color" },
+																						});
 
 	alloc_orbit_arrays();
 

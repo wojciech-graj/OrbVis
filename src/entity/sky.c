@@ -62,9 +62,9 @@ void sky_init(void)
 	model_transform(&model);
 
 	shader_init(&shader, (const char *)res_shader_sky_vert, res_shader_sky_vert_len, (const char *)res_shader_sky_frag, res_shader_sky_frag_len, 2, (struct ShaderAttr[]){
-																    { LOCL_APOS, "in_pos" },
-																    { LOCL_ATEXCOORD, "in_uv" },
-															    });
+																				{ LOCL_APOS, "in_pos" },
+																				{ LOCL_ATEXCOORD, "in_uv" },
+																			});
 
 	texture_init_from_image(&texture, res_texture_stars_jpg, res_texture_stars_jpg_len, GL_TEXTURE0, GL_TEXTURE_2D);
 

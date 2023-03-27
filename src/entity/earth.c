@@ -83,9 +83,9 @@ void earth_init(void)
 	model_init(&model, &obj_earth);
 
 	shader_init(&shader, (const char *)res_shader_earth_vert, res_shader_earth_vert_len, (const char *)res_shader_earth_frag, res_shader_earth_frag_len, 2, (struct ShaderAttr[]){
-																	    { LOCL_APOS, "in_pos" },
-																	    { LOCL_ATEXCOORD, "in_uv" },
-																    });
+																					{ LOCL_APOS, "in_pos" },
+																					{ LOCL_ATEXCOORD, "in_uv" },
+																				});
 
 	texture_init_from_image(&texture_day, res_texture_earth_daymap_jpg, res_texture_earth_daymap_jpg_len, GL_TEXTURE0, GL_TEXTURE_2D);
 	texture_init_from_image(&texture_night, res_texture_earth_nightmap_jpg, res_texture_earth_nightmap_jpg_len, GL_TEXTURE1, GL_TEXTURE_2D);
