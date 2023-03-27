@@ -1341,6 +1341,7 @@
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="toolbar-style">both-horiz</property>
+            <property name="show-arrow">False</property>
             <property name="icon_size">4</property>
             <child>
               <object class="GtkToolItem">

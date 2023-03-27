@@ -30,7 +30,9 @@ void on_glarea_realize(GtkWidget *widget, gpointer user_data)
 
 	GtkGLArea *glarea = GTK_GL_AREA(widget);
 
-	error_check(!gtk_gl_area_get_error(glarea), "Failed to create OpenGL context");
+	GError *error = gtk_gl_area_get_error(glarea);
+	if (unlikely(error != NULL))
+		error("Failed to create OpenGL context.\n%s", error->message);
 
 	gtk_gl_area_make_current(glarea);
 

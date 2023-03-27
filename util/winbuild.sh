@@ -7,7 +7,7 @@ meson setup builddir
 meson compile -C builddir
 mkdir -p release/bin
 cd release/bin
-mv ../../$BIN_NAME $BIN_NAME
+mv ../../builddir/$BIN_NAME $BIN_NAME
 ldd $BIN_NAME | grep '\/mingw.*\.dll' -o | xargs -I{} cp "{}" .
 cd ..
 mkdir -p lib/gdk-pixbuf-2.0/2.10.0/loaders

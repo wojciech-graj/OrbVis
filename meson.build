@@ -1,7 +1,7 @@
 project(
   'OrbVis',
   'c',
-  version : '0.2.1',
+  version : '0.2.2',
   license : 'GPL-2.0-or-later',
   default_options : [
     'c_std=c11',
@@ -34,4 +34,5 @@ executable(
   gen_res,
   include_directories : [orbvis_incdir, lib_incdir],
   dependencies : deps,
+  install : true,
 )
