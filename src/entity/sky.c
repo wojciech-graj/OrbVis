@@ -5,7 +5,7 @@
  * modify it under the terms of the GNU General Public License
  * as published by the Free Software Foundation; either version 2
  * of the License, or (at your option) any later version.
- *
+ *n
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -61,7 +61,7 @@ void sky_init(void)
 	glm_scale_make(model.scl, (vec3){ 70.f, 70.f, 70.f });
 	model_transform(&model);
 
-	shader_init(&shader, res_shader_sky_vert, res_shader_sky_vert_len, res_shader_sky_frag, res_shader_sky_frag_len, 2, (struct ShaderAttr[]){
+	shader_init(&shader, (const char *)res_shader_sky_vert, res_shader_sky_vert_len, (const char *)res_shader_sky_frag, res_shader_sky_frag_len, 2, (struct ShaderAttr[]){
 																    { LOCL_APOS, "in_pos" },
 																    { LOCL_ATEXCOORD, "in_uv" },
 															    });

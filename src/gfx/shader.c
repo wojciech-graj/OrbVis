@@ -18,9 +18,9 @@
 #include "error_gfx.h"
 #include "system.h"
 
-static GLint shader_compile(char *str, unsigned int len, GLenum type);
+static GLint shader_compile(const char *str, unsigned int len, GLenum type);
 
-GLint shader_compile(char *str, unsigned int len, GLenum type)
+GLint shader_compile(const char *str, unsigned int len, GLenum type)
 {
 	GLuint handle = glCreateShader(type);
 	glShaderSource(handle, 1, (const GLchar *const *)&str, (const GLint *)&len);
@@ -33,7 +33,7 @@ GLint shader_compile(char *str, unsigned int len, GLenum type)
 	return handle;
 }
 
-void shader_init(struct Shader *shader, char *vs, unsigned int vs_len, char *fs, unsigned int fs_len, size_t n_vertex_attr, struct ShaderAttr vertex_attr[])
+void shader_init(struct Shader *shader, const char *vs, unsigned int vs_len, const char *fs, unsigned int fs_len, size_t n_vertex_attr, struct ShaderAttr vertex_attr[])
 {
 	GLuint vs_handle = shader_compile(vs, vs_len, GL_VERTEX_SHADER);
 	GLuint fs_handle = shader_compile(fs, fs_len, GL_FRAGMENT_SHADER);

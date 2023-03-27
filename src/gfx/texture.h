@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -27,7 +27,7 @@ void textures_init(void);
 
 void texture_init(struct Texture *texture, GLenum unit, GLenum type);
 
-void texture_init_from_image(struct Texture *texture, unsigned char *buffer, unsigned int len, GLenum unit, GLenum type);
+void texture_init_from_image(struct Texture *texture, const unsigned char *buffer, unsigned int len, GLenum unit, GLenum type);
 
 void texture_deinit(struct Texture *texture);
 

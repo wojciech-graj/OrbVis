@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -26,7 +26,7 @@ struct Shader {
 	GLuint handle;
 };
 
-void shader_init(struct Shader *shader, char *vs, unsigned int vs_len, char *fs, unsigned int fs_len, size_t n_vertex_attr, struct ShaderAttr vertex_attr[]);
+void shader_init(struct Shader *shader, const char *vs, unsigned int vs_len, const char *fs, unsigned int fs_len, size_t n_vertex_attr, struct ShaderAttr vertex_attr[]);
 void shader_deinit(struct Shader *shader);
 void shader_bind(struct Shader *shader);
 

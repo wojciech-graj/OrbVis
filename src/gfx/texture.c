@@ -32,7 +32,7 @@ void texture_init(struct Texture *texture, GLenum unit, GLenum type)
 	glBindTexture(type, texture->handle);
 }
 
-void texture_init_from_image(struct Texture *texture, unsigned char *buffer, unsigned int len, GLenum unit, GLenum type)
+void texture_init_from_image(struct Texture *texture, const unsigned char *buffer, unsigned int len, GLenum unit, GLenum type)
 {
 	int width, height, n_channels;
 	unsigned char *data = stbi_load_from_memory(buffer, len, &width, &height, &n_channels, 0);

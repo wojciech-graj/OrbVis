@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -82,7 +82,7 @@ void earth_init(void)
 	idx_obj_init(&obj_earth);
 	model_init(&model, &obj_earth);
 
-	shader_init(&shader, res_shader_earth_vert, res_shader_earth_vert_len, res_shader_earth_frag, res_shader_earth_frag_len, 2, (struct ShaderAttr[]){
+	shader_init(&shader, (const char *)res_shader_earth_vert, res_shader_earth_vert_len, (const char *)res_shader_earth_frag, res_shader_earth_frag_len, 2, (struct ShaderAttr[]){
 																	    { LOCL_APOS, "in_pos" },
 																	    { LOCL_ATEXCOORD, "in_uv" },
 																    });

@@ -367,8 +367,8 @@ void catalog_init(GtkBuilder *builder)
 	g_signal_connect(render_select, "toggled", G_CALLBACK(on_column_select_cell_toggled), NULL);
 
 	init_col_from_store_col(gtk_cell_renderer_text_new(), gtk_builder_get_object(builder, column_ids[COL_CATNUM]), 1, 5);
-	init_col_with_data_func(gtk_cell_renderer_text_new(), gtk_builder_get_object(builder, column_ids[COL_NAME]), cell_data_func_str, &OFFSET_NAME, 24);
-	init_col_with_data_func(gtk_cell_renderer_text_new(), gtk_builder_get_object(builder, column_ids[COL_ID]), cell_data_func_str, &OFFSET_ID, 11);
+	init_col_with_data_func(gtk_cell_renderer_text_new(), gtk_builder_get_object(builder, column_ids[COL_NAME]), cell_data_func_str, (gpointer)&OFFSET_NAME, 24);
+	init_col_with_data_func(gtk_cell_renderer_text_new(), gtk_builder_get_object(builder, column_ids[COL_ID]), cell_data_func_str, (gpointer)&OFFSET_ID, 11);
 	init_col_with_data_func(gtk_cell_renderer_text_new(), gtk_builder_get_object(builder, column_ids[COL_STATUS]), cell_data_func_status, NULL, 21);
 	init_col_from_store_col(gtk_cell_renderer_text_new(), gtk_builder_get_object(builder, column_ids[COL_SOURCE]), 5, 5);
 	init_col_from_store_col(gtk_cell_renderer_text_new(), gtk_builder_get_object(builder, column_ids[COL_LAUNCH_DATE]), 2, 10);
