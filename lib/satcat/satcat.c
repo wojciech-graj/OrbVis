@@ -9,29 +9,37 @@
 #include "satcat.h"
 
 #include <ctype.h>
-#include <stdlib.h>
 #include <math.h>
+#include <stdlib.h>
 #include <string.h>
 
-static bool isopstat(char c);
-static int parse_int(char *str, unsigned len);
-static double parse_dbl(char *str, unsigned len, unsigned loc_pt);
-static void parse_date(struct SCDate *date, char *str);
+static scbool isopstat(char c);
+static int parse_int(const char *str, unsigned len);
+static double parse_dbl(const char *str, unsigned len, unsigned loc_pt);
+static void parse_date(const char *str, struct SCDate *date);
 
-void sc_parse(struct SatCat *sc, char *str)
+void sc_parse(struct SatCat *sc, const char *str)
 {
 	memcpy(sc->id, str, 11);
+#ifdef SC_CSTRING
 	sc->id[11] = '\0';
+#endif
 	sc->catnum = parse_int(str + 13, 5);
 	sc->mul_names = (str[19] == 'M');
 	sc->payload = (str[20] == '*');
 	sc->opstat = str[21];
 	memcpy(sc->name, str + 23, 24);
+#ifdef SC_CSTRING
+	sc->name[24] = '\0';
+#endif
 	memcpy(sc->source, str + 49, 5);
-	parse_date(&sc->launch_date, str + 56);
+#ifdef SC_CSTRING
+	sc->source[5] = '\0';
+#endif
+	parse_date(str + 56, &sc->launch_date);
 	memcpy(sc->launch_site, str + 68, 5);
 	if (str[75] != ' ') {
-		parse_date(&sc->decay_date, str + 75);
+		parse_date(str + 75, &sc->decay_date);
 	} else {
 		sc->decay_date.year = 0;
 		sc->decay_date.month = 0;
@@ -46,34 +54,29 @@ void sc_parse(struct SatCat *sc, char *str)
 	else
 		sc->radar_cs = 0.0;
 	memcpy(sc->status_code, str + 129, 3);
+#ifdef SC_CSTRING
+	sc->status_code[3] = '\0';
+#endif
 }
 
-bool sc_validate(char *str)
+scbool sc_validate(const char *str)
 {
-	const char *fmt = "nnnn-nnnaaa  nnnnn M*O aaaaaaaaaaaaaaaaaaaaaaaa  aaaaa  nnnn-nn-nn  aaaaa  nnnn-nn-nn  NNNNn.n  NNn.n  NNNNNn  NNNNNn  NNn.nnnn  aaa";
+	const char *fmt = "nnnn-nnnaaa  nnnnn M*O aaaaaaaaaaaaaaaaaaaaaaaa  aaaaa  nnnn-nn-nn  aaaaa  lnnn-nn-nn  NNNNn.n  NNn.n  NNNNNn  NNNNNn  LNn.nnnn  aaa";
 	unsigned i;
 
-	/* Validate Length */
 	for (i = 0; i < 132; i++) {
+		/* Validate Length */
 		if (str[i] == '\0')
 			return 0;
-	}
 
-	/* Validate Contents */
-	for (i = 0; i < 132; i++) {
-		if (i == 75) {
+		/* Validate Contents */
+		switch (fmt[i]) {
+		case 'l':
 			if (!strncmp("          ", str + 75, 10)) {
 				i += 9;
 				continue;
 			}
-		} else if (i == 119) {
-			if (!strncmp("   N/A  ", str + 119, 8)) {
-				i += 7;
-				continue;
-			}
-		}
-
-		switch (fmt[i]) {
+			__attribute__((fallthrough));
 		case 'n':
 			if (!isdigit(str[i]))
 				return 0;
@@ -91,8 +94,15 @@ bool sc_validate(char *str)
 			if (!isopstat(str[i]))
 				return 0;
 			break;
+		case 'L':
+			if (!strncmp("   N/A  ", str + 119, 8)) {
+				i += 7;
+				continue;
+			}
+			__attribute__((fallthrough));
 		case 'N':
-			if ((fmt[i - 1] == 'N' && str[i - 1] != ' ' && str[i] == ' ') || (str[i] != ' ' && !isdigit(str[i])))
+			if ((fmt[i - 1] == 'N' && str[i - 1] != ' ' && str[i] == ' ')
+				|| (str[i] != ' ' && !isdigit(str[i])))
 				return 0;
 			break;
 		default:
@@ -103,7 +113,7 @@ bool sc_validate(char *str)
 	return 1;
 }
 
-bool isopstat(char c)
+scbool isopstat(const char c)
 {
 	switch (c) {
 	case '+':
@@ -121,7 +131,7 @@ bool isopstat(char c)
 	}
 }
 
-int parse_int(char *str, unsigned len)
+int parse_int(const char *str, const unsigned len)
 {
 	char buf[8];
 	memcpy(buf, str, len);
@@ -129,15 +139,15 @@ int parse_int(char *str, unsigned len)
 	return strtol(buf, NULL, 10);
 }
 
-double parse_dbl(char *str, unsigned len, unsigned loc_pt)
+double parse_dbl(const char *str, const unsigned len, const unsigned loc_pt)
 {
-	unsigned decim_places = len - loc_pt - 1;
-	int integral = parse_int(str, loc_pt);
-	int fract = parse_int(str + loc_pt + 1, decim_places);
+	const unsigned decim_places = len - loc_pt - 1;
+	const int integral = parse_int(str, loc_pt);
+	const int fract = parse_int(str + loc_pt + 1, decim_places);
 	return integral + fract / pow(10.0, decim_places);
 }
 
-void parse_date(struct SCDate *date, char *str)
+void parse_date(const char *str, struct SCDate *date)
 {
 	date->year = parse_int(str, 4);
 	date->month = parse_int(str + 5, 2);

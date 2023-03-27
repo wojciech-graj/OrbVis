@@ -18,7 +18,7 @@
 #include "satcat_code.h"
 
 #define NUM_SCSTAT 8
-#define NUM_SCSRC 117
+#define NUM_SCSRC 118
 #define NUM_SCSITE 34
 
 extern const char SCSTAT[NUM_SCSTAT];

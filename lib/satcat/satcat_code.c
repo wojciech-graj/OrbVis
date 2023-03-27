@@ -34,7 +34,8 @@ const char *sc_status_str(const char code)
 	}
 }
 
-const char *sc_source_str(const sc_code_t code){
+const char *sc_source_str(const sc_code_t code)
+{
 	switch (code) {
 	case SCSRC_AB  :
 		return "Arab Satellite Communications Organization";
@@ -162,6 +163,8 @@ const char *sc_source_str(const sc_code_t code){
 		return "Morroco";
 	case SCSRC_MALA:
 		return "Malaysia";
+	case SCSRC_MDA :
+		return "Republic of Moldova";
 	case SCSRC_MEX :
 		return "Mexico";
 	case SCSRC_MMR :
@@ -275,7 +278,8 @@ const char *sc_source_str(const sc_code_t code){
 	}
 }
 
-const char *sc_launch_site_str(const sc_code_t code){
+const char *sc_launch_site_str(const sc_code_t code)
+{
 	switch (code) {
 	case SCSITE_AFETR:
 		return "Air Force Eastern Test Range, Florida, USA";

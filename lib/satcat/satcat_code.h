@@ -9,18 +9,14 @@
 #ifndef SATCAT_CODE_H
 #define SATCAT_CODE_H
 
-#ifdef __cplusplus
-extern "C"{
-#endif
-
 #ifdef _ISOC99_SOURCE
 #include <stdint.h>
 typedef uint64_t sc_code_t;
 #else
 #include <limits.h>
-#if (UINT_MAX >= 0xFFFFFFFFFF)
+#if (UINT_MAX >= 0xFFFFFFFFFFUL)
 typedef unsigned sc_code_t;
-#elif (ULONG_MAX >= 0xFFFFFFFFFF)
+#elif (ULONG_MAX >= 0xFFFFFFFFFFUL)
 typedef unsigned long sc_code_t;
 #else
 typedef unsigned long long sc_code_t;
@@ -113,6 +109,7 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSRC_LUXE  (sc_code_t)138602370380UL
 #define SCSRC_MA    (sc_code_t)137977938253UL
 #define SCSRC_MALA  (sc_code_t)138534469965UL
+#define SCSRC_MDA   (sc_code_t)137980101709UL
 #define SCSRC_MEX   (sc_code_t)137981609293UL
 #define SCSRC_MMR   (sc_code_t)137981218125UL
 #define SCSRC_MNG   (sc_code_t)137980497485UL
@@ -203,9 +200,5 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSITE_XICLF (sc_code_t)301927188824UL
 #define SCSITE_YAVNE (sc_code_t)297667019097UL
 #define SCSITE_YUN   (sc_code_t)137980958041UL
-
-#ifdef __cplusplus
-}
-#endif
 
 #endif /* SATCAT_CODE_H */
