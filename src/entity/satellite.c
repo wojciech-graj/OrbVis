@@ -110,7 +110,8 @@ static gboolean orbits_changed_phys = FALSE;
 
 static gboolean recache = FALSE;
 
-static const char *CACHE_FILENAME = ".sat_cache";
+static const char *CACHE_FILENAME = ".orbvis_cache";
+static gchar *cache_filepath;
 
 static GThreadPool *thread_pool;
 static guint32 *thread_pool_indices_sync;
@@ -156,6 +157,8 @@ void satellite_init(void)
 
 	guint num_proc = g_get_num_processors();
 	thread_pool = g_thread_pool_new(satellites_calc_pos, NULL, MIN(num_proc, MAX_THREAD_TIC), TRUE, NULL);
+
+	cache_filepath = g_build_filename(g_get_user_cache_dir(), CACHE_FILENAME, NULL);
 }
 
 void alloc_orbit_arrays(void)
@@ -194,6 +197,8 @@ void satellite_deinit(void)
 	dealloc_orbit_arrays();
 
 	g_thread_pool_free(thread_pool, TRUE, FALSE);
+
+	g_free(cache_filepath);
 }
 
 void satellites_filter(void)
@@ -237,13 +242,13 @@ int sc_compare(const void *a, const void *b, void *udata)
 
 void satellite_clear_cache(void)
 {
-	g_remove(CACHE_FILENAME);
+	g_remove(cache_filepath);
 	recache = TRUE;
 }
 
 void save_satellite_cache(void)
 {
-	FILE *cache = fopen(CACHE_FILENAME, "w");
+	FILE *cache = fopen(cache_filepath, "w");
 	gint64 epoch_ms = system_epoch_ms();
 	fwrite(&epoch_ms, 8, 1, cache);
 	fwrite(&dl_multi.handles[DL_SATCAT].size, 8, 1, cache);
@@ -267,7 +272,7 @@ void satellites_get(void)
 		dl_multi_perform(&dl_multi);
 		save_satellite_cache();
 	} else {
-		FILE *cache = fopen(CACHE_FILENAME, "r");
+		FILE *cache = fopen(cache_filepath, "r");
 		if (!cache) {
 			dl_multi_perform(&dl_multi);
 			save_satellite_cache();
