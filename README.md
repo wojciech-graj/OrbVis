@@ -7,7 +7,11 @@ View and propagate the full CelesTrak satellite catalog in realtime.
 
 ## Build
 
-### Linux
+### Linux (FlatHub)
+
+<a href='https://flathub.org/apps/details/io.github.wojciech_graj.OrbVis'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
+
+### Linux (Compile from source)
 
 The following packages have to be installed prior to compilation: `gcc pkg-config gtk+-3.0 cglm libcurl epoxy meson`. On Debian-based systems, run the following command to install them:
 ```
