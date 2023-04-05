@@ -25,7 +25,7 @@ struct Setting {
 	gboolean *val;
 };
 
-struct Setting settings[3] = {
+struct Setting settings[] = {
 	{
 		.id = "lighting",
 		.val = &gs_lighting,
@@ -38,11 +38,16 @@ struct Setting settings[3] = {
 		.id = "local_time",
 		.val = &gs_gmt,
 	},
+	{
+		.id = "invert_scroll",
+		.val = &gs_invert_scroll,
+	},
 };
 
 gboolean gs_gmt = FALSE;
 gboolean gs_clouds = TRUE;
 gboolean gs_lighting = TRUE;
+gboolean gs_invert_scroll = FALSE;
 enum ReferenceFrame gs_reference_frame = REFERENCE_FRAME_FIXED;
 
 static GtkWindow *window_settings;
@@ -75,9 +80,9 @@ void on_setting_toggled(GtkToggleButton *togglebutton, gpointer user_data)
 {
 	(void)user_data;
 	unsigned i;
-	for (i = 0; i < 3 && settings[i].button != togglebutton; i++)
+	for (i = 0; i < 4 && settings[i].button != togglebutton; i++)
 		;
-	*settings[i].val = !*settings[i].val;
+	*settings[i].val = gtk_toggle_button_get_active(togglebutton);
 }
 
 void on_fetch_data_clicked(GtkButton *button, gpointer user_data)
@@ -116,6 +121,6 @@ void setting_init(GtkBuilder *builder)
 	gtk_label_set_text(about, ABOUT_STRING);
 
 	unsigned i;
-	for (i = 0; i < 3; i++)
+	for (i = 0; i < 4; i++)
 		settings[i].button = GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, settings[i].id));
 }
