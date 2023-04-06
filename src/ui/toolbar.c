@@ -147,7 +147,7 @@ void toolbar_init(GtkBuilder *builder)
 void toolbar_tic(void)
 {
 	if (!gtk_widget_has_focus(GTK_WIDGET(time_entry)))
-		gtk_entry_set_text(time_entry, epoch_to_iso8601(e_phys.epoch_ms, gs_gmt, TRUE));
+		gtk_entry_set_text(time_entry, epoch_to_iso8601(e_phys.epoch_ms, !gs_localtime, TRUE));
 	if (!gtk_widget_has_focus(GTK_WIDGET(speed_entry))) {
 		char buf[16];
 		g_snprintf(buf, 16, "%.3fx", (double)e_timescale);

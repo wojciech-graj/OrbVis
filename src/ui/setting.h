@@ -23,12 +23,13 @@ enum ReferenceFrame {
 	REFERENCE_FRAME_INERTIAL,
 };
 
-extern gboolean gs_gmt;
+extern gboolean gs_localtime;
 extern gboolean gs_clouds;
 extern gboolean gs_lighting;
 extern gboolean gs_invert_scroll;
 extern enum ReferenceFrame gs_reference_frame;
 
 void setting_init(GtkBuilder *builder);
+void setting_deinit(void);
 
 #endif /* __SETTING_H__ */

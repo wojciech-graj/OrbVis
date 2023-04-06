@@ -19,6 +19,8 @@
 #include "thread.h"
 #include "version.h"
 
+#include <stdio.h>
+
 struct Setting {
 	char *id;
 	GtkToggleButton *button;
@@ -36,7 +38,7 @@ struct Setting settings[] = {
 	},
 	{
 		.id = "local_time",
-		.val = &gs_gmt,
+		.val = &gs_localtime,
 	},
 	{
 		.id = "invert_scroll",
@@ -44,11 +46,14 @@ struct Setting settings[] = {
 	},
 };
 
-gboolean gs_gmt = FALSE;
+gboolean gs_localtime = TRUE;
 gboolean gs_clouds = TRUE;
 gboolean gs_lighting = TRUE;
 gboolean gs_invert_scroll = FALSE;
 enum ReferenceFrame gs_reference_frame = REFERENCE_FRAME_FIXED;
+
+static const char *SETTINGS_FILENAME = ".orbvis.conf";
+static gchar *settings_filepath;
 
 static GtkWindow *window_settings;
 
@@ -57,6 +62,9 @@ static gboolean on_window_settings_delete_event(GtkWidget *widget, GdkEvent *eve
 static void on_setting_toggled(GtkToggleButton *togglebutton, gpointer user_data);
 static void on_fetch_data_clicked(GtkButton *button, gpointer user_data);
 static gboolean on_reference_frame_state_set(GtkSwitch *widget, gboolean state, gpointer user_data);
+
+static void settings_load(void);
+static void settings_save(void);
 
 void on_settings_clicked(GtkToolButton *toolbutton, gpointer user_data)
 {
@@ -105,6 +113,30 @@ gboolean on_reference_frame_state_set(GtkSwitch *widget, gboolean state, gpointe
 	return FALSE;
 }
 
+void settings_save(void)
+{
+	g_autoptr(GKeyFile) settings_file = g_key_file_new();
+	unsigned i;
+	for (i = 0; i < 4; i++)
+		g_key_file_set_boolean(settings_file, "settings", settings[i].id, *settings[i].val);
+	g_key_file_save_to_file(settings_file, settings_filepath, NULL);
+}
+
+void settings_load(void)
+{
+	settings_filepath = g_build_filename(g_get_user_config_dir(), SETTINGS_FILENAME, NULL);
+	g_autoptr(GKeyFile) settings_file = g_key_file_new();
+	if (g_key_file_load_from_file(settings_file, settings_filepath, G_KEY_FILE_NONE, NULL)) {
+		unsigned i;
+		for (i = 0; i < 4; i++) {
+			g_autoptr(GError) error = NULL;
+			gboolean val = g_key_file_get_boolean(settings_file, "settings", settings[i].id, &error);
+			if (!error)
+				*settings[i].val = val;
+		}
+	}
+}
+
 void setting_init(GtkBuilder *builder)
 {
 	gtk_builder_add_callback_symbols(builder,
@@ -120,7 +152,17 @@ void setting_init(GtkBuilder *builder)
 	GtkLabel *about = GTK_LABEL(gtk_builder_get_object(builder, "about"));
 	gtk_label_set_text(about, ABOUT_STRING);
 
+	settings_load();
+
 	unsigned i;
-	for (i = 0; i < 4; i++)
+	for (i = 0; i < 4; i++) {
 		settings[i].button = GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, settings[i].id));
+		gtk_toggle_button_set_active(settings[i].button, *settings[i].val);
+	}
+}
+
+void setting_deinit(void)
+{
+	settings_save();
+	g_free(settings_filepath);
 }

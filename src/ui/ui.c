@@ -93,4 +93,5 @@ void ui_init(int argc, char ***argv)
 void ui_deinit(void)
 {
 	catalog_deinit();
+	setting_deinit();
 }
