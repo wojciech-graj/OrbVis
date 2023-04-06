@@ -25,6 +25,7 @@ meson compile -C builddir
 ```
 To run the program:
 ```
+cd builddir
 ./orbvis
 ```
 

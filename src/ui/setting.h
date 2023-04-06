@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -23,10 +23,10 @@ enum ReferenceFrame {
 	REFERENCE_FRAME_INERTIAL,
 };
 
-extern gboolean gs_localtime;
-extern gboolean gs_clouds;
-extern gboolean gs_lighting;
-extern gboolean gs_invert_scroll;
+extern gboolean es_localtime;
+extern gboolean es_clouds;
+extern gboolean es_lighting;
+extern gboolean es_invert_scroll;
 extern enum ReferenceFrame gs_reference_frame;
 
 void setting_init(GtkBuilder *builder);

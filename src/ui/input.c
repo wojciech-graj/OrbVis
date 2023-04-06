@@ -135,7 +135,7 @@ gboolean on_glarea_scroll_event(GtkWidget *widget, GdkEvent *event, gpointer use
 	(void)user_data;
 	GdkEventScroll *scroll = &event->scroll;
 
-	camera_zoom(&e_camera, scroll->delta_y * 0.2 * (gs_invert_scroll ? 1 : -1));
+	camera_zoom(&e_camera, scroll->delta_y * 0.2 * (es_invert_scroll ? 1 : -1));
 
 	return TRUE;
 }

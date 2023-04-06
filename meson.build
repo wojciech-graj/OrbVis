@@ -1,7 +1,7 @@
 project(
   'OrbVis',
   'c',
-  version : '0.2.3',
+  version : '0.3.0',
   license : 'GPL-2.0-or-later',
   default_options : [
     'c_std=c11',

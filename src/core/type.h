@@ -19,8 +19,8 @@
 
 #define UNREACHABLE __builtin_unreachable()
 
-#define likely(x) __builtin_expect((x), TRUE)
-#define unlikely(x) __builtin_expect((x), FALSE)
+#define likely(x) G_LIKELY(x)
+#define unlikely(x) G_UNLIKELY(x)
 
 #define SWAP(a, b)                       \
 	do {                             \
@@ -28,8 +28,5 @@
 		a = b;                   \
 		b = temp_;               \
 	} while (0)
-
-#define XSTR(s) STR(s)
-#define STR(s) #s
 
 #endif /* __TYPE_H__ */

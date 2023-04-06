@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2023 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -30,32 +30,33 @@ struct Setting {
 struct Setting settings[] = {
 	{
 		.id = "lighting",
-		.val = &gs_lighting,
+		.val = &es_lighting,
 	},
 	{
 		.id = "clouds",
-		.val = &gs_clouds,
+		.val = &es_clouds,
 	},
 	{
 		.id = "local_time",
-		.val = &gs_localtime,
+		.val = &es_localtime,
 	},
 	{
 		.id = "invert_scroll",
-		.val = &gs_invert_scroll,
+		.val = &es_invert_scroll,
 	},
 };
 
-gboolean gs_localtime = TRUE;
-gboolean gs_clouds = TRUE;
-gboolean gs_lighting = TRUE;
-gboolean gs_invert_scroll = FALSE;
+gboolean es_localtime = TRUE;
+gboolean es_clouds = TRUE;
+gboolean es_lighting = TRUE;
+gboolean es_invert_scroll = FALSE;
 enum ReferenceFrame gs_reference_frame = REFERENCE_FRAME_FIXED;
 
 static const char *SETTINGS_FILENAME = ".orbvis.conf";
 static gchar *settings_filepath;
 
 static GtkWindow *window_settings;
+static GtkSwitch *switch_reference_frame;
 
 static void on_settings_clicked(GtkToolButton *toolbutton, gpointer user_data);
 static gboolean on_window_settings_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data);
@@ -115,26 +116,42 @@ gboolean on_reference_frame_state_set(GtkSwitch *widget, gboolean state, gpointe
 
 void settings_save(void)
 {
-	g_autoptr(GKeyFile) settings_file = g_key_file_new();
+	GKeyFile *settings_file = g_key_file_new();
 	unsigned i;
 	for (i = 0; i < 4; i++)
 		g_key_file_set_boolean(settings_file, "settings", settings[i].id, *settings[i].val);
+	g_key_file_set_integer(settings_file, "settings", "reference_frame", gs_reference_frame);
 	g_key_file_save_to_file(settings_file, settings_filepath, NULL);
+	g_key_file_free(settings_file);
 }
 
 void settings_load(void)
 {
 	settings_filepath = g_build_filename(g_get_user_config_dir(), SETTINGS_FILENAME, NULL);
-	g_autoptr(GKeyFile) settings_file = g_key_file_new();
+	GKeyFile *settings_file = g_key_file_new();
 	if (g_key_file_load_from_file(settings_file, settings_filepath, G_KEY_FILE_NONE, NULL)) {
 		unsigned i;
 		for (i = 0; i < 4; i++) {
-			g_autoptr(GError) error = NULL;
-			gboolean val = g_key_file_get_boolean(settings_file, "settings", settings[i].id, &error);
-			if (!error)
+			GError *err = NULL;
+			gboolean val = g_key_file_get_boolean(settings_file, "settings", settings[i].id, &err);
+			if (err)
+				g_error_free(err);
+			else
 				*settings[i].val = val;
 		}
 	}
+	GError *err = NULL;
+	gint reference_frame = g_key_file_get_integer(settings_file, "settings", "reference_frame", &err);
+	if (err)
+		g_error_free(err);
+	else
+		gs_reference_frame = (enum ReferenceFrame)reference_frame;
+	g_key_file_free(settings_file);
+
+	unsigned i;
+	for (i = 0; i < 4; i++)
+		gtk_toggle_button_set_active(settings[i].button, *settings[i].val);
+	gtk_switch_set_state(switch_reference_frame, gs_reference_frame);
 }
 
 void setting_init(GtkBuilder *builder)
@@ -148,17 +165,16 @@ void setting_init(GtkBuilder *builder)
 		NULL);
 
 	window_settings = GTK_WINDOW(gtk_builder_get_object(builder, "window_settings"));
+	switch_reference_frame = GTK_SWITCH(gtk_builder_get_object(builder, "reference_frame"));
 
 	GtkLabel *about = GTK_LABEL(gtk_builder_get_object(builder, "about"));
 	gtk_label_set_text(about, ABOUT_STRING);
 
-	settings_load();
-
 	unsigned i;
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < 4; i++)
 		settings[i].button = GTK_TOGGLE_BUTTON(gtk_builder_get_object(builder, settings[i].id));
-		gtk_toggle_button_set_active(settings[i].button, *settings[i].val);
-	}
+
+	settings_load();
 }
 
 void setting_deinit(void)

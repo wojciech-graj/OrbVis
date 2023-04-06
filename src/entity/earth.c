@@ -131,8 +131,8 @@ void earth_render(void)
 	glUniform1i(LOCU_TEXTURE_GRADIENT, 4);
 	glUniform3fv(LOCU_LOOK_POS, 1, e_camera.pos);
 	glUniformMatrix4fv(LOCU_TRANSFORM, 1, GL_FALSE, (const GLfloat *)&transform);
-	glUniform1i(LOCU_CLOUDS, gs_clouds);
-	glUniform1i(LOCU_LIGHTING, gs_lighting);
+	glUniform1i(LOCU_CLOUDS, es_clouds);
+	glUniform1i(LOCU_LIGHTING, es_lighting);
 
 	glDrawElements(GL_TRIANGLES, obj_earth.n_faces * 3, GL_UNSIGNED_INT, (GLvoid *)0);
 }
