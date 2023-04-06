@@ -37,10 +37,5 @@
         <p>Settings improvements.</p>
       </description>
     </release>
-    <release version="v0.2.2" date="2023-03-27">
-      <description>
-        <p>Initial flatpak release.</p>
-      </description>
-    </release>
   </releases>
 </component>
