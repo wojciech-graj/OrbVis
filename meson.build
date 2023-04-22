@@ -17,7 +17,6 @@ cc = meson.get_compiler('c')
 
 deps = [
   dependency('gtk+-3.0'),
-  dependency('cglm'),
   dependency('libcurl'),
   dependency('epoxy'),
   cc.find_library('m', required : false),

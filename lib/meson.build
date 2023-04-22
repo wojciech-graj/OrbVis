@@ -8,6 +8,7 @@ lib_sources = files([
 ])
 
 lib_incdir = include_directories([
+  'cglm',
   'hashmap_c',
   'satcat',
   'sgp4',

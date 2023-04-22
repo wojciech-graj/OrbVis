@@ -13,9 +13,9 @@ View and propagate the full CelesTrak satellite catalog in realtime.
 
 ### Linux (Compile from source)
 
-The following packages have to be installed prior to compilation: `gcc pkg-config gtk+-3.0 cglm libcurl epoxy meson`. On Debian-based systems, run the following command to install them:
+The following packages have to be installed prior to compilation: `gcc pkg-config gtk+-3.0 libcurl epoxy meson`. On Debian-based systems, run the following command to install them:
 ```
-apt-get install gcc pkg-config libgtk-3-dev libcglm-dev libcurl4-openssl-dev libepoxy-dev meson
+apt-get install gcc pkg-config libgtk-3-dev libcurl4-openssl-dev libepoxy-dev meson
 ```
 
 To compile:
