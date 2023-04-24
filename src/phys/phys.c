@@ -101,7 +101,7 @@ void *phys_thrd(void *arguments)
 
 void phys_phys_sync(void)
 {
-	if (gs_reference_frame == REFERENCE_FRAME_INERTIAL) {
+	if (es_reference_frame == REFERENCE_FRAME_INERTIAL) {
 		gint64 diff_ms = phys_ctx_sync.epoch_ms - e_phys.epoch_ms;
 		float dang = (-2.f * (float)G_PI * diff_ms) / MS_IN_DAY;
 		glm_vec2_copy((vec2){ e_camera.pos[0] * cosf(dang) - e_camera.pos[1] * sinf(dang),

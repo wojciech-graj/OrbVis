@@ -27,7 +27,8 @@ extern gboolean es_localtime;
 extern gboolean es_clouds;
 extern gboolean es_lighting;
 extern gboolean es_invert_scroll;
-extern enum ReferenceFrame gs_reference_frame;
+extern guint es_satellite_scale;
+extern enum ReferenceFrame es_reference_frame;
 
 void setting_init(GtkBuilder *builder);
 void setting_deinit(void);

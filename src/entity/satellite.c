@@ -16,6 +16,7 @@
 
 #include "hashmap.h"
 #include "satcat_code.h"
+#include "setting.h"
 #include <cglm/mat3.h>
 #include <cglm/mat4.h>
 #include <cglm/project.h>
@@ -56,6 +57,7 @@ enum LayoutLoc {
 
 enum UniformLoc {
 	LOCU_TRANSFORM = 0u,
+	LOCU_SCALE,
 };
 
 enum DLMultiLoc {
@@ -469,11 +471,12 @@ void satellites_phys_sync(void)
 
 void satellites_render(void)
 {
-	shader_bind(&shader);
-	camera_mvp_generate(&e_camera, &e_phys.teme_to_world, transform);
-	glUniformMatrix4fv(LOCU_TRANSFORM, 1, GL_FALSE, (const GLfloat *)&transform);
-
 	if (satellites_renderable) {
+		shader_bind(&shader);
+		camera_mvp_generate(&e_camera, &e_phys.teme_to_world, transform);
+		glUniformMatrix4fv(LOCU_TRANSFORM, 1, GL_FALSE, (const GLfloat *)&transform);
+		glUniform1f(LOCU_SCALE, es_satellite_scale);
+
 		vao_bind(&vao_satellites);
 		glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);
 		glDrawElements(GL_POINTS, n_satellites_render, GL_UNSIGNED_INT, satellite_indices);

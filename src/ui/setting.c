@@ -50,19 +50,22 @@ gboolean es_localtime = TRUE;
 gboolean es_clouds = TRUE;
 gboolean es_lighting = TRUE;
 gboolean es_invert_scroll = FALSE;
-enum ReferenceFrame gs_reference_frame = REFERENCE_FRAME_FIXED;
+guint es_satellite_scale = 1;
+enum ReferenceFrame es_reference_frame = REFERENCE_FRAME_FIXED;
 
 static const char *SETTINGS_FILENAME = ".orbvis.conf";
 static gchar *settings_filepath;
 
 static GtkWindow *window_settings;
 static GtkSwitch *switch_reference_frame;
+static GtkAdjustment *adjustment_scale;
 
 static void on_settings_clicked(GtkToolButton *toolbutton, gpointer user_data);
 static gboolean on_window_settings_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 static void on_setting_toggled(GtkToggleButton *togglebutton, gpointer user_data);
 static void on_fetch_data_clicked(GtkButton *button, gpointer user_data);
 static gboolean on_reference_frame_state_set(GtkSwitch *widget, gboolean state, gpointer user_data);
+static void on_adjustment_scale_value_changed(GtkAdjustment *adjustment, gpointer user_data);
 
 static void settings_load(void);
 static void settings_save(void);
@@ -109,9 +112,16 @@ gboolean on_reference_frame_state_set(GtkSwitch *widget, gboolean state, gpointe
 	(void)widget;
 	(void)user_data;
 
-	gs_reference_frame = (enum ReferenceFrame)state;
+	es_reference_frame = (enum ReferenceFrame)state;
 
 	return FALSE;
+}
+
+void on_adjustment_scale_value_changed(GtkAdjustment *adjustment, gpointer user_data)
+{
+	(void)adjustment;
+	(void)user_data;
+	es_satellite_scale = (guint)gtk_adjustment_get_value(adjustment_scale);
 }
 
 void settings_save(void)
@@ -120,7 +130,8 @@ void settings_save(void)
 	unsigned i;
 	for (i = 0; i < 4; i++)
 		g_key_file_set_boolean(settings_file, "settings", settings[i].id, *settings[i].val);
-	g_key_file_set_integer(settings_file, "settings", "reference_frame", gs_reference_frame);
+	g_key_file_set_integer(settings_file, "settings", "reference_frame", es_reference_frame);
+	g_key_file_set_integer(settings_file, "settings", "satellite_scale", es_satellite_scale);
 	g_key_file_save_to_file(settings_file, settings_filepath, NULL);
 	g_key_file_free(settings_file);
 }
@@ -140,18 +151,28 @@ void settings_load(void)
 				*settings[i].val = val;
 		}
 	}
+
 	GError *err = NULL;
 	gint reference_frame = g_key_file_get_integer(settings_file, "settings", "reference_frame", &err);
+	if (err) {
+		g_error_free(err);
+		err = NULL;
+	} else {
+		es_reference_frame = (enum ReferenceFrame)reference_frame;
+	}
+	guint satellite_scale = g_key_file_get_integer(settings_file, "settings", "satellite_scale", &err);
 	if (err)
 		g_error_free(err);
 	else
-		gs_reference_frame = (enum ReferenceFrame)reference_frame;
+		es_satellite_scale = satellite_scale;
+
 	g_key_file_free(settings_file);
 
 	unsigned i;
 	for (i = 0; i < 4; i++)
 		gtk_toggle_button_set_active(settings[i].button, *settings[i].val);
-	gtk_switch_set_state(switch_reference_frame, gs_reference_frame);
+	gtk_switch_set_state(switch_reference_frame, es_reference_frame);
+	gtk_adjustment_set_value(adjustment_scale, es_satellite_scale);
 }
 
 void setting_init(GtkBuilder *builder)
@@ -162,10 +183,12 @@ void setting_init(GtkBuilder *builder)
 		"on_window_settings_delete_event", G_CALLBACK(on_window_settings_delete_event),
 		"on_fetch_data_clicked", G_CALLBACK(on_fetch_data_clicked),
 		"on_reference_frame_state_set", G_CALLBACK(on_reference_frame_state_set),
+		"on_adjustment_scale_value_changed", G_CALLBACK(on_adjustment_scale_value_changed),
 		NULL);
 
 	window_settings = GTK_WINDOW(gtk_builder_get_object(builder, "window_settings"));
 	switch_reference_frame = GTK_SWITCH(gtk_builder_get_object(builder, "reference_frame"));
+	adjustment_scale = GTK_ADJUSTMENT(gtk_builder_get_object(builder, "adjustment_scale"));
 
 	GtkLabel *about = GTK_LABEL(gtk_builder_get_object(builder, "about"));
 	gtk_label_set_text(about, ABOUT_STRING);
