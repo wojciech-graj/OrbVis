@@ -13,6 +13,14 @@ project(
   ],
 )
 
+add_project_arguments(
+  '-Wno-implicit-fallthrough',
+  '-Wno-dangling-else',
+  '-Wno-newline-eof',
+  '-Wno-unknown-pragmas',
+  language : ['c'],
+)
+
 cc = meson.get_compiler('c')
 
 deps = [
