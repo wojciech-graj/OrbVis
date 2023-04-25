@@ -8,6 +8,7 @@
 #ifndef cglm_project_h
 #define cglm_project_h
 
+#include "affine.h"
 #include "common.h"
 #include "vec3.h"
 #include "vec4.h"
@@ -152,14 +153,14 @@ glm_pickmatrix(vec2 center, vec2 size, vec4 vp, mat4 dest) {
 
   if (size[0] <= 0.0f || size[1] <= 0.0f)
     return;
-  
+
   /* Translate and scale the picked region to the entire window */
   v[0] = (vp[2] - 2.0f * (center[0] - vp[0])) / size[0];
   v[1] = (vp[3] - 2.0f * (center[1] - vp[1])) / size[1];
   v[2] = 0.0f;
 
   glm_translate_make(res, v);
-  
+
   v[0] = vp[2] / size[0];
   v[1] = vp[3] / size[1];
   v[2] = 1.0f;
