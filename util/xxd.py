@@ -19,7 +19,7 @@ if __name__ == "__main__":
     filename = sys.argv[1]
     varname = f"{filename[3:].replace('.', '_').replace('/', '_').replace('-', '_')}"
     with open(filename, "rb") as f:
-        data = [hex(c) for c in f.read()]
+        data = [str(c) for c in f.read()]
         print(
             f"const unsigned char {varname}[]={{"
             + ','.join(data)
