@@ -33,17 +33,18 @@ enum LayoutLoc {
 	LOCL_ATEXCOORD,
 };
 
-enum UniformLoc {
-	LOCU_TEXTURE_DAY = 0,
-	LOCU_TEXTURE_NIGHT,
-	LOCU_TEXTURE_SPECULAR,
-	LOCU_TEXTURE_CLOUDS,
-	LOCU_TEXTURE_GRADIENT,
-	LOCU_TRANSFORM,
-	LOCU_SUN_DIR,
-	LOCU_LOOK_POS,
-	LOCU_CLOUDS,
-	LOCU_LIGHTING,
+enum UniformIdx {
+	U_TEXTURE_DAY = 0,
+	U_TEXTURE_NIGHT,
+	U_TEXTURE_SPECULAR,
+	U_TEXTURE_CLOUDS,
+	U_TEXTURE_GRADIENT,
+	U_TRANSFORM,
+	U_SUN_DIR,
+	U_LOOK_POS,
+	U_CLOUDS,
+	U_LIGHTING,
+	N_UNIFORMS,
 };
 
 extern const unsigned char res_shader_earth_vert[];
@@ -73,6 +74,39 @@ static struct Texture texture_specular;
 static struct Texture texture_clouds;
 static struct Texture texture_gradient;
 
+static struct ShaderAttr uniforms[] = {
+	[U_TEXTURE_DAY] = {
+		.name = "texture_day",
+	},
+	[U_TEXTURE_NIGHT] = {
+		.name = "texture_night",
+	},
+	[U_TEXTURE_SPECULAR] = {
+		.name = "texture_specular",
+	},
+	[U_TEXTURE_CLOUDS] = {
+		.name = "texture_clouds",
+	},
+	[U_TEXTURE_GRADIENT] = {
+		.name = "texture_gradient",
+	},
+	[U_TRANSFORM] = {
+		.name = "transform",
+	},
+	[U_SUN_DIR] = {
+		.name = "sun_dir",
+	},
+	[U_LOOK_POS] = {
+		.name = "look_pos",
+	},
+	[U_CLOUDS] = {
+		.name = "clouds",
+	},
+	[U_LIGHTING] = {
+		.name = "lighting",
+	},
+};
+
 void earth_init(void)
 {
 	icosphere_generate(3, &obj_earth.verts, &obj_earth.faces, &obj_earth.uv, &obj_earth.n_verts, &obj_earth.n_faces);
@@ -85,7 +119,8 @@ void earth_init(void)
 	shader_init(&shader, (const char *)res_shader_earth_vert, res_shader_earth_vert_len, (const char *)res_shader_earth_frag, res_shader_earth_frag_len, 2, (struct ShaderAttr[]){
 																					{ LOCL_APOS, "in_pos" },
 																					{ LOCL_ATEXCOORD, "in_uv" },
-																				});
+																				},
+		N_UNIFORMS, uniforms);
 
 	texture_init_from_image(&texture_day, res_texture_earth_daymap_jpg, res_texture_earth_daymap_jpg_len, GL_TEXTURE0, GL_TEXTURE_2D);
 	texture_init_from_image(&texture_night, res_texture_earth_nightmap_jpg, res_texture_earth_nightmap_jpg_len, GL_TEXTURE1, GL_TEXTURE_2D);
@@ -123,16 +158,16 @@ void earth_render(void)
 	camera_mvp_generate(&e_camera, &model.model_mat, transform);
 
 	shader_bind(&shader);
-	glUniform3fv(LOCU_SUN_DIR, 1, e_phys.sun_dir);
-	glUniform1i(LOCU_TEXTURE_DAY, 0);
-	glUniform1i(LOCU_TEXTURE_NIGHT, 1);
-	glUniform1i(LOCU_TEXTURE_SPECULAR, 2);
-	glUniform1i(LOCU_TEXTURE_CLOUDS, 3);
-	glUniform1i(LOCU_TEXTURE_GRADIENT, 4);
-	glUniform3fv(LOCU_LOOK_POS, 1, e_camera.pos);
-	glUniformMatrix4fv(LOCU_TRANSFORM, 1, GL_FALSE, (const GLfloat *)&transform);
-	glUniform1i(LOCU_CLOUDS, es_clouds);
-	glUniform1i(LOCU_LIGHTING, es_lighting);
+	glUniform3fv(uniforms[U_SUN_DIR].index, 1, e_phys.sun_dir);
+	glUniform1i(uniforms[U_TEXTURE_DAY].index, 0);
+	glUniform1i(uniforms[U_TEXTURE_NIGHT].index, 1);
+	glUniform1i(uniforms[U_TEXTURE_SPECULAR].index, 2);
+	glUniform1i(uniforms[U_TEXTURE_CLOUDS].index, 3);
+	glUniform1i(uniforms[U_TEXTURE_GRADIENT].index, 4);
+	glUniform3fv(uniforms[U_LOOK_POS].index, 1, e_camera.pos);
+	glUniformMatrix4fv(uniforms[U_TRANSFORM].index, 1, GL_FALSE, (const GLfloat *)&transform);
+	glUniform1i(uniforms[U_CLOUDS].index, es_clouds);
+	glUniform1i(uniforms[U_LIGHTING].index, es_lighting);
 
 	glDrawElements(GL_TRIANGLES, obj_earth.n_faces * 3, GL_UNSIGNED_INT, (GLvoid *)0);
 }

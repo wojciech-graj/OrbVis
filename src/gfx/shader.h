@@ -26,7 +26,7 @@ struct Shader {
 	GLuint handle;
 };
 
-void shader_init(struct Shader *shader, const char *vs, unsigned int vs_len, const char *fs, unsigned int fs_len, size_t n_vertex_attr, struct ShaderAttr vertex_attr[]);
+void shader_init(struct Shader *shader, const char *vs, unsigned int vs_len, const char *fs, unsigned int fs_len, size_t n_vertex_attr, struct ShaderAttr vertex_attr[], size_t n_uniforms, struct ShaderAttr uniforms[]);
 void shader_deinit(struct Shader *shader);
 void shader_bind(struct Shader *shader);
 

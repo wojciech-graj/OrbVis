@@ -55,9 +55,10 @@ enum LayoutLoc {
 	LOCL_COLOR,
 };
 
-enum UniformLoc {
-	LOCU_TRANSFORM = 0u,
-	LOCU_SCALE,
+enum UniformIdx {
+	U_TRANSFORM = 0u,
+	U_SCALE,
+	N_UNIFORMS,
 };
 
 enum DLMultiLoc {
@@ -87,6 +88,15 @@ static struct BO vbo_orbits;
 static struct BO vbo_orbit_colors;
 
 static struct Shader shader;
+
+static struct ShaderAttr uniforms[] = {
+	[U_TRANSFORM] = {
+		.name = "transform",
+	},
+	[U_SCALE] = {
+		.name = "scl",
+	}
+};
 
 static mat4 transform;
 
@@ -153,7 +163,8 @@ void satellite_init(void)
 	shader_init(&shader, (const char *)res_shader_satellite_vert, res_shader_satellite_vert_len, (const char *)res_shader_satellite_frag, res_shader_satellite_frag_len, 2, (struct ShaderAttr[]){
 																							{ LOCL_APOS, "in_pos" },
 																							{ LOCL_COLOR, "in_color" },
-																						});
+																						},
+		N_UNIFORMS, uniforms);
 
 	alloc_orbit_arrays();
 
@@ -474,8 +485,8 @@ void satellites_render(void)
 	if (satellites_renderable) {
 		shader_bind(&shader);
 		camera_mvp_generate(&e_camera, &e_phys.teme_to_world, transform);
-		glUniformMatrix4fv(LOCU_TRANSFORM, 1, GL_FALSE, (const GLfloat *)&transform);
-		glUniform1f(LOCU_SCALE, es_satellite_scale);
+		glUniformMatrix4fv(uniforms[U_TRANSFORM].index, 1, GL_FALSE, (const GLfloat *)&transform);
+		glUniform1f(uniforms[U_SCALE].index, es_satellite_scale);
 
 		vao_bind(&vao_satellites);
 		glEnable(GL_VERTEX_PROGRAM_POINT_SIZE);

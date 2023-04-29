@@ -1,20 +1,19 @@
 #version 410 core
-#extension GL_ARB_explicit_uniform_location : enable
 
 out vec4 frag_color;
 
 in vec2 uv;
 in vec3 pos;
 
-layout (location = 0) uniform sampler2D texture_day;
-layout (location = 1) uniform sampler2D texture_night;
-layout (location = 2) uniform sampler2D texture_specular;
-layout (location = 3) uniform sampler2D texture_clouds;
-layout (location = 4) uniform sampler1D texture_gradient;
-layout (location = 6) uniform vec3 sun_dir;
-layout (location = 7) uniform vec3 look_pos;
-layout (location = 8) uniform bool clouds;
-layout (location = 9) uniform bool lighting;
+uniform sampler2D texture_day;
+uniform sampler2D texture_night;
+uniform sampler2D texture_specular;
+uniform sampler2D texture_clouds;
+uniform sampler1D texture_gradient;
+uniform vec3 sun_dir;
+uniform vec3 look_pos;
+uniform bool clouds;
+uniform bool lighting;
 
 const float PI = 3.14159;
 const float TRANSITION_WIDTH = 0.1;

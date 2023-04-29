@@ -33,7 +33,7 @@ GLint shader_compile(const char *str, unsigned int len, GLenum type)
 	return handle;
 }
 
-void shader_init(struct Shader *shader, const char *vs, unsigned int vs_len, const char *fs, unsigned int fs_len, size_t n_vertex_attr, struct ShaderAttr vertex_attr[])
+void shader_init(struct Shader *shader, const char *vs, unsigned int vs_len, const char *fs, unsigned int fs_len, size_t n_vertex_attr, struct ShaderAttr vertex_attr[], size_t n_uniforms, struct ShaderAttr uniforms[])
 {
 	GLuint vs_handle = shader_compile(vs, vs_len, GL_VERTEX_SHADER);
 	GLuint fs_handle = shader_compile(fs, fs_len, GL_FRAGMENT_SHADER);
@@ -51,6 +51,12 @@ void shader_init(struct Shader *shader, const char *vs, unsigned int vs_len, con
 	GLint linked;
 	glGetProgramiv(shader->handle, GL_LINK_STATUS, &linked);
 	gfx_error_check(linked, glGetProgramInfoLog, shader->handle, "Failed to link shaders.");
+
+	for (i = 0; i < n_uniforms; i++) {
+		GLint loc = glGetUniformLocation(shader->handle, uniforms[i].name);
+		error_check(loc != -1, "Failed to locate uniform %s in shader.", uniforms[i].name);
+		uniforms[i].index = loc;
+	}
 
 	glDetachShader(shader->handle, vs_handle);
 	glDetachShader(shader->handle, fs_handle);

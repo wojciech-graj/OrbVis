@@ -1,11 +1,10 @@
 #version 410 core
-#extension GL_ARB_explicit_uniform_location : enable
 
 layout (location = 0) in vec3 in_pos;
 layout (location = 1) in vec3 in_color;
 
-layout (location = 0) uniform mat4 transform;
-layout (location = 1) uniform float scl;
+uniform mat4 transform;
+uniform float scl;
 
 out vec3 color;
 
