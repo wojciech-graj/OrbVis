@@ -20,7 +20,7 @@ apt-get install gcc pkg-config libgtk-3-dev libcurl4-openssl-dev libepoxy-dev me
 
 To compile:
 ```
-meson builddir
+meson setup builddir
 meson compile -C builddir
 ```
 To run the program:
