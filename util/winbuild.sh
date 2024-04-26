@@ -22,7 +22,7 @@ cp -r $MINGW_PATH/share/icons icons
 cd ..
 mkdir -p ssl/certs
 cd ssl/certs
-cp -r $MINGW_PATH/ssl/certs/ca-bundle.crt ca-bundle.crt
+cp -r $MINGW_PATH/etc/ssl/certs/ca-bundle.crt ca-bundle.crt
 cd ../..
 cp ../util/README_WIN.txt README.txt
 cp ../LICENSE LICENSE.txt
