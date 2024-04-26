@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2024 Wojciech Graj
  *
  * Licensed under the MIT license: https://opensource.org/licenses/MIT
  * Permission is granted to use, copy, modify, and redistribute the work.
@@ -52,6 +52,7 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSRC_ALG   (sc_code_t)137980496961UL
 #define SCSRC_ANG   (sc_code_t)137980497473UL
 #define SCSRC_ARGN  (sc_code_t)138752250433UL
+#define SCSRC_ARM   (sc_code_t)137980891713UL
 #define SCSRC_ASRA  (sc_code_t)138534867777UL
 #define SCSRC_AUS   (sc_code_t)137981285697UL
 #define SCSRC_AZER  (sc_code_t)138819230273UL
@@ -65,17 +66,20 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSRC_BUL   (sc_code_t)137980826946UL
 #define SCSRC_CA    (sc_code_t)137977938243UL
 #define SCSRC_CHBZ  (sc_code_t)138953246787UL
+#define SCSRC_CHTU  (sc_code_t)138870540355UL
 #define SCSRC_CHLE  (sc_code_t)138601580611UL
 #define SCSRC_CIS   (sc_code_t)137981282627UL
 #define SCSRC_COL   (sc_code_t)137980825411UL
 #define SCSRC_CRI   (sc_code_t)137980629571UL
 #define SCSRC_CZCH  (sc_code_t)138651327043UL
 #define SCSRC_DEN   (sc_code_t)137980953924UL
+#define SCSRC_DJI   (sc_code_t)137980627524UL
 #define SCSRC_ECU   (sc_code_t)137981412165UL
 #define SCSRC_EGYP  (sc_code_t)138786981701UL
 #define SCSRC_ESA   (sc_code_t)137980105541UL
 #define SCSRC_ESRO  (sc_code_t)138769748805UL
 #define SCSRC_EST   (sc_code_t)137981350725UL
+#define SCSRC_ETH   (sc_code_t)137980564549UL
 #define SCSRC_EUME  (sc_code_t)138601649477UL
 #define SCSRC_EUTE  (sc_code_t)138602108229UL
 #define SCSRC_FGER  (sc_code_t)138819225414UL
@@ -95,6 +99,7 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSRC_IRAN  (sc_code_t)138751857225UL
 #define SCSRC_IRAQ  (sc_code_t)138802188873UL
 #define SCSRC_IRID  (sc_code_t)138584609353UL
+#define SCSRC_IRL   (sc_code_t)137980826185UL
 #define SCSRC_ISRA  (sc_code_t)138534867785UL
 #define SCSRC_ISRO  (sc_code_t)138769748809UL
 #define SCSRC_ISS   (sc_code_t)137981285193UL
@@ -109,6 +114,7 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSRC_LUXE  (sc_code_t)138602370380UL
 #define SCSRC_MA    (sc_code_t)137977938253UL
 #define SCSRC_MALA  (sc_code_t)138534469965UL
+#define SCSRC_MCO   (sc_code_t)137981018957UL
 #define SCSRC_MDA   (sc_code_t)137980101709UL
 #define SCSRC_MEX   (sc_code_t)137981609293UL
 #define SCSRC_MMR   (sc_code_t)137981218125UL
@@ -162,8 +168,10 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSRC_URY   (sc_code_t)137981678165UL
 #define SCSRC_US    (sc_code_t)137977942869UL
 #define SCSRC_USBZ  (sc_code_t)138953249621UL
+#define SCSRC_VAT   (sc_code_t)137981346134UL
 #define SCSRC_VENZ  (sc_code_t)138954032470UL
 #define SCSRC_VTNM  (sc_code_t)138735932502UL
+#define SCSRC_ZWE   (sc_code_t)137980368730UL
 
 /* Launch Site */
 #define SCSITE_AFETR (sc_code_t)353601144385UL
@@ -173,6 +181,7 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSITE_ERAS  (sc_code_t)138835743301UL
 #define SCSITE_FRGUI (sc_code_t)314963350086UL
 #define SCSITE_HGSTR (sc_code_t)353602062152UL
+#define SCSITE_JJSLA (sc_code_t)280453401162UL
 #define SCSITE_JSC   (sc_code_t)137980236618UL
 #define SCSITE_KODAK (sc_code_t)323217542987UL
 #define SCSITE_KSCUT (sc_code_t)362207728459UL
@@ -181,10 +190,12 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSITE_NSC   (sc_code_t)137980236622UL
 #define SCSITE_PLMSC (sc_code_t)289160383568UL
 #define SCSITE_RLLB  (sc_code_t)138551250002UL
+#define SCSITE_SCSLA (sc_code_t)280453399379UL
 #define SCSITE_SEAL  (sc_code_t)138718299475UL
 #define SCSITE_SEMLS (sc_code_t)357762418003UL
 #define SCSITE_SMTS  (sc_code_t)138836987219UL
 #define SCSITE_SNMLP (sc_code_t)344877518419UL
+#define SCSITE_SPKII (sc_code_t)314762285139UL
 #define SCSITE_SRILR (sc_code_t)353467191891UL
 #define SCSITE_SUBL  (sc_code_t)138718369107UL
 #define SCSITE_SVOBO (sc_code_t)340414912083UL
@@ -199,6 +210,7 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSITE_WSC   (sc_code_t)137980236631UL
 #define SCSITE_XICLF (sc_code_t)301927188824UL
 #define SCSITE_YAVNE (sc_code_t)297667019097UL
+#define SCSITE_YSLA  (sc_code_t)138534474585UL
 #define SCSITE_YUN   (sc_code_t)137980958041UL
 
 #endif /* SATCAT_CODE_H */

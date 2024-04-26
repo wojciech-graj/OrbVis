@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2024 Wojciech Graj
  *
  * Licensed under the MIT license: https://opensource.org/licenses/MIT
  * Permission is granted to use, copy, modify, and redistribute the work.
@@ -49,6 +49,8 @@ const char *sc_source_str(const sc_code_t code)
 		return "Angola";
 	case SCSRC_ARGN:
 		return "Argentina";
+	case SCSRC_ARM :
+		return "Republic of Armenia";
 	case SCSRC_ASRA:
 		return "Austria";
 	case SCSRC_AUS :
@@ -75,6 +77,8 @@ const char *sc_source_str(const sc_code_t code)
 		return "Canada";
 	case SCSRC_CHBZ:
 		return "China/Brazil";
+	case SCSRC_CHTU:
+		return "China/Turkey";
 	case SCSRC_CHLE:
 		return "Chile";
 	case SCSRC_CIS :
@@ -87,6 +91,8 @@ const char *sc_source_str(const sc_code_t code)
 		return "Czech Republic (former Czechoslovakia)";
 	case SCSRC_DEN :
 		return "Denmark";
+	case SCSRC_DJI :
+		return "Republic of Djibouti";
 	case SCSRC_ECU :
 		return "Ecuador";
 	case SCSRC_EGYP:
@@ -97,6 +103,8 @@ const char *sc_source_str(const sc_code_t code)
 		return "European Space Research Organization";
 	case SCSRC_EST:
 		return "Estonia";
+	case SCSRC_ETH:
+		return "Ethiopia";
 	case SCSRC_EUME:
 		return "European Organization for the";
 	case SCSRC_EUTE:
@@ -135,6 +143,8 @@ const char *sc_source_str(const sc_code_t code)
 		return "Iraq";
 	case SCSRC_IRID:
 		return "Iridium";
+	case SCSRC_IRL :
+		return "Ireland";
 	case SCSRC_ISRA:
 		return "Israel";
 	case SCSRC_ISRO:
@@ -163,6 +173,8 @@ const char *sc_source_str(const sc_code_t code)
 		return "Morroco";
 	case SCSRC_MALA:
 		return "Malaysia";
+	case SCSRC_MCO :
+		return "Principality of Monaco";
 	case SCSRC_MDA :
 		return "Republic of Moldova";
 	case SCSRC_MEX :
@@ -269,10 +281,14 @@ const char *sc_source_str(const sc_code_t code)
 		return "United States";
 	case SCSRC_USBZ:
 		return "United States/Brazil";
+	case SCSRC_VAT :
+		return "Vatican City State";
 	case SCSRC_VENZ:
 		return "Venezuela";
 	case SCSRC_VTNM:
 		return "Vietnam";
+	case SCSRC_ZWE :
+		return "Republic of Zimbabwe";
 	default:
 		return NULL;
 	}
@@ -295,6 +311,8 @@ const char *sc_launch_site_str(const sc_code_t code)
 		return "Europe\'s Spaceport, Kourou, French Guiana";
 	case SCSITE_HGSTR:
 		return "Hammaguira Space Track Range, Algeria";
+	case SCSITE_JJSLA:
+		return "Jeju Island Sea Launch Area, Republic of Korea";
 	case SCSITE_JSC  :
 		return "Jiuquan Space Center, PRC";
 	case SCSITE_KODAK:
@@ -311,6 +329,8 @@ const char *sc_launch_site_str(const sc_code_t code)
 		return "Plesetsk Missile and Space Complex, Russia";
 	case SCSITE_RLLB :
 		return "Rocket Lab Launch Base, Mahia Peninsula, New Zealand";
+	case SCSITE_SCSLA:
+		return "South China Sea Launch Area, PRC";
 	case SCSITE_SEAL :
 		return "Sea Launch Platform (mobile)";
 	case SCSITE_SEMLS:
@@ -319,6 +339,8 @@ const char *sc_launch_site_str(const sc_code_t code)
 		return "Shahrud Missile Test Site, Iran";
 	case SCSITE_SNMLP:
 		return "San Marco Launch Platform, Indian Ocean (Kenya)";
+	case SCSITE_SPKII:
+		return "Space Port Kii, Japan";
 	case SCSITE_SRILR:
 		return "Satish Dhawan Space Centre, India";
 	case SCSITE_SUBL:
@@ -347,6 +369,8 @@ const char *sc_launch_site_str(const sc_code_t code)
 		return "Xichang Launch Facility, PRC";
 	case SCSITE_YAVNE:
 		return "Yavne Launch Facility, Israel";
+	case SCSITE_YSLA:
+		return "Yellow Sea Launch Area, PRC";
 	case SCSITE_YUN:
 		return "Yunsong Launch Site";
 	default:

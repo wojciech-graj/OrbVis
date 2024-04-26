@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2024 Wojciech Graj
  *
  * Licensed under the MIT license: https://opensource.org/licenses/MIT
  * Permission is granted to use, copy, modify, and redistribute the work.
