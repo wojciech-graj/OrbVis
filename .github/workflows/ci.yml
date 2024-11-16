@@ -1,0 +1,17 @@
+name: OrbVis
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install dependencies
+        run: sudo apt-get install -y gcc pkg-config libgtk-3-dev libcurl4-openssl-dev libepoxy-dev meson
+      - name: Compile
+        run: |
+          meson setup builddir
+          meson compile -C builddir
