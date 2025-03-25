@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2024 Wojciech Graj
+ * Copyright (c) 2022-2025 Wojciech Graj
  *
  * Licensed under the MIT license: https://opensource.org/licenses/MIT
  * Permission is granted to use, copy, modify, and redistribute the work.
@@ -92,6 +92,7 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSRC_GREC  (sc_code_t)138567569991UL
 #define SCSRC_GRSA  (sc_code_t)138534933063UL
 #define SCSRC_GUAT  (sc_code_t)138852521287UL
+#define SCSRC_HRV   (sc_code_t)137981481544UL
 #define SCSRC_HUN   (sc_code_t)137980958024UL
 #define SCSRC_IM    (sc_code_t)137977941321UL
 #define SCSRC_IND   (sc_code_t)137980300873UL
@@ -147,6 +148,7 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSRC_SAUD  (sc_code_t)138585391443UL
 #define SCSRC_SDN   (sc_code_t)137980953683UL
 #define SCSRC_SEAL  (sc_code_t)138718299475UL
+#define SCSRC_SEN   (sc_code_t)137980953939UL
 #define SCSRC_SES   (sc_code_t)137981281619UL
 #define SCSRC_SGJP  (sc_code_t)138785998675UL
 #define SCSRC_SING  (sc_code_t)138635266387UL
@@ -176,6 +178,7 @@ const char *sc_launch_site_str(sc_code_t code);
 /* Launch Site */
 #define SCSITE_AFETR (sc_code_t)353601144385UL
 #define SCSITE_AFWTR (sc_code_t)353602324033UL
+#define SCSITE_ANDSP (sc_code_t)344994369089UL
 #define SCSITE_CAS   (sc_code_t)137981280579UL
 #define SCSITE_DLS   (sc_code_t)137981283396UL
 #define SCSITE_ERAS  (sc_code_t)138835743301UL
