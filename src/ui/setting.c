@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Wojciech Graj
+ * Copyright (c) 2022-2025 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -63,7 +63,6 @@ static GtkAdjustment *adjustment_scale;
 static void on_settings_clicked(GtkToolButton *toolbutton, gpointer user_data);
 static gboolean on_window_settings_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data);
 static void on_setting_toggled(GtkToggleButton *togglebutton, gpointer user_data);
-static void on_fetch_data_clicked(GtkButton *button, gpointer user_data);
 static gboolean on_reference_frame_state_set(GtkSwitch *widget, gboolean state, gpointer user_data);
 static void on_adjustment_scale_value_changed(GtkAdjustment *adjustment, gpointer user_data);
 
@@ -95,16 +94,6 @@ void on_setting_toggled(GtkToggleButton *togglebutton, gpointer user_data)
 	for (i = 0; i < 4 && settings[i].button != togglebutton; i++)
 		;
 	*settings[i].val = gtk_toggle_button_get_active(togglebutton);
-}
-
-void on_fetch_data_clicked(GtkButton *button, gpointer user_data)
-{
-	(void)button;
-	(void)user_data;
-	if (!e_threads[THRD_SATELLITES_GET].thread) {
-		satellite_clear_cache();
-		thread_dispatch(THRD_SATELLITES_GET, NULL);
-	}
 }
 
 gboolean on_reference_frame_state_set(GtkSwitch *widget, gboolean state, gpointer user_data)
@@ -181,7 +170,6 @@ void setting_init(GtkBuilder *builder)
 		"on_settings_clicked", G_CALLBACK(on_settings_clicked),
 		"on_setting_toggled", G_CALLBACK(on_setting_toggled),
 		"on_window_settings_delete_event", G_CALLBACK(on_window_settings_delete_event),
-		"on_fetch_data_clicked", G_CALLBACK(on_fetch_data_clicked),
 		"on_reference_frame_state_set", G_CALLBACK(on_reference_frame_state_set),
 		"on_adjustment_scale_value_changed", G_CALLBACK(on_adjustment_scale_value_changed),
 		NULL);

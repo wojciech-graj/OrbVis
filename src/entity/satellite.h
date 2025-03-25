@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022 Wojciech Graj
+ * Copyright (c) 2022-2025 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -42,8 +42,6 @@ void satellites_get_sync(void);
 
 void satellite_select(double xpos, double ypos);
 void satellite_select_ptr(struct Satellite *satellite);
-
-void satellite_clear_cache(void);
 
 void satellites_filter(void);
 

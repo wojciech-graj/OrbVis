@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Wojciech Graj
+ * Copyright (c) 2022-2025 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -120,8 +120,6 @@ static GArray *satellite_orbit_data = NULL;
 static vec3 *satellite_orbit_colors = NULL;
 static gboolean orbits_changed_phys = FALSE;
 
-static gboolean recache = FALSE;
-
 static const char *CACHE_FILENAME = ".orbvis_cache";
 static gchar *cache_filepath;
 
@@ -143,7 +141,7 @@ static void satellites_calc_pos(gpointer data, gpointer user_data);
 
 void satellite_init(void)
 {
-	const char *urls[] = { "https://celestrak.org/pub/satcat.txt", "https://celestrak.org/pub/TLE/catalog.txt" };
+	const char *urls[] = { "https://celestrak.org/pub/satcat.txt", "https://celestrak.org/NORAD/elements/gp.php?SPECIAL=full-catalog&amp;FORMAT=tle" };
 	dl_multi_init(&dl_multi, 2, urls);
 
 	vao_init(&vao_satellites);
@@ -253,14 +251,13 @@ int sc_compare(const void *a, const void *b, void *udata)
 	return (int)(((struct SatCat *)a)->catnum) - (int)(((struct SatCat *)b)->catnum);
 }
 
-void satellite_clear_cache(void)
-{
-	g_remove(cache_filepath);
-	recache = TRUE;
-}
-
 void save_satellite_cache(void)
 {
+	if (count((char *)dl_multi.handles[DL_TLE].memory, '\n', dl_multi.handles[DL_TLE].size) < 3) {
+		printf_log("Failed to fetch TLEs. Response:\n%.*s", (int)dl_multi.handles[DL_TLE].size, dl_multi.handles[DL_TLE].memory);
+		return;
+	}
+
 	FILE *cache = fopen(cache_filepath, "w");
 	gint64 epoch_ms = system_epoch_ms();
 	fwrite(&epoch_ms, 8, 1, cache);
@@ -280,29 +277,23 @@ void load_cache(struct DLHandle *handle, guint64 size, FILE *cache)
 
 void satellites_get(void)
 {
-	if (recache) {
-		recache = FALSE;
+	FILE *cache = fopen(cache_filepath, "r");
+	if (!cache) {
 		dl_multi_perform(&dl_multi);
 		save_satellite_cache();
 	} else {
-		FILE *cache = fopen(cache_filepath, "r");
-		if (!cache) {
+		gint64 cache_time;
+		fread(&cache_time, 8, 1, cache);
+		if (system_epoch_ms() - cache_time > CACHE_INVAL_MS) {
+			fclose(cache);
 			dl_multi_perform(&dl_multi);
 			save_satellite_cache();
 		} else {
-			gint64 cache_time;
-			fread(&cache_time, 8, 1, cache);
-			if (system_epoch_ms() - cache_time > CACHE_INVAL_MS) {
-				fclose(cache);
-				dl_multi_perform(&dl_multi);
-				save_satellite_cache();
-			} else {
-				guint64 sizes[2];
-				fread(sizes, 8, 2, cache);
-				load_cache(&dl_multi.handles[DL_SATCAT], sizes[0], cache);
-				load_cache(&dl_multi.handles[DL_TLE], sizes[1], cache);
-				fclose(cache);
-			}
+			guint64 sizes[2];
+			fread(sizes, 8, 2, cache);
+			load_cache(&dl_multi.handles[DL_SATCAT], sizes[0], cache);
+			load_cache(&dl_multi.handles[DL_TLE], sizes[1], cache);
+			fclose(cache);
 		}
 	}
 
@@ -413,6 +404,8 @@ void satellites_get_sync(void)
 	satellites_filter();
 
 	status_pop(STAT_FETCHING_SAT);
+	if (!n_satellites)
+		status_push(STAT_FETCHING_SAT, "Failed to fetch satellites. Check logs and try again later.");
 }
 
 void satellites_tic_sync(void)
