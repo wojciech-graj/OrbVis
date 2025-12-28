@@ -10,6 +10,7 @@ project(
     'buildtype=release',
     'b_ndebug=if-release',
     'debug=false',
+    'c_args=-DSC_CSTRING',
   ],
 )
 
