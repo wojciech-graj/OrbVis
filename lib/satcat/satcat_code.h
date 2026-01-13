@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025 Wojciech Graj
+ * Copyright (c) 2022-2026 Wojciech Graj
  *
  * Licensed under the MIT license: https://opensource.org/licenses/MIT
  * Permission is granted to use, copy, modify, and redistribute the work.
@@ -60,10 +60,12 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSRC_BELA  (sc_code_t)138534470978UL
 #define SCSRC_BERM  (sc_code_t)138736190786UL
 #define SCSRC_BGD   (sc_code_t)137980299074UL
+#define SCSRC_BHR   (sc_code_t)137981216834UL
 #define SCSRC_BHUT  (sc_code_t)138853828674UL
 #define SCSRC_BOL   (sc_code_t)137980825410UL
 #define SCSRC_BRAZ  (sc_code_t)138953183810UL
 #define SCSRC_BUL   (sc_code_t)137980826946UL
+#define SCSRC_BWA   (sc_code_t)137980106562UL
 #define SCSRC_CA    (sc_code_t)137977938243UL
 #define SCSRC_CHBZ  (sc_code_t)138953246787UL
 #define SCSRC_CHTU  (sc_code_t)138870540355UL
@@ -119,6 +121,7 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSRC_MDA   (sc_code_t)137980101709UL
 #define SCSRC_MEX   (sc_code_t)137981609293UL
 #define SCSRC_MMR   (sc_code_t)137981218125UL
+#define SCSRC_MNE   (sc_code_t)137980366413UL
 #define SCSRC_MNG   (sc_code_t)137980497485UL
 #define SCSRC_MUS   (sc_code_t)137981285709UL
 #define SCSRC_NATO  (sc_code_t)138769875278UL
@@ -153,6 +156,7 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSRC_SGJP  (sc_code_t)138785998675UL
 #define SCSRC_SING  (sc_code_t)138635266387UL
 #define SCSRC_SKOR  (sc_code_t)138819881811UL
+#define SCSRC_SLB   (sc_code_t)137980169299UL
 #define SCSRC_SPN   (sc_code_t)137980956755UL
 #define SCSRC_STCT  (sc_code_t)138852652115UL
 #define SCSRC_SVN   (sc_code_t)137980958291UL
@@ -179,6 +183,8 @@ const char *sc_launch_site_str(sc_code_t code);
 #define SCSITE_AFETR (sc_code_t)353601144385UL
 #define SCSITE_AFWTR (sc_code_t)353602324033UL
 #define SCSITE_ANDSP (sc_code_t)344994369089UL
+#define SCSITE_ALCLC (sc_code_t)289042287681UL
+#define SCSITE_BOS   (sc_code_t)137981284162UL
 #define SCSITE_CAS   (sc_code_t)137981280579UL
 #define SCSITE_DLS   (sc_code_t)137981283396UL
 #define SCSITE_ERAS  (sc_code_t)138835743301UL

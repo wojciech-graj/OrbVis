@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025 Wojciech Graj
+ * Copyright (c) 2022-2026 Wojciech Graj
  *
  * Licensed under the MIT license: https://opensource.org/licenses/MIT
  * Permission is granted to use, copy, modify, and redistribute the work.
@@ -65,20 +65,24 @@ const char *sc_source_str(const sc_code_t code)
 		return "Bermuda";
 	case SCSRC_BGD :
 		return "Peoples Republic of Bangladesh";
+	case SCSRC_BHR:
+		return "The Kingdom of Bahrain";
 	case SCSRC_BHUT:
-		return "Kingdom of Bhutan";
+		return "The Kingdom of Bhutan";
 	case SCSRC_BOL :
 		return "Bolivia";
 	case SCSRC_BRAZ:
 		return "Brazil";
-	case SCSRC_BUL:
+	case SCSRC_BUL :
 		return "Bulgaria";
+	case SCSRC_BWA :
+		return "Republic of Botswana";
 	case SCSRC_CA  :
 		return "Canada";
 	case SCSRC_CHBZ:
 		return "China/Brazil";
 	case SCSRC_CHTU:
-		return "China/Turkey";
+		return "China/Türkiye";
 	case SCSRC_CHLE:
 		return "Chile";
 	case SCSRC_CIS :
@@ -183,6 +187,8 @@ const char *sc_source_str(const sc_code_t code)
 		return "Mexico";
 	case SCSRC_MMR :
 		return "Republic of the Union of Myanmar";
+	case SCSRC_MNE :
+		return "Montenegro";
 	case SCSRC_MNG :
 		return "Mongolia";
 	case SCSRC_MUS :
@@ -251,6 +257,8 @@ const char *sc_source_str(const sc_code_t code)
 		return "Singapore";
 	case SCSRC_SKOR:
 		return "Republic of Korea";
+	case SCSRC_SLB :
+		return "Solomon Islands";
 	case SCSRC_SPN :
 		return "Spain";
 	case SCSRC_STCT:
@@ -270,7 +278,7 @@ const char *sc_source_str(const sc_code_t code)
 	case SCSRC_TUN :
 		return "Republic of Tunisia";
 	case SCSRC_TURK:
-		return "Turkey";
+		return "Türkiye";
 	case SCSRC_UAE :
 		return "United Arab Emirates";
 	case SCSRC_UK  :
@@ -307,6 +315,10 @@ const char *sc_launch_site_str(const sc_code_t code)
 		return "Air Force Western Test Range, California, USA";
 	case SCSITE_ANDSP:
 		return "Andøya Spaceport, Nordland, Norway";
+	case SCSITE_ALCLC:
+		return "Alâcantara Launch Center, Maranhão, Brazil";
+	case SCSITE_BOS  :
+		return "Bowen Orbital Spaceport, Queensland, Australia";
 	case SCSITE_CAS  :
 		return "Canaries Airspace";
 	case SCSITE_DLS  :

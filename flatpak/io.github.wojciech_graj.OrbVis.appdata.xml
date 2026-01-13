@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2023-2025 Wojciech Graj -->
+<!-- Copyright 2023-2026 Wojciech Graj -->
 <component type="desktop-application">
   <id>io.github.wojciech_graj.OrbVis</id>
   <metadata_license>CC0-1.0</metadata_license>
@@ -32,9 +32,9 @@
   <developer_name>Wojciech Graj</developer_name>
 
   <releases>
-    <release version="v0.3.2" date="2025-03-25">
+    <release version="v0.3.3" date="2026-01-13">
       <description>
-        <p>Fix TLE downloads.</p>
+        <p>Fix strings missing null-terminator.</p>
       </description>
     </release>
   </releases>
