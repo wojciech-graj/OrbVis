@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2025 Wojciech Graj
+ * Copyright (c) 2022-2026 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -141,7 +141,7 @@ static void satellites_calc_pos(gpointer data, gpointer user_data);
 
 void satellite_init(void)
 {
-	const char *urls[] = { "https://celestrak.org/pub/satcat.txt", "https://celestrak.org/NORAD/elements/gp.php?SPECIAL=full-catalog&amp;FORMAT=tle" };
+	const char *urls[] = { "https://celestrak.org/pub/satcat.txt", "https://celestrak.org/NORAD/elements/gp.php?SPECIAL=full-catalog&FORMAT=tle" };
 	dl_multi_init(&dl_multi, 2, urls);
 
 	vao_init(&vao_satellites);
