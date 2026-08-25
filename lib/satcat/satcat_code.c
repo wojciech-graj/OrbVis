@@ -332,7 +332,7 @@ const char *sc_launch_site_str(const sc_code_t code)
 	case SCSITE_JJSLA:
 		return "Jeju Island Sea Launch Area, Republic of Korea";
 	case SCSITE_JSC  :
-		return "Jiuquan Space Center, PRC";
+		return "Jiuquan Satellite Launch Center, PRC";
 	case SCSITE_KODAK:
 		return "Kodiak Launch Complex, Alaska, USA";
 	case SCSITE_KSCUT:
@@ -366,7 +366,7 @@ const char *sc_launch_site_str(const sc_code_t code)
 	case SCSITE_SVOBO:
 		return "Svobodnyy Launch Complex, Russia";
 	case SCSITE_TAISC:
-		return "Taiyuan Space Center, PRC";
+		return "Taiyuan Satellite Launch Center, PRC";
 	case SCSITE_TANSC:
 		return "Tanegashima Space Center, Japan";
 	case SCSITE_TYMSC:
@@ -384,7 +384,7 @@ const char *sc_launch_site_str(const sc_code_t code)
 	case SCSITE_WSC:
 		return "Wenchang Satellite Launch Site, PRC";
 	case SCSITE_XICLF:
-		return "Xichang Launch Facility, PRC";
+		return "Xichang Satellite Launch Center, PRC";
 	case SCSITE_YAVNE:
 		return "Yavne Launch Facility, Israel";
 	case SCSITE_YSLA:
