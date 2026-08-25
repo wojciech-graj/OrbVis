@@ -1,5 +1,11 @@
 # Orbit Visualizer
 
+> **OrbVis is no longer being maintained as of 2026-08-25.**
+>
+> It should continue to function for now, although satellites launched on or after 2026-07-11 will not be displayed.
+>
+> Thank you for using OrbVis over the years.
+
 View and propagate the full CelesTrak satellite catalog in realtime.
 
 ![scr02](screenshot/scr02.png)

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2022-2023 Wojciech Graj
+ * Copyright (c) 2022-2026 Wojciech Graj
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,6 +36,7 @@ GtkWindow *e_window_main;
 
 static void on_window_main_destroy(GtkWidget *widget, gpointer user_data);
 static gboolean on_window_main_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data);
+static void on_deprecation_dialog_response(GtkDialog *dialog, gint response_id, gpointer user_data);
 
 gboolean on_window_main_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data)
 {
@@ -88,6 +89,22 @@ void ui_init(int argc, char ***argv)
 	gtk_widget_show_all(window_main);
 
 	g_object_unref((gpointer)builder);
+
+	GtkWidget *dialog = gtk_message_dialog_new(
+		GTK_WINDOW(window_main),
+		GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+		GTK_MESSAGE_WARNING,
+		GTK_BUTTONS_CLOSE,
+		"OrbVis is no longer being maintained as of 2026-08-25.\nIt should continue to function for now, although satellites launched on or after 2026-07-11 will not be displayed.\nThank you for using OrbVis over the years.");
+	g_signal_connect(dialog, "response", G_CALLBACK(on_deprecation_dialog_response), NULL);
+	gtk_widget_show_all(dialog);
+}
+
+static void on_deprecation_dialog_response(GtkDialog *dialog, gint response_id, gpointer user_data)
+{
+	gtk_widget_destroy(GTK_WIDGET(dialog));
+	(void)response_id;
+	(void)user_data;
 }
 
 void ui_deinit(void)
