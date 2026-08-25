@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2023-2026 Wojciech Graj -->
-<component type="desktop-application">
+<component type="desktop-application" date_eol="2026-08-25">
   <id>io.github.wojciech_graj.OrbVis</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0-or-later</project_license>
@@ -10,7 +10,7 @@
 
   <description>
     <p>
-      OrbVis is a tool used to view and propagate the full CelesTrak satellite catalog in realtime.
+      View and propagate the full CelesTrak satellite catalog in realtime.
     </p>
   </description>
 
@@ -32,9 +32,9 @@
   <developer_name>Wojciech Graj</developer_name>
 
   <releases>
-    <release version="v0.3.3" date="2026-01-13">
+    <release version="v0.3.4" date="2026-08-25">
       <description>
-        <p>Fix strings missing null-terminator.</p>
+        <p>Final release.</p>
       </description>
     </release>
   </releases>
